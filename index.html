@@ -1,47 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <script src="https://code.highcharts.com/highcharts.js"></script>
-  <style>
-    :root {
-      --scrollbar-width: 10px;
-    }
-    body {
-      font-family: Arial;
-      text-align: center;
-    }
+  <head>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/accessibility.js"></script> -->
+    <style>
+      :root {
+        --scrollbar-width: 10px;
+      }
+      body {
+        font-family: Arial;
+        text-align: center;
+      }
 
-    #chart-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
-    }
+      #chart-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
 
-    #scrollbar {
-      writing-mode: vertical-lr;
-      -webkit-appearance: none;
-      appearance: none;
-      width: var(--scrollbar-width);
-      height: 300px;
-      background: transparent;
-    }
+      #scrollbar {
+        writing-mode: vertical-lr;
+        -webkit-appearance: none;
+        appearance: none;
+        width: var(--scrollbar-width);
+        height: 300px;
+        background: transparent;
+      }
 
-    #scrollbar::-webkit-slider-runnable-track {
-      background: #ccc;
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
-    }
+      #scrollbar::-webkit-slider-runnable-track {
+        background: #ccc;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
 
-    #scrollbar::-moz-range-track {
-      background: #ccc;
-      width: 100%;
-      height: 100%;
-      border-radius: 5px;
-    }
+      #scrollbar::-moz-range-track {
+        background: #ccc;
+        width: 100%;
+        height: 100%;
+        border-radius: 5px;
+      }
 
-    #scrollbar::-webkit-slider-thumb {
+      #scrollbar::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
         background: #007bff;
@@ -50,27 +53,26 @@
         width: var(--scrollbar-width);
         height: 50px; /* Set a default height */
         cursor: pointer;
-        }
+      }
 
-        #scrollbar::-moz-range-thumb {
+      #scrollbar::-moz-range-thumb {
         background: #007bff;
         border: none;
         border-radius: 6px;
         width: var(--scrollbar-width);
         height: 50px;
         cursor: pointer;
-        }
+      }
 
-        #scrollbar::-webkit-slider-thumb:hover {
-  background: #339eff;
-}
+      #scrollbar::-webkit-slider-thumb:hover {
+        background: #339eff;
+      }
 
-#scrollbar::-webkit-slider-thumb:active {
-  background: #0056b3;
-}
+      #scrollbar::-webkit-slider-thumb:active {
+        background: #0056b3;
+      }
 
-
-    /* #scrollbar::-webkit-slider-thumb {
+      /* #scrollbar::-webkit-slider-thumb {
       -webkit-appearance: none;
       background: #007bff;
       border: none;
@@ -87,438 +89,517 @@
       position: relative;
     } */
 
-    #container {
-      width: 600px;
-      height: 400px;
-    }
+      #container {
+        width: 600px;
+        height: 400px;
+      }
 
-    select, label {
-      margin-top: 10px;
-      font-size: 16px;
-    }
+      select,
+      label {
+        margin-top: 10px;
+        font-size: 16px;
+      }
 
-    .control-panel {
-      margin-bottom: 10px;
-    }
+      .control-panel {
+        margin-bottom: 10px;
+      }
 
-    #leftMarginValue {
-      display: inline-block;
-      width: 30px;
-      text-align: right;
-    }
+      #leftMarginValue {
+        display: inline-block;
+        width: 30px;
+        text-align: right;
+      }
 
-    #datasetSelector {
-      width: 500px;
-      text-align: center;
-      text-align-last: center;
-      margin-left: 130px;
-      margin-right: 60px;
-      border: 1px solid #eee;
-      border-radius: 4px;
-    }
+      #datasetSelector {
+        width: 500px;
+        text-align: center;
+        text-align-last: center;
+        margin-left: 130px;
+        margin-right: 60px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+      }
 
-    #chart-container {
-      max-width: 100%;
-      overflow-x: auto;
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
+      #chart-container {
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0 10px;
+        box-sizing: border-box;
+      }
 
-    #sliderStatus {
-      margin-top: 6px;
-      font-size: 14px;
-      text-align: center;
-      line-height: 1.4;
-    }
-  </style>
-</head>
-<body>
+      #sliderStatus {
+        margin-top: 6px;
+        font-size: 14px;
+        text-align: center;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Scrollable Bar Chart with Adjustable Margin and Features</h3>
 
-<h3>Scrollable Bar Chart with Adjustable Margin and Features</h3>
+    <div class="control-panel">
+      <label for="windowSizeSelector">Bars per page:</label>
+      <select id="windowSizeSelector" onchange="onWindowSizeChange(this.value)">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="20">20</option>
+        <option value="max">Max</option>
+      </select>
 
-<div class="control-panel">
-  <label for="windowSizeSelector">Bars per page:</label>
-  <select id="windowSizeSelector" onchange="onWindowSizeChange(this.value)">
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5" selected>5</option>
-    <option value="6">6</option>
-    <option value="7">7</option>
-    <option value="20">20</option>
-    <option value="max">Max</option>
-  </select>
+      <input
+        type="checkbox"
+        id="toggleLabels"
+        onchange="renderChart()"
+        checked
+      />
+      Show values in bars
 
-  <input type="checkbox" id="toggleLabels" onchange="renderChart()" checked>
-  Show values in bars
+      <label style="margin-left: 20px">
+        Left Margin:
+        <input
+          type="range"
+          id="leftMarginSlider"
+          min="0"
+          max="200"
+          value="100"
+          step="10"
+          oninput="updateLeftMarginDisplay(); renderChart();"
+        />
+        <span id="leftMarginValue">100</span>px
+      </label>
 
-  <label style="margin-left: 20px;">
-    Left Margin:
-    <input type="range" id="leftMarginSlider" min="0" max="200" value="100" step="10" oninput="updateLeftMarginDisplay(); renderChart();">
-    <span id="leftMarginValue">100</span>px
-  </label>
+      <label style="margin-left: 20px">
+        Sort by value:
+        <select id="sortSelector" onchange="renderChart()">
+          <option value="unsorted">Unsorted</option>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
+        </select>
+      </label>
 
-  <!-- <label style="margin-left: 20px;">
-    Sort by value:
-    <select id="sortSelector" onchange="renderChart()">
-      <option value="unsorted">Unsorted</option>
-      <option value="asc">Ascending</option>
-      <option value="desc">Descending</option>
-    </select>
-  </label> -->
+      <label style="margin-left: 20px">
+        Sort:
+        <select id="sortSelector" onchange="renderChart()">
+          <option value="unsorted">Unsorted</option>
+          <option value="valueAsc">Value ↑</option>
+          <option value="valueDesc">Value ↓</option>
+          <option value="nameAsc">Name A–Z</option>
+          <option value="nameDesc">Name Z–A</option>
+        </select>
+      </label>
+    </div>
 
-  <label style="margin-left: 20px;">
-  Sort:
-    <select id="sortSelector" onchange="renderChart()">
-      <option value="unsorted">Unsorted</option>
-      <option value="valueAsc">Value ↑</option>
-      <option value="valueDesc">Value ↓</option>
-      <option value="nameAsc">Name A–Z</option>
-      <option value="nameDesc">Name Z–A</option>
-    </select>
-  </label>
-
-</div>
-
-<label style="margin-left: 20px;">
-  Bar Height:
-  <input type="range" id="barHeightSlider" min="0.5" max="1.0" step="0.025" value="0.75"
-         oninput="updateBarHeightDisplay(); renderChart();">
-  <span id="barHeightValue">0.75</span>
-</label>
-
-<label style="margin-left: 20px;">
-  <input type="checkbox" id="autoScaleCheckbox" checked onchange="renderChart()">
-  Auto-scale Axis
-</label>
-
-
-<label style="margin-left: 20px;">
-  Axis Min:
-  <input type="number" id="yMinInput" value="0" step="10" style="width: 70px;">
-</label>
-
-<label style="margin-left: 10px;">
-  Axis Max:
-  <input type="number" id="yMaxInput" value="100" step="10" style="width: 70px;">
-</label>
-
-
-
-
-
-<div id="chart-container">
-  <select id="datasetSelector" onchange="onDatasetChange(this.value)">
-    <option value="dataset1">NPV ($M)</option>
-    <option value="dataset2">Gross Margin ($M)</option>
-    <option value="dataset3">Dataset 3</option>
-  </select>
-
-  <div id="chart-wrapper">
-    <div style="display: flex; flex-direction: column; align-items: center; margin-right: 15px;">
+    <label style="margin-left: 20px">
+      Bar Height:
       <input
         type="range"
-        id="scrollbar"
-        min="0"
-        max="5"
+        id="barHeightSlider"
+        min="0.5"
+        max="1.0"
+        step="0.025"
+        value="0.75"
+        `
+        oninput="updateBarHeightDisplay(); renderChart();"
+      />
+      <span id="barHeightValue">0.75</span>
+    </label>
+
+    <label style="margin-left: 20px">
+      <input
+        type="checkbox"
+        id="autoScaleCheckbox"
+        checked
+        onchange="renderChart()"
+      />
+      Auto-scale Axis
+    </label>
+
+    <label style="margin-left: 20px">
+      Axis Min:
+      <input
+        type="number"
+        id="yMinInput"
         value="0"
-        step="1"
-        oninput="onScrollChange(this.value)"
-      >
-      <div id="sliderStatus"></div>
+        step="10"
+        style="width: 70px"
+      />
+    </label>
+
+    <label style="margin-left: 10px">
+      Axis Max:
+      <input
+        type="number"
+        id="yMaxInput"
+        value="100"
+        step="10"
+        style="width: 70px"
+      />
+    </label>
+
+    <div id="chart-container">
+      <select id="datasetSelector" onchange="onDatasetChange(this.value)">
+        <option value="dataset1">NPV ($M)</option>
+        <option value="dataset2">Gross Margin ($M)</option>
+        <option value="dataset3">Dataset 3</option>
+      </select>
+
+      <div id="chart-wrapper">
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 15px;
+          "
+        >
+          <input
+            type="range"
+            id="scrollbar"
+            min="0"
+            max="5"
+            value="0"
+            step="1"
+            oninput="onScrollChange(this.value)"
+          />
+          <div id="sliderStatus"></div>
+        </div>
+        <div id="container"></div>
+      </div>
     </div>
-    <div id="container"></div>
-  </div>
-</div>
 
-<style id="dynamic-slider-style"></style>
+    <style id="dynamic-slider-style"></style>
 
-<script>
-  let previousStart = 0;
-  const fullCategories = Array.from({ length: 40 }, (_, i) => `Category ${i + 1}`);
-  fullCategories[4] = "This is a long Category 5";
+    <script>
+      let previousStart = 0;
+      const fullCategories = Array.from(
+        { length: 40 },
+        (_, i) => `Category ${i + 1}`
+      );
+      fullCategories[4] = "This is a long Category 5";
 
-  const datasets = {
-    dataset1: Array.from({ length: 40 }, () => Math.floor(Math.random() * 200)),
-    dataset2: Array.from({ length: 40 }, () => Math.floor(Math.random() * 100)),
-    dataset3: Array.from({ length: 40 }, () => Math.floor(Math.random() * 100))
-  };
+      const datasets = {
+        dataset1: Array.from({ length: 40 }, () =>
+          Math.floor(Math.random() * 200)
+        ),
+        dataset2: Array.from({ length: 40 }, () =>
+          Math.floor(Math.random() * 100)
+        ),
+        dataset3: Array.from({ length: 40 }, () =>
+          Math.floor(Math.random() * 100)
+        ),
+      };
 
-  let currentDatasetKey = 'dataset1';
-  let fullData = datasets[currentDatasetKey];
-  let windowSize = 5;
-  const trackHeight = 300;
-  let currentStart = 0;
-  let chart;
-  const yMin = 0;
-  let yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
+      let currentDatasetKey = "dataset1";
+      let fullData = datasets[currentDatasetKey];
+      let windowSize = 5;
+      const trackHeight = 300;
+      let currentStart = 0;
+      let chart;
+      const yMin = 0;
+      let yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
 
-  function setSliderThumbHeight() {
-    const thumbHeight = (windowSize / fullCategories.length) * trackHeight;
-    const style = `
+      function setSliderThumbHeight() {
+        const thumbHeight = (windowSize / fullCategories.length) * trackHeight;
+        const style = `
       #scrollbar::-webkit-slider-thumb { height: ${thumbHeight}px; }
       #scrollbar::-moz-range-thumb { height: ${thumbHeight}px; }
     `;
-    document.getElementById('dynamic-slider-style').textContent = style;
-  }
-
-  function getSmoothSlice(startFloat) {
-    const baseIndex = Math.floor(startFloat);
-    const sortMode = document.getElementById('sortSelector').value;
-
-    const categoryValuePairs = fullCategories.map((name, i) => ({
-      name,
-      y: fullData[i]
-    }));
-
-    // if (sortMode === 'asc') categoryValuePairs.sort((a, b) => a.y - b.y);
-    // else if (sortMode === 'desc') categoryValuePairs.sort((a, b) => b.y - a.y);
-    if (sortMode === 'valueAsc') {
-      categoryValuePairs.sort((a, b) => a.y - b.y);
-    } else if (sortMode === 'valueDesc') {
-      categoryValuePairs.sort((a, b) => b.y - a.y);
-    } else if (sortMode === 'nameAsc') {
-      categoryValuePairs.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortMode === 'nameDesc') {
-      categoryValuePairs.sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    const slice = [];
-    for (let i = 0; i < windowSize; i++) {
-      const idx = baseIndex + i;
-      if (idx >= categoryValuePairs.length) {
-        slice.push({ name: '', y: 0, color: 'rgba(0, 0, 0, 0.05)' });
-      } else {
-        slice.push(categoryValuePairs[idx]);
+        document.getElementById("dynamic-slider-style").textContent = style;
       }
-    }
 
-    while (slice.length < windowSize) {
-      slice.push({ name: '', y: 0, color: 'rgba(0, 0, 0, 0.05)' });
-    }
+      function getSmoothSlice(startFloat) {
+        const baseIndex = Math.floor(startFloat);
+        const sortMode = document.getElementById("sortSelector").value;
 
-    return {
-      categories: slice.map(d => d.name || ' '),
-      data: slice
-    };
-  }
+        const categoryValuePairs = fullCategories.map((name, i) => ({
+          name,
+          y: fullData[i],
+        }));
 
-  function renderChart() {
-    currentStart = 0;
+        // if (sortMode === 'asc') categoryValuePairs.sort((a, b) => a.y - b.y);
+        // else if (sortMode === 'desc') categoryValuePairs.sort((a, b) => b.y - a.y);
+        if (sortMode === "valueAsc") {
+          categoryValuePairs.sort((a, b) => a.y - b.y);
+        } else if (sortMode === "valueDesc") {
+          categoryValuePairs.sort((a, b) => b.y - a.y);
+        } else if (sortMode === "nameAsc") {
+          categoryValuePairs.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortMode === "nameDesc") {
+          categoryValuePairs.sort((a, b) => b.name.localeCompare(a.name));
+        }
 
-
-    // yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
-    const autoScale = document.getElementById('autoScaleCheckbox').checked;
-    const yMin = parseFloat(document.getElementById('yMinInput').value);
-    console.log('autoScale', autoScale)
-
-    // if {autoScale==true}
-    //     yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
-    // else
-    //     yMax = parseFloat(document.getElementById('yMaxInput').value);
-
-    yMax = autoScale ? Math.ceil(Math.max(...fullData) / 10) * 10 : parseFloat(document.getElementById('yMaxInput').value);
-    // autoScale ? document.getElementById('yMaxInput').value = yMax : null;
-
-    console.log('yMax', yMax)
-
-    const showLabels = document.getElementById('toggleLabels').checked;
-    const leftMargin = parseInt(document.getElementById('leftMarginSlider').value);
-    document.getElementById('leftMarginValue').textContent = leftMargin;
-
-    const scrollbar = document.getElementById('scrollbar');
-    scrollbar.max = Math.max(0, fullCategories.length - windowSize);
-    scrollbar.value = currentStart;
-    setSliderThumbHeight();
-
-    const slice = getSmoothSlice(currentStart);
-
-    chart = Highcharts.chart('container', {
-      chart: {
-        type: 'bar',
-        height: 400,
-        animation: false,
-        marginLeft: leftMargin,
-        marginRight: 60
-      },
-      title: { text: '' },
-      xAxis: {
-        categories: slice.categories,
-        reversed: true,
-      },
-      yAxis: {
-        title: { text: null, align: 'middle', rotation: 0, offset: 0, y: -20, x: 0, style: { fontWeight: 'bold', fontSize: 15 } },
-        labels: { align: 'center', x: 0, y: 10 },
-        opposite: true,
-        // min: yMin,
-        max: yMax,
-         min: autoScale ? null : (isNaN(yMin) ? null : yMin),
-        // max: autoScale ? null : (isNaN(yMax) ? null : yMax)
-        //  max: autoScale ? null : (isNaN(yMax) ? null : yMax)
-      },
-      plotOptions: {
-        series: {
-          pointPadding: 1 - (parseFloat(document.getElementById('barHeightSlider').value)/2)-.5,
-          groupPadding: 0.0,
-          animation: { duration: 400, easing: 'easeOutCubic' },
-          dataLabels: {
-            enabled: showLabels,
-            inside: true,
-            style: { fontWeight: 'bold', color: 'white', textOutline: '0px' },
-            formatter: function () { return this.y > 0 ? this.y : ''; }
+        const slice = [];
+        for (let i = 0; i < windowSize; i++) {
+          const idx = baseIndex + i;
+          if (idx >= categoryValuePairs.length) {
+            slice.push({ name: "", y: 0, color: "rgba(0, 0, 0, 0.05)" });
+          } else {
+            slice.push(categoryValuePairs[idx]);
           }
         }
-      },
-      series: [{
-        name: 'Values',
-        data: slice.data,
-        showInLegend: false
-      }]
-    });
 
-    updateSliderStatus();
-  }
+        while (slice.length < windowSize) {
+          slice.push({ name: "", y: 0, color: "rgba(0, 0, 0, 0.05)" });
+        }
 
-  function onScrollChange(value) {
-    const newStart = parseFloat(value);
-    const direction = newStart > previousStart ? 1 : -1;
-    previousStart = newStart;
-    currentStart = newStart;
+        return {
+          categories: slice.map((d) => d.name || " "),
+          data: slice,
+        };
+      }
 
-    const maxStart = fullCategories.length - windowSize;
-    if (currentStart > maxStart) currentStart = maxStart;
+      function renderChart() {
+        currentStart = 0;
 
-    const slice = getSmoothSlice(currentStart);
-    const showLabels = document.getElementById('toggleLabels').checked;
+        // yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
+        const autoScale = document.getElementById("autoScaleCheckbox").checked;
+        const yMin = parseFloat(document.getElementById("yMinInput").value);
+        console.log("autoScale", autoScale);
 
-    chart.xAxis[0].update({ categories: slice.categories }, false);
-    chart.series[0].update({ dataLabels: { enabled: showLabels } }, false);
+        // if {autoScale==true}
+        //     yMax = Math.ceil(Math.max(...fullData) / 10) * 10;
+        // else
+        //     yMax = parseFloat(document.getElementById('yMaxInput').value);
 
-    chart.series[0].setData(slice.data, true, {
-      duration: 400,
-      easing: 'easeOutCubic'
-    });
+        yMax = autoScale
+          ? Math.ceil(Math.max(...fullData) / 10) * 10
+          : parseFloat(document.getElementById("yMaxInput").value);
+        // autoScale ? document.getElementById('yMaxInput').value = yMax : null;
 
-    // const labelGroup = chart.xAxis[0].labelGroup?.element;
-    // if (labelGroup) {
-    //   labelGroup.animate([
-    //     { transform: `translateY(${20 * direction}px)`, opacity: 0 },
-    //     { transform: 'translateY(0)', opacity: 1 }
-    //   ], {
-    //     duration: 400,
-    //     easing: 'ease-out'
-    //   });
-    // }
-    const labelGroup = chart.xAxis[0].labelGroup?.element;
-if (labelGroup) {
-  labelGroup.animate(
-    [
-      { transform: `translateY(${40 * direction}px)`, opacity: 0 },
-      { transform: 'translateY(0)', opacity: 1 }
-    ],
-    {
-      duration: 800,
-      easing: 'cubic-bezier(0.22, 1, 0.36, 1)' // gentle easeOutExpo-like curve
-    }
-  );
-}
+        console.log("yMax", yMax);
 
+        const showLabels = document.getElementById("toggleLabels").checked;
+        const leftMargin = parseInt(
+          document.getElementById("leftMarginSlider").value
+        );
+        document.getElementById("leftMarginValue").textContent = leftMargin;
 
-    updateSliderStatus();
-  }
+        const scrollbar = document.getElementById("scrollbar");
+        scrollbar.max = Math.max(0, fullCategories.length - windowSize);
+        scrollbar.value = currentStart;
+        setSliderThumbHeight();
 
-  function onWindowSizeChange(newSize) {
-    windowSize = newSize === "max" ? fullData.length : parseInt(newSize);
-    currentStart = 0;
-    renderChart();
-  }
+        const slice = getSmoothSlice(currentStart);
 
-  function updateLeftMarginDisplay() {
-    document.getElementById('leftMarginValue').textContent = document.getElementById('leftMarginSlider').value;
-  }
+        chart = Highcharts.chart("container", {
+          chart: {
+            type: "bar",
+            height: 400,
+            animation: false,
+            marginLeft: leftMargin,
+            marginRight: 60,
+          },
+          title: { text: "" },
+          xAxis: {
+            categories: slice.categories,
+            reversed: true,
+            scrollbar: {
+              enabled: true,
+            },
+          },
+          yAxis: {
+            title: {
+              text: null,
+              align: "middle",
+              rotation: 0,
+              offset: 0,
+              y: -20,
+              x: 0,
+              style: { fontWeight: "bold", fontSize: 15 },
+            },
+            labels: { align: "center", x: 0, y: 10 },
+            opposite: true,
+            // min: yMin,
+            max: yMax,
+            min: autoScale ? null : isNaN(yMin) ? null : yMin,
+            // max: autoScale ? null : (isNaN(yMax) ? null : yMax)
+            //  max: autoScale ? null : (isNaN(yMax) ? null : yMax)
+          },
+          plotOptions: {
+            series: {
+              pointPadding:
+                1 -
+                parseFloat(document.getElementById("barHeightSlider").value) /
+                  2 -
+                0.5,
+              groupPadding: 0.0,
+              animation: { duration: 400, easing: "easeOutCubic" },
+              dataLabels: {
+                enabled: showLabels,
+                inside: true,
+                style: {
+                  fontWeight: "bold",
+                  color: "white",
+                  textOutline: "0px",
+                },
+                formatter: function () {
+                  return this.y > 0 ? this.y : "";
+                },
+              },
+            },
+          },
+          series: [
+            {
+              name: "Values",
+              data: slice.data,
+              showInLegend: false,
+            },
+          ],
+        });
 
-  function onDatasetChange(datasetKey) {
-    currentDatasetKey = datasetKey;
-    fullData = datasets[currentDatasetKey];
-    currentStart = 0;
-    renderChart();
-  }
+        updateSliderStatus();
+      }
 
-  function updateSliderStatus() {
-    const total = fullCategories.length;
-    const start = currentStart + 1;
-    const end = Math.min(currentStart + windowSize, total);
-    document.getElementById('sliderStatus').textContent = `Showing ${start}–${end} of ${total}`;
-  }
+      function onScrollChange(value) {
+        const newStart = parseFloat(value);
+        const direction = newStart > previousStart ? 1 : -1;
+        previousStart = newStart;
+        currentStart = newStart;
 
-  function updateBarHeightDisplay() {
-    document.getElementById('barHeightValue').textContent = document.getElementById('barHeightSlider').value;
-    }
+        const maxStart = fullCategories.length - windowSize;
+        if (currentStart > maxStart) currentStart = maxStart;
 
+        const slice = getSmoothSlice(currentStart);
+        const showLabels = document.getElementById("toggleLabels").checked;
 
-//  document.getElementById('autoScaleCheckbox').addEventListener('change', function () {
-//   const disabled = this.checked;
-//   document.getElementById('yMinInput').disabled = disabled;
-//   document.getElementById('yMaxInput').disabled = disabled;
-// });
-document.getElementById('autoScaleCheckbox').addEventListener('change', function () {
-  const disabled = this.checked;
-  const yMinInput = document.getElementById('yMinInput');
-  const yMaxInput = document.getElementById('yMaxInput');
+        chart.xAxis[0].update({ categories: slice.categories }, false);
+        chart.series[0].update({ dataLabels: { enabled: showLabels } }, false);
 
-  yMinInput.disabled = disabled;
-  yMaxInput.disabled = disabled;
+        chart.series[0].setData(slice.data, true, {
+          duration: 400,
+          easing: "easeOutCubic",
+        });
 
-  // Optional: style the inputs to visually indicate they are inactive
-  yMinInput.style.opacity = disabled ? '0.3' : '1';
-  yMaxInput.style.opacity = disabled ? '0.3' : '1';
+        // const labelGroup = chart.xAxis[0].labelGroup?.element;
+        // if (labelGroup) {
+        //   labelGroup.animate([
+        //     { transform: `translateY(${20 * direction}px)`, opacity: 0 },
+        //     { transform: 'translateY(0)', opacity: 1 }
+        //   ], {
+        //     duration: 400,
+        //     easing: 'ease-out'
+        //   });
+        // }
+        const labelGroup = chart.xAxis[0].labelGroup?.element;
+        if (labelGroup) {
+          labelGroup.animate(
+            [
+              { transform: `translateY(${40 * direction}px)`, opacity: 0 },
+              { transform: "translateY(0)", opacity: 1 },
+            ],
+            {
+              duration: 800,
+              easing: "cubic-bezier(0.22, 1, 0.36, 1)", // gentle easeOutExpo-like curve
+            }
+          );
+        }
 
-  const yMinLabel = document.getElementById('yMinInput').parentElement;
-  const yMaxLabel = document.getElementById('yMaxInput').parentElement;
+        updateSliderStatus();
+      }
 
-  // Set disabled state and visual opacity
-  document.getElementById('yMinInput').disabled = disabled;
-  document.getElementById('yMaxInput').disabled = disabled;
+      function onWindowSizeChange(newSize) {
+        windowSize = newSize === "max" ? fullData.length : parseInt(newSize);
+        currentStart = 0;
+        renderChart();
+      }
 
-  yMinLabel.style.opacity = disabled ? '0.3' : '1';
-  yMaxLabel.style.opacity = disabled ? '0.3' : '1';
-});
+      function updateLeftMarginDisplay() {
+        document.getElementById("leftMarginValue").textContent =
+          document.getElementById("leftMarginSlider").value;
+      }
 
-document.getElementById('yMinInput').addEventListener('input', function () {
-  if (!document.getElementById('autoScaleCheckbox').checked) {
-    renderChart();
-  }
-});
+      function onDatasetChange(datasetKey) {
+        currentDatasetKey = datasetKey;
+        fullData = datasets[currentDatasetKey];
+        currentStart = 0;
+        renderChart();
+      }
 
-document.getElementById('yMaxInput').addEventListener('input', function () {
-  if (!document.getElementById('autoScaleCheckbox').checked) {
-    renderChart();
-  }
-});
+      function updateSliderStatus() {
+        const total = fullCategories.length;
+        const start = currentStart + 1;
+        const end = Math.min(currentStart + windowSize, total);
+        document.getElementById(
+          "sliderStatus"
+        ).textContent = `Showing ${start}–${end} of ${total}`;
+      }
 
+      function updateBarHeightDisplay() {
+        document.getElementById("barHeightValue").textContent =
+          document.getElementById("barHeightSlider").value;
+      }
 
-// Set initial disabled and greyed-out state on page load
-(function initializeYAxisInputs() {
-  const autoScaleChecked = document.getElementById('autoScaleCheckbox').checked;
-  const yMinInput = document.getElementById('yMinInput');
-  const yMaxInput = document.getElementById('yMaxInput');
-  const yMinLabel = yMinInput.parentElement;
-  const yMaxLabel = yMaxInput.parentElement;
+      //  document.getElementById('autoScaleCheckbox').addEventListener('change', function () {
+      //   const disabled = this.checked;
+      //   document.getElementById('yMinInput').disabled = disabled;
+      //   document.getElementById('yMaxInput').disabled = disabled;
+      // });
+      document
+        .getElementById("autoScaleCheckbox")
+        .addEventListener("change", function () {
+          const disabled = this.checked;
+          const yMinInput = document.getElementById("yMinInput");
+          const yMaxInput = document.getElementById("yMaxInput");
 
-  yMinInput.disabled = autoScaleChecked;
-  yMaxInput.disabled = autoScaleChecked;
+          yMinInput.disabled = disabled;
+          yMaxInput.disabled = disabled;
 
-  yMinInput.style.opacity = autoScaleChecked ? '0.3' : '1';
-  yMaxInput.style.opacity = autoScaleChecked ? '0.3' : '1';
+          // Optional: style the inputs to visually indicate they are inactive
+          yMinInput.style.opacity = disabled ? "0.3" : "1";
+          yMaxInput.style.opacity = disabled ? "0.3" : "1";
 
-  yMinLabel.style.opacity = autoScaleChecked ? '0.3' : '1';
-  yMaxLabel.style.opacity = autoScaleChecked ? '0.3' : '1';
-})();
+          const yMinLabel = document.getElementById("yMinInput").parentElement;
+          const yMaxLabel = document.getElementById("yMaxInput").parentElement;
 
+          // Set disabled state and visual opacity
+          document.getElementById("yMinInput").disabled = disabled;
+          document.getElementById("yMaxInput").disabled = disabled;
 
+          yMinLabel.style.opacity = disabled ? "0.3" : "1";
+          yMaxLabel.style.opacity = disabled ? "0.3" : "1";
+        });
 
-  renderChart();
-</script>
+      document
+        .getElementById("yMinInput")
+        .addEventListener("input", function () {
+          if (!document.getElementById("autoScaleCheckbox").checked) {
+            renderChart();
+          }
+        });
 
-</body>
+      document
+        .getElementById("yMaxInput")
+        .addEventListener("input", function () {
+          if (!document.getElementById("autoScaleCheckbox").checked) {
+            renderChart();
+          }
+        });
+
+      // Set initial disabled and greyed-out state on page load
+      (function initializeYAxisInputs() {
+        const autoScaleChecked =
+          document.getElementById("autoScaleCheckbox").checked;
+        const yMinInput = document.getElementById("yMinInput");
+        const yMaxInput = document.getElementById("yMaxInput");
+        const yMinLabel = yMinInput.parentElement;
+        const yMaxLabel = yMaxInput.parentElement;
+
+        yMinInput.disabled = autoScaleChecked;
+        yMaxInput.disabled = autoScaleChecked;
+
+        yMinInput.style.opacity = autoScaleChecked ? "0.3" : "1";
+        yMaxInput.style.opacity = autoScaleChecked ? "0.3" : "1";
+
+        yMinLabel.style.opacity = autoScaleChecked ? "0.3" : "1";
+        yMaxLabel.style.opacity = autoScaleChecked ? "0.3" : "1";
+      })();
+
+      renderChart();
+    </script>
+  </body>
 </html>
