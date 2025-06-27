@@ -187,7 +187,7 @@
         <select id="sortSelector" onchange="renderChart()">
           <option value="unsorted">Unsorted</option>
           <option value="valueAsc">Value ↑</option>
-          <option value="valueDesc">Value ↓</option>
+          <option value="valueDesc" selected>Value ↓</option>
           <option value="nameAsc">Name A–Z</option>
           <option value="nameDesc">Name Z–A</option>
         </select>
@@ -366,10 +366,26 @@
         // else
         //     yMax = parseFloat(document.getElementById('yMaxInput').value);
 
-        yMax = autoScale
-          ? Math.ceil(Math.max(...fullData) / 10) * 10
-          : parseFloat(document.getElementById("yMaxInput").value);
+        // yMax = autoScale
+        //   ? Math.ceil(Math.max(...fullData) / 10) * 10
+        //   : parseFloat(document.getElementById("yMaxInput").value);
         // autoScale ? document.getElementById('yMaxInput').value = yMax : null;
+
+        if (autoScale) {
+          const maxValue = Math.max(...fullData);
+          const minValue = Math.min(...fullData);
+          yMax = Math.ceil(maxValue / 10) * 10;
+          const yMinAuto = Math.floor(minValue / 10) * 10;
+
+          // Update input boxes with auto-scaled values
+          document.getElementById("yMinInput").value = yMinAuto;
+          document.getElementById("yMaxInput").value = yMax;
+
+          yMinFinal = yMinAuto;
+        } else {
+          yMax = parseFloat(document.getElementById("yMaxInput").value);
+          yMinFinal = parseFloat(document.getElementById("yMinInput").value);
+        }
 
         console.log("yMax", yMax);
 
@@ -416,7 +432,8 @@
             opposite: true,
             // min: yMin,
             max: yMax,
-            min: autoScale ? null : isNaN(yMin) ? null : yMin,
+            min: autoScale ? null : isNaN(yMinFinal) ? null : yMinFinal,
+            // min: autoScale ? null : isNaN(yMin) ? null : yMin,
             // max: autoScale ? null : (isNaN(yMax) ? null : yMax)
             //  max: autoScale ? null : (isNaN(yMax) ? null : yMax)
           },
