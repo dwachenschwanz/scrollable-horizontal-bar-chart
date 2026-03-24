@@ -54,13 +54,6 @@ h1 {
   text-align: left;
 }
 
-.data-table-header {
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #334155;
-}
-
 .data-table-wrapper {
   overflow-x: auto;
 }
@@ -193,8 +186,19 @@ input[type="text"] {
   width: 100%;
 }
 
+input.is-invalid {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
 input[type="number"] {
   max-width: 120px;
+}
+
+.field-status {
+  min-height: 1.1em;
+  font-size: 0.8rem;
+  color: #b91c1c;
 }
 
 #resetDefaultsButton {
@@ -307,6 +311,15 @@ input[type="number"] {
   width: 100%;
   min-width: 320px;
   height: 400px;
+}
+
+.chart-axis-label {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
 }
 
 #sliderStatus {

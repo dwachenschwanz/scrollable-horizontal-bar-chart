@@ -13,8 +13,9 @@ The app supports horizontal and vertical bar layouts, sorting, paging through vi
 - Adjustable left margin and bar height
 - Auto-scale or manual axis bounds
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
+- Uppercase currency input with validation and safe fallback to `USD`
 - Currency-aware value labels inside bars
-- Tabbed controls sidebar with sticky tabs
+- Tabbed controls sidebar
 - Full data table below the chart
 - Table row highlighting for rows currently visible in the chart
 - One-click reset back to default settings while preserving the current dataset
@@ -96,6 +97,7 @@ On first load, the app starts with:
 - Choose notation such as standard, compact, scientific, or engineering
 - Switch between decimal and currency formatting
 - Choose a currency code
+- Invalid currency codes are highlighted and fall back to `USD`
 - Set max fraction digits
 - Toggle grouping separators
 
@@ -133,4 +135,5 @@ npm run build
 
 - The demo datasets are generated in `src/chart-app.js`
 - `dataset1` includes values up to the tens of thousands to exercise numeric formatting and axis behavior
+- Sorted rows, visible slices, and number formatters are cached to keep redraws lighter
 - Highcharts credits are disabled in the chart configuration

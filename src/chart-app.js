@@ -4,6 +4,27 @@ const CATEGORY_COUNT = 40;
 const TRACK_HEIGHT = 300;
 const EMPTY_BAR_COLOR = "rgba(0, 0, 0, 0.05)";
 
+const defaultSettings = {
+  activeTab: "display",
+  autoScale: true,
+  barHeight: "0.75",
+  datasetKey: "dataset1",
+  leftMargin: "100",
+  orientation: "horizontal",
+  showDataTable: true,
+  showLabels: true,
+  sort: "valueDesc",
+  windowSize: "5",
+  xAxisCurrency: "USD",
+  xAxisFractionDigits: "0",
+  xAxisGrouping: true,
+  xAxisLocale: "en-US",
+  xAxisNotation: "compact",
+  xAxisStyle: "currency",
+  yMax: "100",
+  yMin: "0",
+};
+
 function createSeededRandom(seed) {
   let value = seed >>> 0;
   return () => {
@@ -34,32 +55,18 @@ const datasets = {
 
 const state = {
   chart: null,
-  currentDatasetKey: "dataset1",
+  currentDatasetKey: defaultSettings.datasetKey,
   currentStart: 0,
+  formatterCache: new Map(),
   pendingScrollStart: 0,
   previousStart: 0,
   scrollAnimationFrame: null,
-  windowSize: 5,
-};
-
-const defaultSettings = {
-  activeTab: "display",
-  autoScale: true,
-  barHeight: "0.75",
-  leftMargin: "100",
-  orientation: "horizontal",
-  showDataTable: true,
-  showLabels: true,
-  sort: "valueDesc",
-  windowSize: "5",
-  xAxisCurrency: "USD",
-  xAxisFractionDigits: "0",
-  xAxisGrouping: true,
-  xAxisLocale: "en-US",
-  xAxisNotation: "compact",
-  xAxisStyle: "currency",
-  yMax: "100",
-  yMin: "0",
+  sliceCache: null,
+  sliceCacheKey: "",
+  sortedPairsCache: null,
+  sortedPairsCacheKey: "",
+  tableRenderKey: "",
+  windowSize: Number.parseInt(defaultSettings.windowSize, 10),
 };
 
 const elements = {
@@ -83,6 +90,7 @@ const elements = {
   toggleLabels: document.getElementById("toggleLabels"),
   windowSizeSelector: document.getElementById("windowSizeSelector"),
   xAxisCurrencyInput: document.getElementById("xAxisCurrencyInput"),
+  xAxisCurrencyStatus: document.getElementById("xAxisCurrencyStatus"),
   xAxisFractionDigitsInput: document.getElementById("xAxisFractionDigitsInput"),
   xAxisGroupingCheckbox: document.getElementById("xAxisGroupingCheckbox"),
   xAxisLocaleInput: document.getElementById("xAxisLocaleInput"),
@@ -107,7 +115,12 @@ function setActiveControlsTab(targetTabName) {
   });
 }
 
-function resetToDefaults() {
+function applyDefaultSettings({ preserveDataset = false } = {}) {
+  if (!preserveDataset) {
+    state.currentDatasetKey = defaultSettings.datasetKey;
+    elements.datasetSelector.value = defaultSettings.datasetKey;
+  }
+
   state.currentStart = 0;
   state.pendingScrollStart = 0;
   state.previousStart = 0;
@@ -131,19 +144,40 @@ function resetToDefaults() {
   elements.xAxisGroupingCheckbox.checked = defaultSettings.xAxisGrouping;
 
   setActiveControlsTab(defaultSettings.activeTab);
+}
+
+function resetToDefaults() {
+  applyDefaultSettings({ preserveDataset: true });
+  invalidateSortedPairsCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
   updateCurrencyInputState();
   updateDataTableVisibility();
   updateYAxisInputState();
-  renderChart({ resetScroll: true });
+  renderChart({ resetScroll: true, forceTableRender: true });
 }
 
 function getCurrentDataset() {
   return datasets[state.currentDatasetKey];
 }
 
+function invalidateSortedPairsCache() {
+  state.sortedPairsCache = null;
+  state.sortedPairsCacheKey = "";
+  state.sliceCache = null;
+  state.sliceCacheKey = "";
+}
+
+function getSortedPairsCacheKey() {
+  return `${state.currentDatasetKey}|${elements.sortSelector.value}`;
+}
+
 function getSortedPairs() {
+  const cacheKey = getSortedPairsCacheKey();
+  if (state.sortedPairsCache && state.sortedPairsCacheKey === cacheKey) {
+    return state.sortedPairsCache;
+  }
+
   const pairs = fullCategories.map((name, index) => ({
     index,
     name,
@@ -175,10 +209,21 @@ function getSortedPairs() {
       break;
   }
 
+  state.sortedPairsCache = pairs;
+  state.sortedPairsCacheKey = cacheKey;
   return pairs;
 }
 
+function getSliceCacheKey() {
+  return `${getSortedPairsCacheKey()}|${state.currentStart}|${state.windowSize}`;
+}
+
 function getSlice() {
+  const cacheKey = getSliceCacheKey();
+  if (state.sliceCache && state.sliceCacheKey === cacheKey) {
+    return state.sliceCache;
+  }
+
   const sortedPairs = getSortedPairs();
   const slice = [];
 
@@ -192,10 +237,14 @@ function getSlice() {
     );
   }
 
-  return {
+  const result = {
     categories: slice.map((item) => item.name || "\u00A0"),
     data: slice,
   };
+
+  state.sliceCache = result;
+  state.sliceCacheKey = cacheKey;
+  return result;
 }
 
 function updateDataTableVisibility() {
@@ -217,6 +266,8 @@ function getMaxStart() {
 
 function clampCurrentStart() {
   state.currentStart = Math.min(Math.max(state.currentStart, 0), getMaxStart());
+  state.sliceCache = null;
+  state.sliceCacheKey = "";
 }
 
 function setSliderThumbHeight() {
@@ -268,6 +319,55 @@ function updateCurrencyInputState() {
   elements.xAxisCurrencyInput.disabled = disabled;
   elements.xAxisCurrencyInput.style.opacity = opacity;
   elements.xAxisCurrencyInput.parentElement.style.opacity = opacity;
+  elements.xAxisCurrencyStatus.style.opacity = opacity;
+
+  if (disabled) {
+    elements.xAxisCurrencyInput.classList.remove("is-invalid");
+    elements.xAxisCurrencyStatus.textContent = "";
+  } else {
+    updateCurrencyValidationState();
+  }
+}
+
+function normalizeCurrencyInput() {
+  elements.xAxisCurrencyInput.value =
+    elements.xAxisCurrencyInput.value.toUpperCase();
+}
+
+function isValidCurrencyCode(code) {
+  const normalized = code.trim().toUpperCase();
+
+  if (!/^[A-Z]{3}$/.test(normalized)) {
+    return false;
+  }
+
+  if (typeof Intl.supportedValuesOf === "function") {
+    return Intl.supportedValuesOf("currency").includes(normalized);
+  }
+
+  try {
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: normalized,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function updateCurrencyValidationState() {
+  if (elements.xAxisStyleSelect.value !== "currency") {
+    return;
+  }
+
+  const rawCurrency = elements.xAxisCurrencyInput.value.trim();
+  const isValid = isValidCurrencyCode(rawCurrency);
+
+  elements.xAxisCurrencyInput.classList.toggle("is-invalid", !isValid);
+  elements.xAxisCurrencyStatus.textContent = isValid
+    ? ""
+    : `Invalid currency code. Using ${defaultSettings.xAxisCurrency}.`;
 }
 
 function getAxisBounds() {
@@ -299,6 +399,38 @@ function getAxisBounds() {
   return { min, max };
 }
 
+function getSanitizedCurrencyCode() {
+  const rawCurrency = elements.xAxisCurrencyInput.value.trim().toUpperCase();
+  return isValidCurrencyCode(rawCurrency)
+    ? rawCurrency
+    : defaultSettings.xAxisCurrency;
+}
+
+function createSafeNumberFormatter(locale, options, fallbackOptions = {}) {
+  const cacheKey = JSON.stringify({
+    fallbackOptions,
+    locale: locale ?? "",
+    options,
+  });
+  if (state.formatterCache.has(cacheKey)) {
+    return state.formatterCache.get(cacheKey);
+  }
+
+  let formatter;
+  try {
+    formatter = new Intl.NumberFormat(locale, options);
+  } catch (error) {
+    console.warn(
+      "Invalid Intl.NumberFormat options, using safe defaults instead.",
+      error
+    );
+    formatter = new Intl.NumberFormat(undefined, fallbackOptions);
+  }
+
+  state.formatterCache.set(cacheKey, formatter);
+  return formatter;
+}
+
 function getValueAxisFormatter() {
   const locale = elements.xAxisLocaleInput.value.trim() || undefined;
   const maximumFractionDigits = Number.parseInt(
@@ -321,16 +453,20 @@ function getValueAxisFormatter() {
   }
 
   if (style === "currency") {
-    options.currency = elements.xAxisCurrencyInput.value.trim().toUpperCase() || "USD";
+    options.currency = getSanitizedCurrencyCode();
     options.currencyDisplay = "symbol";
   }
 
-  try {
-    return new Intl.NumberFormat(locale, options);
-  } catch (error) {
-    console.warn("Invalid Intl.NumberFormat options, using defaults instead.", error);
-    return new Intl.NumberFormat(undefined, options);
-  }
+  return createSafeNumberFormatter(locale, options, {
+    notation: "standard",
+    style: style === "currency" ? "currency" : "decimal",
+    ...(style === "currency"
+      ? {
+          currency: defaultSettings.xAxisCurrency,
+          currencyDisplay: "symbol",
+        }
+      : {}),
+  });
 }
 
 function getBarValueFormatter() {
@@ -345,7 +481,7 @@ function getBarValueFormatter() {
   );
 
   const options = {
-    currency: elements.xAxisCurrencyInput.value.trim().toUpperCase() || "USD",
+    currency: getSanitizedCurrencyCode(),
     currencyDisplay: "symbol",
     notation: "standard",
     style: "currency",
@@ -359,19 +495,46 @@ function getBarValueFormatter() {
     );
   }
 
-  try {
-    return new Intl.NumberFormat(locale, options);
-  } catch (error) {
-    console.warn(
-      "Invalid currency format options for bar labels, using defaults instead.",
-      error
-    );
-    return new Intl.NumberFormat(undefined, options);
-  }
+  return createSafeNumberFormatter(locale, options, {
+    currency: defaultSettings.xAxisCurrency,
+    currencyDisplay: "symbol",
+    notation: "standard",
+    style: "currency",
+    useGrouping: elements.xAxisGroupingCheckbox.checked,
+  });
 }
 
 function getChartOrientation() {
   return elements.orientationSelector.value;
+}
+
+function getHorizontalCategoryLabelWidth() {
+  const leftMargin = Number.parseInt(elements.leftMarginSlider.value, 10);
+  return Math.max(48, leftMargin - 16);
+}
+
+function getCategoryAxisOptions(categories) {
+  const isVertical = getChartOrientation() === "vertical";
+  const categoryLabelWidth = getHorizontalCategoryLabelWidth();
+
+  return {
+    categories,
+    reversed: !isVertical,
+    labels: isVertical
+      ? {}
+      : {
+          reserveSpace: false,
+          useHTML: true,
+          x: -8,
+          formatter() {
+            const label = typeof this.value === "string" ? this.value : "";
+            return `<span class="chart-axis-label" title="${escapeHtml(label)}" style="width:${categoryLabelWidth}px">${escapeHtml(label)}</span>`;
+          },
+        },
+    scrollbar: {
+      enabled: true,
+    },
+  };
 }
 
 function getChartOptions() {
@@ -388,15 +551,10 @@ function getChartOptions() {
       animation: false,
       marginLeft: Number.parseInt(elements.leftMarginSlider.value, 10),
       marginRight: 60,
+      spacingLeft: 0,
+      spacingRight: 0,
     },
-    title: { text: "" },
-    xAxis: {
-      categories: slice.categories,
-      reversed: !isVertical,
-      scrollbar: {
-        enabled: true,
-      },
-    },
+    xAxis: getCategoryAxisOptions(slice.categories),
     yAxis: {
       title: {
         text: null,
@@ -419,15 +577,12 @@ function getChartOptions() {
       min: axisBounds.min,
       max: axisBounds.max,
     },
-    credits: {
-      enabled: false,
-    },
     plotOptions: {
       series: {
         pointPadding:
           1 - Number.parseFloat(elements.barHeightSlider.value) / 2 - 0.5,
         groupPadding: 0,
-        animation: { duration: 400, easing: "easeOutCubic" },
+        animation: false,
         dataLabels: {
           enabled: elements.toggleLabels.checked,
           inside: true,
@@ -458,37 +613,132 @@ function getChartOptions() {
   };
 }
 
-function renderDataTable() {
+function getChartConfig(options) {
+  return {
+    chart: options.chart,
+    title: { text: "" },
+    xAxis: options.xAxis,
+    yAxis: options.yAxis,
+    credits: { enabled: false },
+    plotOptions: options.plotOptions,
+    series: options.series,
+  };
+}
+
+function getTableRenderKey() {
+  return [
+    state.currentDatasetKey,
+    elements.sortSelector.value,
+    elements.xAxisLocaleInput.value.trim(),
+    elements.xAxisNotationSelect.value,
+    elements.xAxisStyleSelect.value,
+    getSanitizedCurrencyCode(),
+    elements.xAxisFractionDigitsInput.value,
+    elements.xAxisGroupingCheckbox.checked,
+  ].join("|");
+}
+
+function updateTableHighlights() {
+  if (elements.dataTablePanel.hidden) {
+    return;
+  }
+
+  const visibleIndexes = new Set(
+    Array.from(
+      { length: Math.max(0, Math.min(state.windowSize, getSortedPairs().length - state.currentStart)) },
+      (_, offset) => state.currentStart + offset
+    )
+  );
+
+  Array.from(elements.dataTableBody.querySelectorAll("tr[data-sorted-index]")).forEach(
+    (row) => {
+      const sortedIndex = Number.parseInt(row.dataset.sortedIndex, 10);
+      row.classList.toggle("data-table-row-visible", visibleIndexes.has(sortedIndex));
+    }
+  );
+}
+
+function renderDataTable({ force = false } = {}) {
   updateDataTableVisibility();
   if (!elements.showDataTableCheckbox.checked) {
+    state.tableRenderKey = "";
+    return;
+  }
+
+  const renderKey = getTableRenderKey();
+  if (!force && state.tableRenderKey === renderKey) {
+    updateTableHighlights();
     return;
   }
 
   const tableFormatter = getBarValueFormatter() ?? getValueAxisFormatter();
   const allRows = getSortedPairs();
-  const visibleRowKeys = new Set(
-    allRows
-      .slice(state.currentStart, state.currentStart + state.windowSize)
-      .map((item) => `${item.index}:${item.name}`)
-  );
 
   elements.dataTableBody.innerHTML = allRows
     .map(
-      (item) => `
-        <tr class="${
-          visibleRowKeys.has(`${item.index}:${item.name}`)
-            ? "data-table-row-visible"
-            : ""
-        }">
+      (item, sortedIndex) => `
+        <tr data-sorted-index="${sortedIndex}">
           <td>${escapeHtml(item.name)}</td>
           <td>${tableFormatter.format(item.y)}</td>
         </tr>
       `
     )
     .join("");
+
+  state.tableRenderKey = renderKey;
+  updateTableHighlights();
 }
 
-function renderChart({ resetScroll = false } = {}) {
+function createChart(options) {
+  state.chart = Highcharts.chart("container", getChartConfig(options));
+}
+
+function updateExistingChart(options) {
+  const currentType = state.chart.options.chart?.type;
+  const nextType = options.chart.type;
+
+  if (currentType !== nextType) {
+    state.chart.destroy();
+    state.chart = null;
+    createChart(options);
+    return;
+  }
+
+  state.chart.update(
+    {
+      chart: {
+        marginLeft: options.chart.marginLeft,
+        marginRight: options.chart.marginRight,
+        spacingLeft: options.chart.spacingLeft,
+        spacingRight: options.chart.spacingRight,
+      },
+    },
+    false,
+    false,
+    false
+  );
+  state.chart.xAxis[0].update(
+    {
+      reversed: options.xAxis.reversed,
+      labels: options.xAxis.labels,
+    },
+    false
+  );
+  state.chart.yAxis[0].update(options.yAxis, false);
+  state.chart.series[0].update(
+    {
+      dataLabels: options.plotOptions.series.dataLabels,
+      pointPadding: options.plotOptions.series.pointPadding,
+      groupPadding: options.plotOptions.series.groupPadding,
+    },
+    false
+  );
+  state.chart.xAxis[0].setCategories(options.xAxis.categories, false);
+  state.chart.series[0].setData(options.series[0].data, false, false, false);
+  state.chart.redraw();
+}
+
+function renderChart({ forceTableRender = false, resetScroll = false } = {}) {
   if (resetScroll) {
     state.currentStart = 0;
     state.pendingScrollStart = 0;
@@ -501,13 +751,13 @@ function renderChart({ resetScroll = false } = {}) {
 
   const options = getChartOptions();
 
-  if (state.chart) {
-    state.chart.destroy();
-    state.chart = null;
+  if (!state.chart) {
+    createChart(options);
+  } else {
+    updateExistingChart(options);
   }
 
-  state.chart = Highcharts.chart("container", options);
-  renderDataTable();
+  renderDataTable({ force: forceTableRender });
 }
 
 function applyScrollPosition(nextStart) {
@@ -521,32 +771,18 @@ function applyScrollPosition(nextStart) {
   updateScrollbar();
 
   const slice = getSlice();
-  const direction = state.currentStart >= state.previousStart ? 1 : -1;
+  const axisOptions = getCategoryAxisOptions(slice.categories);
 
-  state.chart.xAxis[0].update({ categories: slice.categories }, false);
-  state.chart.series[0].update(
-    { dataLabels: { enabled: elements.toggleLabels.checked } },
+  state.chart.xAxis[0].update(
+    {
+      reversed: axisOptions.reversed,
+      labels: axisOptions.labels,
+    },
     false
   );
-  state.chart.series[0].setData(slice.data, true, {
-    duration: 400,
-    easing: "easeOutCubic",
-  });
-  renderDataTable();
-
-  const labelGroup = state.chart.xAxis[0].labelGroup?.element;
-  if (labelGroup) {
-    labelGroup.animate(
-      [
-        { transform: `translateY(${18 * direction}px)`, opacity: 0.25 },
-        { transform: "translateY(0)", opacity: 1 },
-      ],
-      {
-        duration: 320,
-        easing: "cubic-bezier(0.22, 1, 0.36, 1)",
-      }
-    );
-  }
+  state.chart.xAxis[0].setCategories(slice.categories, false);
+  state.chart.series[0].setData(slice.data, true, false, false);
+  updateTableHighlights();
 }
 
 function flushScrollUpdate() {
@@ -565,6 +801,16 @@ function onScrollChange(value) {
 }
 
 function bindEvents() {
+  const debouncedFormatRender = debounce(
+    () => renderChart({ forceTableRender: true }),
+    180
+  );
+  const debouncedManualAxisRender = debounce(() => {
+    if (!elements.autoScaleCheckbox.checked) {
+      renderChart();
+    }
+  }, 120);
+
   elements.controlsTabs.forEach((tab, index) => {
     tab.addEventListener("click", () => {
       setActiveControlsTab(tab.dataset.tabTarget);
@@ -598,12 +844,13 @@ function bindEvents() {
   elements.orientationSelector.addEventListener("change", () => renderChart());
   elements.resetDefaultsButton.addEventListener("click", resetToDefaults);
   elements.showDataTableCheckbox.addEventListener("change", () =>
-    renderDataTable()
+    renderDataTable({ force: true })
   );
   elements.leftMarginSlider.addEventListener("input", () => renderChart());
-  elements.sortSelector.addEventListener("change", () =>
-    renderChart({ resetScroll: true })
-  );
+  elements.sortSelector.addEventListener("change", () => {
+    invalidateSortedPairsCache();
+    renderChart({ forceTableRender: true, resetScroll: true });
+  });
   elements.barHeightSlider.addEventListener("input", () => {
     updateBarHeightDisplay();
     renderChart();
@@ -612,45 +859,58 @@ function bindEvents() {
     updateYAxisInputState();
     renderChart();
   });
-  elements.yMinInput.addEventListener("input", () => {
-    if (!elements.autoScaleCheckbox.checked) {
-      renderChart();
-    }
-  });
-  elements.yMaxInput.addEventListener("input", () => {
-    if (!elements.autoScaleCheckbox.checked) {
-      renderChart();
-    }
-  });
+  elements.yMinInput.addEventListener("input", debouncedManualAxisRender);
+  elements.yMaxInput.addEventListener("input", debouncedManualAxisRender);
   elements.datasetSelector.addEventListener("change", (event) => {
     state.currentDatasetKey = event.target.value;
-    renderChart({ resetScroll: true });
+    invalidateSortedPairsCache();
+    renderChart({ forceTableRender: true, resetScroll: true });
   });
-  elements.xAxisLocaleInput.addEventListener("input", () => renderChart());
-  elements.xAxisNotationSelect.addEventListener("change", () => renderChart());
+  elements.xAxisLocaleInput.addEventListener("input", debouncedFormatRender);
+  elements.xAxisNotationSelect.addEventListener("change", () =>
+    renderChart({ forceTableRender: true })
+  );
   elements.xAxisStyleSelect.addEventListener("change", () => {
     updateCurrencyInputState();
-    renderChart();
+    renderChart({ forceTableRender: true });
   });
-  elements.xAxisCurrencyInput.addEventListener("input", () => renderChart());
-  elements.xAxisFractionDigitsInput.addEventListener("input", () =>
-    renderChart()
+  elements.xAxisCurrencyInput.addEventListener("input", () => {
+    normalizeCurrencyInput();
+    updateCurrencyValidationState();
+    debouncedFormatRender();
+  });
+  elements.xAxisFractionDigitsInput.addEventListener(
+    "input",
+    debouncedFormatRender
   );
   elements.xAxisGroupingCheckbox.addEventListener("change", () =>
-    renderChart()
+    renderChart({ forceTableRender: true })
   );
   elements.scrollbar.addEventListener("input", (event) => {
     onScrollChange(event.target.value);
   });
 }
 
+function debounce(callback, delay) {
+  let timeoutId = null;
+
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+}
+
 export function initializeChartApp() {
-  setActiveControlsTab("display");
+  applyDefaultSettings();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
   updateCurrencyInputState();
+  normalizeCurrencyInput();
+  updateCurrencyValidationState();
   updateDataTableVisibility();
   updateYAxisInputState();
   bindEvents();
-  renderChart({ resetScroll: true });
+  renderChart({ forceTableRender: true, resetScroll: true });
 }
