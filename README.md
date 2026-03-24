@@ -142,6 +142,8 @@ npm run build
 - `vite.config.js` uses `base: "/scrollable-horizontal-bar-chart/"`
 - The GitHub Pages workflow builds from `dist/`
 - In GitHub repository settings, Pages should use `GitHub Actions` as the source
+- The live site is available at `https://dwachenschwanz.github.io/scrollable-horizontal-bar-chart/`
+- After pushing to `main`, open that URL once the Pages workflow finishes successfully
 
 ## Testing
 
