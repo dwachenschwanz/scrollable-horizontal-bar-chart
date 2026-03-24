@@ -42,6 +42,26 @@ const state = {
   windowSize: 5,
 };
 
+const defaultSettings = {
+  activeTab: "display",
+  autoScale: true,
+  barHeight: "0.75",
+  leftMargin: "100",
+  orientation: "horizontal",
+  showDataTable: true,
+  showLabels: true,
+  sort: "valueDesc",
+  windowSize: "5",
+  xAxisCurrency: "USD",
+  xAxisFractionDigits: "0",
+  xAxisGrouping: true,
+  xAxisLocale: "en-US",
+  xAxisNotation: "compact",
+  xAxisStyle: "currency",
+  yMax: "100",
+  yMin: "0",
+};
+
 const elements = {
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
@@ -55,6 +75,7 @@ const elements = {
   leftMarginSlider: document.getElementById("leftMarginSlider"),
   leftMarginValue: document.getElementById("leftMarginValue"),
   orientationSelector: document.getElementById("orientationSelector"),
+  resetDefaultsButton: document.getElementById("resetDefaultsButton"),
   showDataTableCheckbox: document.getElementById("showDataTableCheckbox"),
   scrollbar: document.getElementById("scrollbar"),
   sliderStatus: document.getElementById("sliderStatus"),
@@ -84,6 +105,38 @@ function setActiveControlsTab(targetTabName) {
     panel.classList.toggle("is-active", isActive);
     panel.hidden = !isActive;
   });
+}
+
+function resetToDefaults() {
+  state.currentStart = 0;
+  state.pendingScrollStart = 0;
+  state.previousStart = 0;
+  state.windowSize = Number.parseInt(defaultSettings.windowSize, 10);
+
+  elements.windowSizeSelector.value = defaultSettings.windowSize;
+  elements.toggleLabels.checked = defaultSettings.showLabels;
+  elements.showDataTableCheckbox.checked = defaultSettings.showDataTable;
+  elements.orientationSelector.value = defaultSettings.orientation;
+  elements.leftMarginSlider.value = defaultSettings.leftMargin;
+  elements.barHeightSlider.value = defaultSettings.barHeight;
+  elements.sortSelector.value = defaultSettings.sort;
+  elements.autoScaleCheckbox.checked = defaultSettings.autoScale;
+  elements.yMinInput.value = defaultSettings.yMin;
+  elements.yMaxInput.value = defaultSettings.yMax;
+  elements.xAxisLocaleInput.value = defaultSettings.xAxisLocale;
+  elements.xAxisNotationSelect.value = defaultSettings.xAxisNotation;
+  elements.xAxisStyleSelect.value = defaultSettings.xAxisStyle;
+  elements.xAxisCurrencyInput.value = defaultSettings.xAxisCurrency;
+  elements.xAxisFractionDigitsInput.value = defaultSettings.xAxisFractionDigits;
+  elements.xAxisGroupingCheckbox.checked = defaultSettings.xAxisGrouping;
+
+  setActiveControlsTab(defaultSettings.activeTab);
+  updateLeftMarginDisplay();
+  updateBarHeightDisplay();
+  updateCurrencyInputState();
+  updateDataTableVisibility();
+  updateYAxisInputState();
+  renderChart({ resetScroll: true });
 }
 
 function getCurrentDataset() {
@@ -543,6 +596,7 @@ function bindEvents() {
 
   elements.toggleLabels.addEventListener("change", () => renderChart());
   elements.orientationSelector.addEventListener("change", () => renderChart());
+  elements.resetDefaultsButton.addEventListener("click", resetToDefaults);
   elements.showDataTableCheckbox.addEventListener("change", () =>
     renderDataTable()
   );

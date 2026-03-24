@@ -47,7 +47,6 @@
             aria-label="Visible chart data"
             hidden
           >
-            <div class="data-table-header">Visible data</div>
             <div class="data-table-wrapper">
               <table class="data-table">
                 <thead>
@@ -124,7 +123,7 @@
             </label>
 
             <label class="checkbox-label" for="showDataTableCheckbox">
-              <input type="checkbox" id="showDataTableCheckbox" />
+              <input type="checkbox" id="showDataTableCheckbox" checked />
               <span>Show data table</span>
             </label>
 
@@ -172,6 +171,10 @@
                 <option value="nameDesc">Name Z-A</option>
               </select>
             </label>
+
+            <button type="button" id="resetDefaultsButton">
+              Reset to defaults
+            </button>
           </div>
 
           <div
@@ -219,8 +222,8 @@
             <label for="xAxisNotationSelect">
               <span>Notation:</span>
               <select id="xAxisNotationSelect">
-                <option value="standard" selected>Standard</option>
-                <option value="compact">Compact</option>
+                <option value="standard">Standard</option>
+                <option value="compact" selected>Compact</option>
                 <option value="scientific">Scientific</option>
                 <option value="engineering">Engineering</option>
               </select>
@@ -229,8 +232,8 @@
             <label for="xAxisStyleSelect">
               <span>Style:</span>
               <select id="xAxisStyleSelect">
-                <option value="decimal" selected>Decimal</option>
-                <option value="currency">Currency</option>
+                <option value="decimal">Decimal</option>
+                <option value="currency" selected>Currency</option>
               </select>
             </label>
 

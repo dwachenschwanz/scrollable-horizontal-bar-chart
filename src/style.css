@@ -197,6 +197,20 @@ input[type="number"] {
   max-width: 120px;
 }
 
+#resetDefaultsButton {
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+#resetDefaultsButton:hover {
+  background: #eef2ff;
+  border-color: #94a3b8;
+}
+
 #datasetSelector {
   width: min(500px, 100%);
   text-align: center;
