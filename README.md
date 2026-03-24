@@ -2,19 +2,23 @@
 
 A Vite + vanilla JavaScript app for exploring bar-chart data with Highcharts.
 
-The app supports horizontal and vertical bar layouts, sorting, paging through visible bars, numeric formatting with `Intl.NumberFormat`, and an optional data table that stays synced with the chart.
+The app supports horizontal and vertical bar layouts, sorting, paging through visible bars, `Intl.NumberFormat`-based numeric formatting, and a synced data table below the chart.
 
 ## Features
 
-- Horizontal or vertical bar orientation
+- Horizontal and vertical bar orientation
 - Sort by source order, value, or name
+- Stable secondary tie-breakers for sorting
 - Configurable bars per page with a custom scrollbar for the visible window
 - Adjustable left margin and bar height
 - Auto-scale or manual axis bounds
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
-- Optional in-bar value labels
-- Toggleable data table below the chart
-- Highlighting in the table for rows currently visible in the chart
+- Currency-aware value labels inside bars
+- Tabbed controls sidebar with sticky tabs
+- Full data table below the chart
+- Table row highlighting for rows currently visible in the chart
+- One-click reset back to default settings while preserving the current dataset
+- GitHub Pages-ready Vite configuration
 
 ## Getting Started
 
@@ -29,7 +33,7 @@ The app supports horizontal and vertical bar layouts, sorting, paging through vi
 npm install
 ```
 
-### Run the app
+### Run locally
 
 ```bash
 npm run dev
@@ -48,22 +52,38 @@ npm run preview
 ## Project Structure
 
 ```text
-index.html          App shell and control markup
-src/main.js         Lightweight app entry
-src/chart-app.js    Chart logic, controls, sorting, formatting, and table sync
-src/style.css       App styles and layout
+index.html                       App shell and control markup
+src/main.js                      Lightweight app entry
+src/chart-app.js                 Chart logic, controls, sorting, formatting, and table sync
+src/style.css                    App styles and layout
+vite.config.js                   Vite config and GitHub Pages base path
+.github/workflows/deploy-pages.yml  GitHub Pages deployment workflow
 ```
+
+## Default Behavior
+
+On first load, the app starts with:
+
+- `Bars per page`: `5`
+- `Orientation`: `Horizontal`
+- `Sort`: `Value ↓`
+- `Show values in bars`: enabled
+- `Show data table`: enabled
+- `Notation`: `Compact`
+- `Style`: `Currency`
+- `Currency`: `USD`
 
 ## Using the App
 
 ### Display tab
 
-- Switch between horizontal and vertical orientation
 - Change bars per page
 - Toggle value labels inside bars
+- Show or hide the data table
+- Switch between horizontal and vertical orientation
 - Adjust left margin and bar height
 - Change the sort order
-- Show or hide the data table
+- Reset the controls to default settings
 
 ### Axis tab
 
@@ -81,10 +101,36 @@ src/style.css       App styles and layout
 
 ## Data Table
 
-When enabled, the table shows the full sorted dataset below the chart. Rows that are currently visible in the chart are highlighted so it is easy to relate the chart window to the full dataset.
+When enabled, the table shows the full sorted dataset below the chart.
+
+- Rows currently visible in the chart are highlighted
+- The table stays in sync with sorting, scrolling, dataset changes, and formatting
+- The reset button does not change the currently selected dataset
+
+## Sorting Notes
+
+- `Value ↑` and `Value ↓` sort numerically
+- `Name A-Z` and `Name Z-A` use natural string sorting, so `Category 2` sorts before `Category 10`
+- Sorting uses stable secondary tie-breakers for more predictable output
+
+## Deployment
+
+This project is configured for GitHub Pages using GitHub Actions.
+
+### Build for production
+
+```bash
+npm run build
+```
+
+### GitHub Pages notes
+
+- `vite.config.js` uses `base: "/scrollable-horizontal-bar-chart/"`
+- The GitHub Pages workflow builds from `dist/`
+- In GitHub repository settings, Pages should use `GitHub Actions` as the source
 
 ## Notes
 
-- The demo datasets are generated in `src/chart-app.js`.
-- `dataset1` includes values up to the tens of thousands to better exercise numeric formatting and axis behavior.
-- Highcharts credits are disabled in the chart configuration.
+- The demo datasets are generated in `src/chart-app.js`
+- `dataset1` includes values up to the tens of thousands to exercise numeric formatting and axis behavior
+- Highcharts credits are disabled in the chart configuration
