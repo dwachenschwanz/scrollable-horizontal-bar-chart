@@ -42,12 +42,21 @@ npm run dev
 
 Then open the local Vite URL shown in the terminal.
 
+### Run tests
+
+```bash
+npm test
+```
+
+The project uses Node's built-in test runner, so no extra test framework setup is required.
+
 ## Scripts
 
 ```bash
 npm run dev
 npm run build
 npm run preview
+npm test
 ```
 
 ## Project Structure
@@ -56,7 +65,10 @@ npm run preview
 index.html                       App shell and control markup
 src/main.js                      Lightweight app entry
 src/chart-app.js                 Chart logic, controls, sorting, formatting, and table sync
+src/chart-utils.js               Pure chart utilities for sorting, slicing, bounds, and formatting helpers
 src/style.css                    App styles and layout
+test/chart-utils.test.js         Unit tests for sorting, slicing, bounds, formatting, and layout helpers
+test/index-shell.test.js         Smoke tests for default control state in index.html
 vite.config.js                   Vite config and GitHub Pages base path
 .github/workflows/deploy-pages.yml  GitHub Pages deployment workflow
 ```
@@ -131,9 +143,15 @@ npm run build
 - The GitHub Pages workflow builds from `dist/`
 - In GitHub repository settings, Pages should use `GitHub Actions` as the source
 
+## Testing
+
+- `npm test` runs the Node-based test suite
+- Unit tests cover sort behavior, visible-slice padding, auto-scale bounds, currency validation, label width, and point padding
+- Shell smoke tests verify key default selections and checked controls in `index.html`
+
 ## Notes
 
 - The demo datasets are generated in `src/chart-app.js`
 - `dataset1` includes values up to the tens of thousands to exercise numeric formatting and axis behavior
-- Sorted rows, visible slices, and number formatters are cached to keep redraws lighter
+- Auto-scale bounds, sorted rows, visible slices, table row references, and number formatters are cached to keep redraws lighter
 - Highcharts credits are disabled in the chart configuration
