@@ -1,8 +1,17 @@
 import Highcharts from "highcharts";
+import {
+  buildSlice,
+  getAutoScaleBounds,
+  getHorizontalCategoryLabelWidth,
+  getPointPadding,
+  isValidCurrencyCode,
+  sanitizeAxisBounds,
+  sanitizeCurrencyCode,
+  sortPairs,
+} from "./chart-utils.js";
 
 const CATEGORY_COUNT = 40;
 const TRACK_HEIGHT = 300;
-const EMPTY_BAR_COLOR = "rgba(0, 0, 0, 0.05)";
 
 const defaultSettings = {
   activeTab: "display",
@@ -54,6 +63,8 @@ const datasets = {
 };
 
 const state = {
+  autoScaleBoundsCache: null,
+  autoScaleBoundsCacheKey: "",
   chart: null,
   currentDatasetKey: defaultSettings.datasetKey,
   currentStart: 0,
@@ -65,6 +76,7 @@ const state = {
   sliceCacheKey: "",
   sortedPairsCache: null,
   sortedPairsCacheKey: "",
+  tableRows: [],
   tableRenderKey: "",
   windowSize: Number.parseInt(defaultSettings.windowSize, 10),
 };
@@ -161,7 +173,13 @@ function getCurrentDataset() {
   return datasets[state.currentDatasetKey];
 }
 
+function getAutoScaleBoundsCacheKey() {
+  return state.currentDatasetKey;
+}
+
 function invalidateSortedPairsCache() {
+  state.autoScaleBoundsCache = null;
+  state.autoScaleBoundsCacheKey = "";
   state.sortedPairsCache = null;
   state.sortedPairsCacheKey = "";
   state.sliceCache = null;
@@ -184,34 +202,9 @@ function getSortedPairs() {
     y: getCurrentDataset()[index],
   }));
 
-  const compareNames = (a, b) =>
-    a.name.localeCompare(b.name, undefined, {
-      numeric: true,
-      sensitivity: "base",
-    });
-  const byNameAsc = (a, b) => compareNames(a, b) || a.index - b.index;
-  const byNameDesc = (a, b) => compareNames(b, a) || a.index - b.index;
-
-  switch (elements.sortSelector.value) {
-    case "valueAsc":
-      pairs.sort((a, b) => a.y - b.y || byNameAsc(a, b));
-      break;
-    case "valueDesc":
-      pairs.sort((a, b) => b.y - a.y || byNameAsc(a, b));
-      break;
-    case "nameAsc":
-      pairs.sort((a, b) => byNameAsc(a, b) || a.y - b.y);
-      break;
-    case "nameDesc":
-      pairs.sort((a, b) => byNameDesc(a, b) || a.y - b.y);
-      break;
-    default:
-      break;
-  }
-
-  state.sortedPairsCache = pairs;
+  state.sortedPairsCache = sortPairs(pairs, elements.sortSelector.value);
   state.sortedPairsCacheKey = cacheKey;
-  return pairs;
+  return state.sortedPairsCache;
 }
 
 function getSliceCacheKey() {
@@ -224,23 +217,7 @@ function getSlice() {
     return state.sliceCache;
   }
 
-  const sortedPairs = getSortedPairs();
-  const slice = [];
-
-  for (let index = 0; index < state.windowSize; index += 1) {
-    slice.push(
-      sortedPairs[state.currentStart + index] ?? {
-        name: "",
-        y: 0,
-        color: EMPTY_BAR_COLOR,
-      }
-    );
-  }
-
-  const result = {
-    categories: slice.map((item) => item.name || "\u00A0"),
-    data: slice,
-  };
+  const result = buildSlice(getSortedPairs(), state.currentStart, state.windowSize);
 
   state.sliceCache = result;
   state.sliceCacheKey = cacheKey;
@@ -334,28 +311,6 @@ function normalizeCurrencyInput() {
     elements.xAxisCurrencyInput.value.toUpperCase();
 }
 
-function isValidCurrencyCode(code) {
-  const normalized = code.trim().toUpperCase();
-
-  if (!/^[A-Z]{3}$/.test(normalized)) {
-    return false;
-  }
-
-  if (typeof Intl.supportedValuesOf === "function") {
-    return Intl.supportedValuesOf("currency").includes(normalized);
-  }
-
-  try {
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: normalized,
-    });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 function updateCurrencyValidationState() {
   if (elements.xAxisStyleSelect.value !== "currency") {
     return;
@@ -374,25 +329,32 @@ function getAxisBounds() {
   const dataset = getCurrentDataset();
 
   if (elements.autoScaleCheckbox.checked) {
-    const maxValue = Math.max(...dataset);
-    const minValue = Math.min(...dataset);
-    const min = Math.floor(minValue / 10) * 10;
-    const max = Math.ceil(maxValue / 10) * 10;
+    const cacheKey = getAutoScaleBoundsCacheKey();
+    if (
+      !state.autoScaleBoundsCache ||
+      state.autoScaleBoundsCacheKey !== cacheKey
+    ) {
+      state.autoScaleBoundsCache = getAutoScaleBounds(dataset);
+      state.autoScaleBoundsCacheKey = cacheKey;
+    }
+
+    const { min, max } = state.autoScaleBoundsCache;
 
     elements.yMinInput.value = String(min);
     elements.yMaxInput.value = String(max);
     return { min, max };
   }
 
-  let min = Number.parseFloat(elements.yMinInput.value);
-  let max = Number.parseFloat(elements.yMaxInput.value);
+  const { min, max } = sanitizeAxisBounds(
+    elements.yMinInput.value,
+    elements.yMaxInput.value
+  );
 
-  min = Number.isNaN(min) ? null : min;
-  max = Number.isNaN(max) ? null : max;
-
-  if (min !== null && max !== null && min > max) {
-    [min, max] = [max, min];
+  if (min !== null) {
     elements.yMinInput.value = String(min);
+  }
+
+  if (max !== null) {
     elements.yMaxInput.value = String(max);
   }
 
@@ -400,10 +362,10 @@ function getAxisBounds() {
 }
 
 function getSanitizedCurrencyCode() {
-  const rawCurrency = elements.xAxisCurrencyInput.value.trim().toUpperCase();
-  return isValidCurrencyCode(rawCurrency)
-    ? rawCurrency
-    : defaultSettings.xAxisCurrency;
+  return sanitizeCurrencyCode(
+    elements.xAxisCurrencyInput.value,
+    defaultSettings.xAxisCurrency
+  );
 }
 
 function createSafeNumberFormatter(locale, options, fallbackOptions = {}) {
@@ -508,14 +470,11 @@ function getChartOrientation() {
   return elements.orientationSelector.value;
 }
 
-function getHorizontalCategoryLabelWidth() {
-  const leftMargin = Number.parseInt(elements.leftMarginSlider.value, 10);
-  return Math.max(48, leftMargin - 16);
-}
-
 function getCategoryAxisOptions(categories) {
   const isVertical = getChartOrientation() === "vertical";
-  const categoryLabelWidth = getHorizontalCategoryLabelWidth();
+  const categoryLabelWidth = getHorizontalCategoryLabelWidth(
+    elements.leftMarginSlider.value
+  );
 
   return {
     categories,
@@ -579,8 +538,7 @@ function getChartOptions() {
     },
     plotOptions: {
       series: {
-        pointPadding:
-          1 - Number.parseFloat(elements.barHeightSlider.value) / 2 - 0.5,
+        pointPadding: getPointPadding(elements.barHeightSlider.value),
         groupPadding: 0,
         animation: false,
         dataLabels: {
@@ -650,17 +608,16 @@ function updateTableHighlights() {
     )
   );
 
-  Array.from(elements.dataTableBody.querySelectorAll("tr[data-sorted-index]")).forEach(
-    (row) => {
-      const sortedIndex = Number.parseInt(row.dataset.sortedIndex, 10);
-      row.classList.toggle("data-table-row-visible", visibleIndexes.has(sortedIndex));
-    }
-  );
+  state.tableRows.forEach((row) => {
+    const sortedIndex = Number.parseInt(row.dataset.sortedIndex, 10);
+    row.classList.toggle("data-table-row-visible", visibleIndexes.has(sortedIndex));
+  });
 }
 
 function renderDataTable({ force = false } = {}) {
   updateDataTableVisibility();
   if (!elements.showDataTableCheckbox.checked) {
+    state.tableRows = [];
     state.tableRenderKey = "";
     return;
   }
@@ -685,6 +642,9 @@ function renderDataTable({ force = false } = {}) {
     )
     .join("");
 
+  state.tableRows = Array.from(
+    elements.dataTableBody.querySelectorAll("tr[data-sorted-index]")
+  );
   state.tableRenderKey = renderKey;
   updateTableHighlights();
 }
