@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Scrollable uncertainty range comparison chart built with Vite, Highcharts, and vanilla JavaScript."
+    />
+    <title>Uncertainty Range Comparison</title>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <h1>Uncertainty Range Comparison</h1>
+
+      <div class="workspace">
+        <section class="chart-panel">
+          <div id="chart-container">
+            <label class="dataset-select" for="datasetSelector">
+              <span class="sr-only">Dataset</span>
+              <select id="datasetSelector">
+                <option value="capitalPlan" selected>Capital Plan</option>
+                <option value="productCases">Product Cases</option>
+                <option value="operations">Operations</option>
+              </select>
+            </label>
+
+            <div class="slider-column">
+              <input
+                type="range"
+                id="scrollbar"
+                min="0"
+                max="5"
+                value="0"
+                step="1"
+                aria-label="Scroll visible bars"
+              />
+              <div id="sliderStatus" aria-live="polite"></div>
+            </div>
+            <div
+              id="container"
+              role="img"
+              aria-label="Scrollable uncertainty range comparison chart"
+            ></div>
+          </div>
+
+          <section
+            class="data-table-panel"
+            id="dataTablePanel"
+            aria-label="Uncertainty inputs"
+          >
+            <div class="data-table-toolbar">
+              <h2>Inputs</h2>
+              <div class="data-table-actions">
+                <button type="button" id="addRowButton">Add bar</button>
+                <button type="button" id="normalizeRowsButton">
+                  Normalize ranges
+                </button>
+              </div>
+            </div>
+
+            <div class="data-table-wrapper">
+              <table class="data-table data-input-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Bar</th>
+                    <th scope="col">Low</th>
+                    <th scope="col">Base</th>
+                    <th scope="col">High</th>
+                    <th scope="col">Mean</th>
+                    <th scope="col">Spread</th>
+                    <th scope="col">
+                      <span class="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="dataTableBody"></tbody>
+              </table>
+            </div>
+
+            <p id="dataStatus" class="table-status" aria-live="polite"></p>
+          </section>
+        </section>
+
+        <aside class="controls-sidebar" aria-label="Chart controls">
+          <div class="controls-tabs" role="tablist" aria-label="Control sections">
+            <button
+              type="button"
+              class="controls-tab is-active"
+              id="tab-display"
+              role="tab"
+              aria-selected="true"
+              aria-controls="panel-display"
+              data-tab-target="display"
+            >
+              Display
+            </button>
+            <button
+              type="button"
+              class="controls-tab"
+              id="tab-axis"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-axis"
+              data-tab-target="axis"
+              tabindex="-1"
+            >
+              Axis
+            </button>
+            <button
+              type="button"
+              class="controls-tab"
+              id="tab-format"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panel-format"
+              data-tab-target="format"
+              tabindex="-1"
+            >
+              Format
+            </button>
+          </div>
+
+          <div
+            class="control-panel control-section is-active"
+            id="panel-display"
+            role="tabpanel"
+            aria-labelledby="tab-display"
+            data-tab-panel="display"
+          >
+            <label for="windowSizeSelector">Bars per page:</label>
+            <select id="windowSizeSelector">
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="8">8</option>
+              <option value="12">12</option>
+              <option value="max">Max</option>
+            </select>
+
+            <label class="checkbox-label" for="toggleLabels">
+              <input type="checkbox" id="toggleLabels" checked />
+              <span>Show base labels</span>
+            </label>
+
+            <label class="checkbox-label" for="toggleMean">
+              <input type="checkbox" id="toggleMean" checked />
+              <span>Plot mean marker</span>
+            </label>
+
+            <label class="checkbox-label" for="showDataTableCheckbox">
+              <input type="checkbox" id="showDataTableCheckbox" checked />
+              <span>Show input table</span>
+            </label>
+
+            <label class="range-label" for="leftMarginSlider">
+              <span>Left Margin:</span>
+              <input
+                type="range"
+                id="leftMarginSlider"
+                min="0"
+                max="220"
+                value="120"
+                step="10"
+              />
+              <span><span id="leftMarginValue">120</span>px</span>
+            </label>
+
+            <label class="range-label" for="barHeightSlider">
+              <span>Bar Height:</span>
+              <input
+                type="range"
+                id="barHeightSlider"
+                min="0.5"
+                max="1.0"
+                step="0.025"
+                value="0.72"
+              />
+              <span id="barHeightValue">0.72</span>
+            </label>
+
+            <label for="sortSelector">
+              <span>Sort:</span>
+              <select id="sortSelector">
+                <option value="unsorted">Unsorted</option>
+                <option value="baseAsc">Base low to high</option>
+                <option value="baseDesc" selected>Base high to low</option>
+                <option value="spreadAsc">Spread low to high</option>
+                <option value="spreadDesc">Spread high to low</option>
+                <option value="nameAsc">Name A-Z</option>
+                <option value="nameDesc">Name Z-A</option>
+              </select>
+            </label>
+
+            <button type="button" id="resetDefaultsButton">
+              Reset controls
+            </button>
+          </div>
+
+          <div
+            class="secondary-controls control-section"
+            id="panel-axis"
+            role="tabpanel"
+            aria-labelledby="tab-axis"
+            data-tab-panel="axis"
+            hidden
+          >
+            <label class="checkbox-label" for="autoScaleCheckbox">
+              <input type="checkbox" id="autoScaleCheckbox" checked />
+              <span>Auto-scale Axis</span>
+            </label>
+
+            <label for="yMinInput">
+              <span>Axis Min:</span>
+              <input type="number" id="yMinInput" value="0" step="10" />
+            </label>
+
+            <label for="yMaxInput">
+              <span>Axis Max:</span>
+              <input type="number" id="yMaxInput" value="100" step="10" />
+            </label>
+          </div>
+
+          <div
+            class="tertiary-controls control-section"
+            id="panel-format"
+            role="tabpanel"
+            aria-labelledby="tab-format"
+            data-tab-panel="format"
+            hidden
+          >
+            <label for="xAxisLocaleInput">
+              <span>Value Axis Locale:</span>
+              <input
+                type="text"
+                id="xAxisLocaleInput"
+                value="en-US"
+                placeholder="Browser default"
+              />
+            </label>
+
+            <label for="xAxisNotationSelect">
+              <span>Notation:</span>
+              <select id="xAxisNotationSelect">
+                <option value="standard">Standard</option>
+                <option value="compact" selected>Compact</option>
+                <option value="scientific">Scientific</option>
+                <option value="engineering">Engineering</option>
+              </select>
+            </label>
+
+            <label for="xAxisStyleSelect">
+              <span>Style:</span>
+              <select id="xAxisStyleSelect">
+                <option value="decimal">Decimal</option>
+                <option value="currency" selected>Currency</option>
+              </select>
+            </label>
+
+            <label for="xAxisCurrencyInput">
+              <span>Currency:</span>
+              <input
+                type="text"
+                id="xAxisCurrencyInput"
+                value="USD"
+                maxlength="3"
+                placeholder="USD"
+              />
+              <span
+                id="xAxisCurrencyStatus"
+                class="field-status"
+                aria-live="polite"
+              ></span>
+            </label>
+
+            <label for="xAxisFractionDigitsInput">
+              <span>Max Fraction Digits:</span>
+              <input
+                type="number"
+                id="xAxisFractionDigitsInput"
+                min="0"
+                max="6"
+                value="0"
+              />
+            </label>
+
+            <label class="checkbox-label" for="xAxisGroupingCheckbox">
+              <input type="checkbox" id="xAxisGroupingCheckbox" checked />
+              <span>Use Grouping</span>
+            </label>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <style id="dynamic-slider-style"></style>
+  </body>
+</html>
