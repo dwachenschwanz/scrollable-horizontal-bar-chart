@@ -65,5 +65,15 @@ test("index shell includes uncertainty input table", () => {
   assert.match(indexHtml, /<th scope="col">Base<\/th>/);
   assert.match(indexHtml, /<th scope="col">High<\/th>/);
   assert.match(indexHtml, /<th scope="col">Mean<\/th>/);
-  assert.match(indexHtml, /id="normalizeRowsButton"/);
+  assert.doesNotMatch(indexHtml, /id="addRowButton"/);
+  assert.doesNotMatch(indexHtml, /id="normalizeRowsButton"/);
+  assert.doesNotMatch(indexHtml, /<span class="sr-only">Actions<\/span>/);
+});
+
+test("index shell includes collapsible controls sidebar affordance", () => {
+  assert.match(indexHtml, /<div class="workspace" id="workspace">/);
+  assert.match(indexHtml, /<aside class="controls-sidebar" id="controlsSidebar"/);
+  assert.match(indexHtml, /id="sidebarToggle"/);
+  assert.match(indexHtml, /aria-controls="controlsContent"/);
+  assert.match(indexHtml, /id="controlsContent"/);
 });

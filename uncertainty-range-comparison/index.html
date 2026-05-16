@@ -14,7 +14,7 @@
     <main class="page">
       <h1>Uncertainty Range Comparison</h1>
 
-      <div class="workspace">
+      <div class="workspace" id="workspace">
         <section class="chart-panel">
           <div id="chart-container">
             <label class="dataset-select" for="datasetSelector">
@@ -52,12 +52,6 @@
           >
             <div class="data-table-toolbar">
               <h2>Inputs</h2>
-              <div class="data-table-actions">
-                <button type="button" id="addRowButton">Add bar</button>
-                <button type="button" id="normalizeRowsButton">
-                  Normalize ranges
-                </button>
-              </div>
             </div>
 
             <div class="data-table-wrapper">
@@ -70,9 +64,6 @@
                     <th scope="col">High</th>
                     <th scope="col">Mean</th>
                     <th scope="col">Spread</th>
-                    <th scope="col">
-                      <span class="sr-only">Actions</span>
-                    </th>
                   </tr>
                 </thead>
                 <tbody id="dataTableBody"></tbody>
@@ -83,8 +74,30 @@
           </section>
         </section>
 
-        <aside class="controls-sidebar" aria-label="Chart controls">
-          <div class="controls-tabs" role="tablist" aria-label="Control sections">
+        <aside class="controls-sidebar" id="controlsSidebar" aria-label="Chart controls">
+          <div class="sidebar-toolbar">
+            <button
+              type="button"
+              class="sidebar-drag-handle"
+              id="sidebarDragHandle"
+              aria-label="Drag controls panel"
+              title="Drag controls panel"
+            ></button>
+            <button
+              type="button"
+              class="sidebar-toggle"
+              id="sidebarToggle"
+              aria-expanded="true"
+              aria-controls="controlsContent"
+              title="Collapse controls"
+            >
+              <span id="sidebarToggleIcon" aria-hidden="true">&gt;</span>
+              <span class="sr-only" id="sidebarToggleText">Collapse controls</span>
+            </button>
+          </div>
+
+          <div class="controls-content" id="controlsContent">
+            <div class="controls-tabs" role="tablist" aria-label="Control sections">
             <button
               type="button"
               class="controls-tab is-active"
@@ -288,6 +301,7 @@
               <input type="checkbox" id="xAxisGroupingCheckbox" checked />
               <span>Use Grouping</span>
             </label>
+          </div>
           </div>
         </aside>
       </div>

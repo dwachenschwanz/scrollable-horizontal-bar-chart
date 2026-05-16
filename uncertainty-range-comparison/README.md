@@ -2,7 +2,7 @@
 
 A separate Vite + vanilla JavaScript project derived from the layout and interaction model of the original scrollable bar chart.
 
-Each bar is driven by three editable values:
+Each bar is driven by three values:
 
 - `Low`
 - `Base`
@@ -15,17 +15,17 @@ The chart renders each bar from its low value to its high value, with a base div
 ## Features
 
 - Scrollable horizontal uncertainty range chart
-- Editable low/base/high inputs for every bar
+- Read-only low/base/high table for every bar
 - Calculated weighted mean for every bar
 - Optional mean marker plotted as an `X`
 - Sample datasets for capital planning, product cases, and operations
 - Sort by base, uncertainty spread, or name
 - Configurable bars per page with a custom scrollbar
+- Collapsible controls sidebar with persisted state
 - Adjustable left margin and bar height
 - Auto-scale or manual axis bounds
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
 - Synced input table with visible-row highlighting
-- Add, remove, and normalize rows
 
 ## Getting Started
 

@@ -1,5 +1,6 @@
 :root {
   --scrollbar-width: 10px;
+  --slider-column-width: 78px;
   color-scheme: light;
   color: #111827;
   font-family: Arial, sans-serif;
@@ -39,10 +40,7 @@ h2 {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  align-items: start;
-  gap: 24px;
+  position: relative;
 }
 
 .chart-panel {
@@ -67,14 +65,6 @@ h2 {
   margin-bottom: 12px;
 }
 
-.data-table-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.data-table-actions button,
-.remove-row-button,
 #resetDefaultsButton {
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -84,16 +74,9 @@ h2 {
   cursor: pointer;
 }
 
-.data-table-actions button:hover,
-.remove-row-button:hover,
 #resetDefaultsButton:hover {
   background: #ecfeff;
   border-color: #67e8f9;
-}
-
-.remove-row-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
 }
 
 .data-table-wrapper {
@@ -141,14 +124,6 @@ h2 {
   min-width: 840px;
 }
 
-.table-input {
-  min-width: 96px;
-}
-
-.table-input-name {
-  min-width: 180px;
-}
-
 .table-warning {
   color: #c2410c;
   font-weight: 700;
@@ -162,9 +137,114 @@ h2 {
 }
 
 .controls-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  justify-items: stretch;
+  text-align: left;
+  width: min(320px, calc(100vw - 32px));
+  pointer-events: auto;
+}
+
+.sidebar-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  gap: 8px;
+  align-items: center;
+}
+
+.sidebar-drag-handle {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  min-width: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.sidebar-drag-handle::before {
+  content: "";
+  width: 34px;
+  height: 18px;
+  background-image: radial-gradient(#64748b 1.4px, transparent 1.5px);
+  background-size: 8px 8px;
+}
+
+.sidebar-drag-handle:hover {
+  border-color: #67e8f9;
+  background: #ecfeff;
+}
+
+.sidebar-drag-handle:active,
+.sidebar-drag-handle.is-dragging {
+  cursor: grabbing;
+}
+
+.sidebar-drag-handle:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 2px;
+}
+
+.sidebar-toggle {
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.sidebar-toggle:hover {
+  border-color: #67e8f9;
+  background: #ecfeff;
+}
+
+.sidebar-toggle:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 2px;
+}
+
+.controls-content {
   display: grid;
   gap: 16px;
-  text-align: left;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding-bottom: 4px;
+}
+
+.workspace.sidebar-collapsed .controls-sidebar {
+  width: 52px;
+  justify-items: center;
+}
+
+.workspace.sidebar-collapsed .sidebar-toolbar {
+  grid-template-columns: 38px;
+}
+
+.workspace.sidebar-collapsed .sidebar-drag-handle {
+  display: none;
+}
+
+.workspace.sidebar-collapsed .controls-content {
+  display: none;
+}
+
+.workspace.sidebar-collapsed .sidebar-toggle {
+  justify-self: center;
 }
 
 .controls-tabs {
@@ -284,7 +364,7 @@ input[type="number"] {
 
 #chart-container {
   display: grid;
-  grid-template-columns: auto minmax(320px, min(600px, calc(100vw - 96px)));
+  grid-template-columns: var(--slider-column-width) minmax(320px, min(820px, calc(100vw - 96px)));
   justify-content: center;
   column-gap: 15px;
   row-gap: 6px;
@@ -306,6 +386,7 @@ input[type="number"] {
   flex-direction: column;
   align-items: center;
   align-self: center;
+  width: var(--slider-column-width);
 }
 
 #scrollbar {
@@ -422,8 +503,11 @@ input[type="number"] {
 }
 
 #sliderStatus {
+  width: 100%;
+  min-height: 2.8em;
   margin-top: 6px;
   font-size: 14px;
+  font-variant-numeric: tabular-nums;
   line-height: 1.4;
   text-align: center;
 }
@@ -441,14 +525,6 @@ input[type="number"] {
 }
 
 @media (max-width: 760px) {
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .controls-sidebar {
-    order: 2;
-  }
-
   #chart-container {
     min-width: 680px;
   }

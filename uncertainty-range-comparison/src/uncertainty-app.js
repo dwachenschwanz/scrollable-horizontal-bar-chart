@@ -13,6 +13,8 @@ import {
 const TRACK_HEIGHT = 300;
 const UNCERTAINTY_BAR_COLOR = "#2caffe";
 const UNCERTAINTY_BAR_BORDER_COLOR = "#258ec9";
+const SIDEBAR_COLLAPSED_STORAGE_KEY = "uncertaintySidebarCollapsed";
+const SIDEBAR_POSITION_STORAGE_KEY = "uncertaintySidebarPosition";
 
 const defaultSettings = {
   activeTab: "display",
@@ -88,6 +90,7 @@ const state = {
   previousStart: 0,
   rows: [],
   scrollAnimationFrame: null,
+  sidebarDrag: null,
   sliceCache: null,
   sliceCacheKey: "",
   sortedRowsCache: null,
@@ -98,12 +101,13 @@ const state = {
 };
 
 const elements = {
-  addRowButton: document.getElementById("addRowButton"),
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
   barHeightValue: document.getElementById("barHeightValue"),
   controlsPanels: Array.from(document.querySelectorAll("[data-tab-panel]")),
   controlsTabs: Array.from(document.querySelectorAll("[data-tab-target]")),
+  controlsContent: document.getElementById("controlsContent"),
+  controlsSidebar: document.getElementById("controlsSidebar"),
   dataStatus: document.getElementById("dataStatus"),
   dataTableBody: document.getElementById("dataTableBody"),
   dataTablePanel: document.getElementById("dataTablePanel"),
@@ -111,10 +115,13 @@ const elements = {
   dynamicSliderStyle: document.getElementById("dynamic-slider-style"),
   leftMarginSlider: document.getElementById("leftMarginSlider"),
   leftMarginValue: document.getElementById("leftMarginValue"),
-  normalizeRowsButton: document.getElementById("normalizeRowsButton"),
   resetDefaultsButton: document.getElementById("resetDefaultsButton"),
   showDataTableCheckbox: document.getElementById("showDataTableCheckbox"),
   scrollbar: document.getElementById("scrollbar"),
+  sidebarDragHandle: document.getElementById("sidebarDragHandle"),
+  sidebarToggle: document.getElementById("sidebarToggle"),
+  sidebarToggleIcon: document.getElementById("sidebarToggleIcon"),
+  sidebarToggleText: document.getElementById("sidebarToggleText"),
   sliderStatus: document.getElementById("sliderStatus"),
   sortSelector: document.getElementById("sortSelector"),
   toggleLabels: document.getElementById("toggleLabels"),
@@ -127,6 +134,7 @@ const elements = {
   xAxisLocaleInput: document.getElementById("xAxisLocaleInput"),
   xAxisNotationSelect: document.getElementById("xAxisNotationSelect"),
   xAxisStyleSelect: document.getElementById("xAxisStyleSelect"),
+  workspace: document.getElementById("workspace"),
   yMaxInput: document.getElementById("yMaxInput"),
   yMinInput: document.getElementById("yMinInput"),
 };
@@ -160,6 +168,150 @@ function setActiveControlsTab(targetTabName) {
     const isActive = panel.dataset.tabPanel === targetTabName;
     panel.classList.toggle("is-active", isActive);
     panel.hidden = !isActive;
+  });
+}
+
+function getStoredSidebarCollapsed() {
+  try {
+    return window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function persistSidebarCollapsed(isCollapsed) {
+  try {
+    window.localStorage.setItem(
+      SIDEBAR_COLLAPSED_STORAGE_KEY,
+      String(isCollapsed)
+    );
+  } catch {
+    // Local storage can be unavailable in private browsing or embedded previews.
+  }
+}
+
+function getStoredSidebarPosition() {
+  try {
+    const rawPosition = window.localStorage.getItem(SIDEBAR_POSITION_STORAGE_KEY);
+    if (!rawPosition) {
+      return null;
+    }
+
+    const position = JSON.parse(rawPosition);
+    if (
+      Number.isFinite(position?.left) &&
+      Number.isFinite(position?.top)
+    ) {
+      return position;
+    }
+  } catch {
+    // Local storage can be unavailable or contain stale values.
+  }
+
+  return null;
+}
+
+function persistSidebarPosition(position) {
+  try {
+    window.localStorage.setItem(
+      SIDEBAR_POSITION_STORAGE_KEY,
+      JSON.stringify(position)
+    );
+  } catch {
+    // Local storage can be unavailable in private browsing or embedded previews.
+  }
+}
+
+function getSidebarBounds() {
+  return {
+    maxLeft: Math.max(
+      0,
+      elements.workspace.clientWidth - elements.controlsSidebar.offsetWidth
+    ),
+    maxTop: Math.max(
+      0,
+      elements.workspace.clientHeight - elements.controlsSidebar.offsetHeight
+    ),
+  };
+}
+
+function getCurrentSidebarPosition() {
+  const workspaceRect = elements.workspace.getBoundingClientRect();
+  const sidebarRect = elements.controlsSidebar.getBoundingClientRect();
+
+  return {
+    left: sidebarRect.left - workspaceRect.left,
+    top: sidebarRect.top - workspaceRect.top,
+  };
+}
+
+function setSidebarPosition(left, top, { persist = false } = {}) {
+  const bounds = getSidebarBounds();
+  const nextPosition = {
+    left: Math.min(Math.max(left, 0), bounds.maxLeft),
+    top: Math.min(Math.max(top, 0), bounds.maxTop),
+  };
+
+  elements.controlsSidebar.style.left = `${nextPosition.left}px`;
+  elements.controlsSidebar.style.right = "auto";
+  elements.controlsSidebar.style.top = `${nextPosition.top}px`;
+
+  if (persist) {
+    persistSidebarPosition(nextPosition);
+  }
+
+  return nextPosition;
+}
+
+function clampSidebarPosition({ persist = false } = {}) {
+  if (!elements.controlsSidebar.style.left) {
+    return;
+  }
+
+  const currentPosition = getCurrentSidebarPosition();
+  setSidebarPosition(currentPosition.left, currentPosition.top, { persist });
+}
+
+function updateChartAfterSidebarChange() {
+  window.requestAnimationFrame(() => {
+    state.chart?.reflow();
+  });
+}
+
+function setSidebarCollapsed(isCollapsed, { persist = false } = {}) {
+  elements.workspace.classList.toggle("sidebar-collapsed", isCollapsed);
+  elements.controlsContent.hidden = isCollapsed;
+  elements.sidebarToggle.setAttribute("aria-expanded", String(!isCollapsed));
+  elements.sidebarToggle.title = isCollapsed
+    ? "Expand controls"
+    : "Collapse controls";
+  elements.sidebarToggleIcon.textContent = isCollapsed ? "<" : ">";
+  elements.sidebarToggleText.textContent = isCollapsed
+    ? "Expand controls"
+    : "Collapse controls";
+
+  if (persist) {
+    persistSidebarCollapsed(isCollapsed);
+  }
+
+  window.requestAnimationFrame(() => {
+    clampSidebarPosition({ persist });
+  });
+  updateChartAfterSidebarChange();
+}
+
+function applyStoredSidebarState() {
+  setSidebarCollapsed(getStoredSidebarCollapsed());
+}
+
+function applyStoredSidebarPosition() {
+  const storedPosition = getStoredSidebarPosition();
+  if (!storedPosition) {
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    setSidebarPosition(storedPosition.left, storedPosition.top);
   });
 }
 
@@ -634,6 +786,67 @@ function drawMeanMarker(renderer, layer, x, yCenter, barThickness) {
   });
 }
 
+function rangesOverlap(firstStart, firstEnd, secondStart, secondEnd) {
+  return firstStart < secondEnd && secondStart < firstEnd;
+}
+
+function clampPixelPosition(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function positionBaseLabel(label, chart, baseX, yCenter, barTop, meanX = null) {
+  const labelOffset = 8;
+  const markerClearance = 14;
+  const plotLeft = chart.plotLeft;
+  const plotRight = chart.plotLeft + chart.plotWidth;
+  const labelWidth = label.getBBox().width;
+  const rightX = clampPixelPosition(
+    baseX + labelOffset,
+    plotLeft + labelOffset,
+    plotRight - labelWidth - labelOffset
+  );
+  const leftX = clampPixelPosition(
+    baseX - labelWidth - labelOffset,
+    plotLeft + labelOffset,
+    plotRight - labelWidth - labelOffset
+  );
+
+  if (meanX === null) {
+    label.attr({ x: rightX, y: yCenter + 5 });
+    return;
+  }
+
+  const meanStart = meanX - markerClearance;
+  const meanEnd = meanX + markerClearance;
+  const rightOverlapsMean = rangesOverlap(
+    rightX,
+    rightX + labelWidth,
+    meanStart,
+    meanEnd
+  );
+  const leftOverlapsMean = rangesOverlap(
+    leftX,
+    leftX + labelWidth,
+    meanStart,
+    meanEnd
+  );
+
+  if (!rightOverlapsMean) {
+    label.attr({ x: rightX, y: yCenter + 5 });
+    return;
+  }
+
+  if (!leftOverlapsMean) {
+    label.attr({ x: leftX, y: yCenter + 5 });
+    return;
+  }
+
+  label.attr({
+    x: rightX,
+    y: Math.max(chart.plotTop + 12, barTop - 5),
+  });
+}
+
 function drawUncertaintyRanges(chart) {
   const config = chart.options.custom?.uncertainty;
   if (!config) {
@@ -691,10 +904,12 @@ function drawUncertaintyRanges(chart) {
     const y = yCenter - barThickness / 2;
     const baseIsVisible = row.base >= visibleLow && row.base <= visibleHigh;
     const meanIsVisible = row.mean >= visibleLow && row.mean <= visibleHigh;
+    const meanX =
+      config.showMean && meanIsVisible ? xAxis.toPixels(row.mean) : null;
     const titleText = `${row.name}: Low ${item.formattedLow}, Base ${item.formattedBase}, High ${item.formattedHigh}, Mean ${item.formattedMean}, Spread ${item.formattedSpread}`;
 
     const range = renderer
-      .rect(x, y, width, barThickness, 4)
+      .rect(x, y, width, barThickness, 0)
       .attr({
         "aria-label": titleText,
         fill: item.color,
@@ -740,9 +955,8 @@ function drawUncertaintyRanges(chart) {
       .add(layer);
 
     if (config.showLabels) {
-      const labelX = Math.min(baseX + 8, chart.plotLeft + chart.plotWidth - 76);
-      renderer
-        .text(item.formattedBase, labelX, yCenter + 5)
+      const label = renderer
+        .text(item.formattedBase, baseX + 8, yCenter + 5)
         .css({
           color: "#0f172a",
           fontSize: "12px",
@@ -750,10 +964,11 @@ function drawUncertaintyRanges(chart) {
           pointerEvents: "none",
         })
         .add(layer);
+      positionBaseLabel(label, chart, baseX, yCenter, y, meanX);
     }
 
-    if (config.showMean && meanIsVisible) {
-      drawMeanMarker(renderer, layer, xAxis.toPixels(row.mean), yCenter, barThickness);
+    if (meanX !== null) {
+      drawMeanMarker(renderer, layer, meanX, yCenter, barThickness);
     }
   });
 
@@ -857,6 +1072,7 @@ function getChartOptions() {
       max: axisBounds.max,
       min: axisBounds.min,
       opposite: true,
+      tickLength: 0,
       title: {
         align: "middle",
         offset: 0,
@@ -923,38 +1139,7 @@ function updateTableHighlights() {
   });
 }
 
-function getFocusedInputSnapshot() {
-  const activeElement = document.activeElement;
-  if (!activeElement?.matches("[data-row-id][data-field]")) {
-    return null;
-  }
-
-  return {
-    field: activeElement.dataset.field,
-    rowId: activeElement.dataset.rowId,
-    selectionEnd: activeElement.selectionEnd,
-    selectionStart: activeElement.selectionStart,
-  };
-}
-
-function restoreFocusedInput(snapshot) {
-  if (!snapshot) {
-    return;
-  }
-
-  const selector = `[data-row-id="${snapshot.rowId}"][data-field="${snapshot.field}"]`;
-  const input = elements.dataTableBody.querySelector(selector);
-  if (!input) {
-    return;
-  }
-
-  input.focus();
-  if (input.setSelectionRange && snapshot.selectionStart !== null) {
-    input.setSelectionRange(snapshot.selectionStart, snapshot.selectionEnd);
-  }
-}
-
-function renderDataTable({ force = false, preserveFocus = false } = {}) {
+function renderDataTable({ force = false } = {}) {
   updateDataTableVisibility();
   if (!elements.showDataTableCheckbox.checked) {
     state.tableRows = [];
@@ -968,10 +1153,8 @@ function renderDataTable({ force = false, preserveFocus = false } = {}) {
     return;
   }
 
-  const focusSnapshot = preserveFocus ? getFocusedInputSnapshot() : null;
   const tableFormatter = getMarkerValueFormatter() ?? getValueAxisFormatter();
   const allRows = getSortedRows();
-  const canRemoveRows = state.rows.length > 1;
 
   elements.dataTableBody.innerHTML = allRows
     .map((row, sortedIndex) => {
@@ -984,66 +1167,13 @@ function renderDataTable({ force = false, preserveFocus = false } = {}) {
 
       return `
         <tr data-row-id="${row.id}" data-sorted-index="${sortedIndex}">
-          <td>
-            <input
-              type="text"
-              class="table-input table-input-name"
-              data-row-id="${row.id}"
-              data-field="name"
-              value="${escapeHtml(state.rows[row.sourceIndex].name)}"
-              aria-label="${escapeHtml(row.name)} name"
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              class="table-input"
-              data-row-id="${row.id}"
-              data-field="low"
-              value="${escapeHtml(state.rows[row.sourceIndex].low)}"
-              step="1"
-              aria-label="${escapeHtml(row.name)} low"
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              class="table-input"
-              data-row-id="${row.id}"
-              data-field="base"
-              value="${escapeHtml(state.rows[row.sourceIndex].base)}"
-              step="1"
-              aria-label="${escapeHtml(row.name)} base"
-            />
-          </td>
-          <td>
-            <input
-              type="number"
-              class="table-input"
-              data-row-id="${row.id}"
-              data-field="high"
-              value="${escapeHtml(state.rows[row.sourceIndex].high)}"
-              step="1"
-              aria-label="${escapeHtml(row.name)} high"
-            />
-          </td>
-          <td>
-            ${escapeHtml(tableFormatter.format(row.mean))}
-          </td>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(tableFormatter.format(row.low))}</td>
+          <td>${escapeHtml(tableFormatter.format(row.base))}</td>
+          <td>${escapeHtml(tableFormatter.format(row.high))}</td>
+          <td>${escapeHtml(tableFormatter.format(row.mean))}</td>
           <td class="${adjustments ? "table-warning" : ""}" title="${escapeHtml(adjustments)}">
             ${escapeHtml(tableFormatter.format(row.spread))}
-          </td>
-          <td>
-            <button
-              type="button"
-              class="remove-row-button"
-              data-row-id="${row.id}"
-              data-action="remove"
-              ${canRemoveRows ? "" : "disabled"}
-              aria-label="Remove ${escapeHtml(row.name)}"
-            >
-              Remove
-            </button>
           </td>
         </tr>
       `;
@@ -1056,7 +1186,6 @@ function renderDataTable({ force = false, preserveFocus = false } = {}) {
   state.tableRenderKey = renderKey;
   updateTableHighlights();
   updateDataStatus();
-  restoreFocusedInput(focusSnapshot);
 }
 
 function updateDataStatus(message = "") {
@@ -1102,11 +1231,7 @@ function updateExistingChart(options) {
   );
 }
 
-function renderChart({
-  forceTableRender = false,
-  preserveFocus = false,
-  resetScroll = false,
-} = {}) {
+function renderChart({ forceTableRender = false, resetScroll = false } = {}) {
   if (resetScroll) {
     state.currentStart = 0;
     state.pendingScrollStart = 0;
@@ -1125,7 +1250,7 @@ function renderChart({
     updateExistingChart(options);
   }
 
-  renderDataTable({ force: forceTableRender, preserveFocus });
+  renderDataTable({ force: forceTableRender });
 }
 
 function applyScrollPosition(nextStart) {
@@ -1158,76 +1283,72 @@ function onScrollChange(value) {
   state.scrollAnimationFrame = window.requestAnimationFrame(flushScrollUpdate);
 }
 
-function updateRowValue(rowId, field, value) {
-  const row = state.rows.find((item) => item.id === rowId);
-  if (!row || !(field in row)) {
-    return false;
-  }
-
-  row[field] = value;
-  return true;
-}
-
-function onTableInput(event) {
-  const input = event.target.closest("[data-row-id][data-field]");
-  if (!input) {
+function startSidebarDrag(event) {
+  if (event.button !== 0 || elements.workspace.classList.contains("sidebar-collapsed")) {
     return;
   }
 
-  const updated = updateRowValue(
-    input.dataset.rowId,
-    input.dataset.field,
-    input.value
+  event.preventDefault();
+  const currentPosition = getCurrentSidebarPosition();
+
+  state.sidebarDrag = {
+    originLeft: currentPosition.left,
+    originTop: currentPosition.top,
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+  };
+  elements.sidebarDragHandle.classList.add("is-dragging");
+  elements.sidebarDragHandle.setPointerCapture?.(event.pointerId);
+}
+
+function moveSidebarDrag(event) {
+  if (!state.sidebarDrag || state.sidebarDrag.pointerId !== event.pointerId) {
+    return;
+  }
+
+  event.preventDefault();
+  setSidebarPosition(
+    state.sidebarDrag.originLeft + event.clientX - state.sidebarDrag.startX,
+    state.sidebarDrag.originTop + event.clientY - state.sidebarDrag.startY
   );
-  if (!updated) {
-    return;
-  }
-
-  invalidateRowsCache();
-  renderChart({ forceTableRender: true, preserveFocus: true });
 }
 
-function onTableClick(event) {
-  const removeButton = event.target.closest("[data-action='remove']");
-  if (!removeButton) {
+function endSidebarDrag(event) {
+  if (!state.sidebarDrag || state.sidebarDrag.pointerId !== event.pointerId) {
     return;
   }
 
-  if (state.rows.length <= 1) {
-    updateDataStatus("At least one bar is required.");
-    return;
-  }
-
-  state.rows = state.rows.filter((row) => row.id !== removeButton.dataset.rowId);
-  invalidateRowsCache();
-  renderChart({ forceTableRender: true });
+  const currentPosition = getCurrentSidebarPosition();
+  setSidebarPosition(currentPosition.left, currentPosition.top, {
+    persist: true,
+  });
+  elements.sidebarDragHandle.classList.remove("is-dragging");
+  elements.sidebarDragHandle.releasePointerCapture?.(event.pointerId);
+  state.sidebarDrag = null;
 }
 
-function addRow() {
-  const nextIndex = state.rows.length + 1;
-  state.rows.push(
-    createRow({
-      base: 25,
-      high: 40,
-      low: 10,
-      name: `New Bar ${nextIndex}`,
-    })
+function nudgeSidebarPosition(event) {
+  const offsets = {
+    ArrowDown: [0, 1],
+    ArrowLeft: [-1, 0],
+    ArrowRight: [1, 0],
+    ArrowUp: [0, -1],
+  };
+  const offset = offsets[event.key];
+
+  if (!offset) {
+    return;
+  }
+
+  event.preventDefault();
+  const step = event.shiftKey ? 40 : 10;
+  const currentPosition = getCurrentSidebarPosition();
+  setSidebarPosition(
+    currentPosition.left + offset[0] * step,
+    currentPosition.top + offset[1] * step,
+    { persist: true }
   );
-  state.currentStart = getMaxStart();
-  invalidateRowsCache();
-  renderChart({ forceTableRender: true });
-}
-
-function normalizeRows() {
-  state.rows = getNormalizedRows().map((row) => ({
-    base: String(row.base),
-    high: String(row.high),
-    id: row.id,
-    low: String(row.low),
-    name: row.name,
-  }));
-  invalidateRowsCache();
-  renderChart({ forceTableRender: true });
 }
 
 function changeDataset(datasetKey) {
@@ -1267,6 +1388,13 @@ function bindEvents() {
       setActiveControlsTab(nextTab.dataset.tabTarget);
       nextTab.focus();
     });
+  });
+
+  elements.sidebarToggle.addEventListener("click", () => {
+    setSidebarCollapsed(
+      !elements.workspace.classList.contains("sidebar-collapsed"),
+      { persist: true }
+    );
   });
 
   elements.windowSizeSelector.addEventListener("change", (event) => {
@@ -1324,10 +1452,6 @@ function bindEvents() {
   elements.scrollbar.addEventListener("input", (event) => {
     onScrollChange(event.target.value);
   });
-  elements.dataTableBody.addEventListener("input", onTableInput);
-  elements.dataTableBody.addEventListener("click", onTableClick);
-  elements.addRowButton.addEventListener("click", addRow);
-  elements.normalizeRowsButton.addEventListener("click", normalizeRows);
 }
 
 function debounce(callback, delay) {
@@ -1344,6 +1468,7 @@ function debounce(callback, delay) {
 export function initializeUncertaintyApp() {
   state.rows = cloneDatasetRows(defaultSettings.datasetKey);
   applyDefaultSettings({ preserveRows: true });
+  applyStoredSidebarState();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
   updateCurrencyInputState();
