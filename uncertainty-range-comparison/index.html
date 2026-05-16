@@ -196,32 +196,6 @@
               <span>Show input table</span>
             </label>
 
-            <label class="range-label" for="leftMarginSlider">
-              <span>Left Margin:</span>
-              <input
-                type="range"
-                id="leftMarginSlider"
-                min="0"
-                max="220"
-                value="120"
-                step="10"
-              />
-              <span><span id="leftMarginValue">120</span>px</span>
-            </label>
-
-            <label class="range-label" for="barHeightSlider">
-              <span>Bar Height:</span>
-              <input
-                type="range"
-                id="barHeightSlider"
-                min="0.5"
-                max="1.0"
-                step="0.025"
-                value="0.72"
-              />
-              <span id="barHeightValue">0.72</span>
-            </label>
-
             <label for="sortSelector">
               <span>Sort:</span>
               <select id="sortSelector">
@@ -234,6 +208,38 @@
                 <option value="nameDesc">Name Z-A</option>
               </select>
             </label>
+
+            <details class="advanced-controls" id="advancedDisplayControls">
+              <summary>Advanced</summary>
+
+              <div class="advanced-controls-content">
+                <label class="range-label" for="leftMarginSlider">
+                  <span>Left Margin:</span>
+                  <input
+                    type="range"
+                    id="leftMarginSlider"
+                    min="0"
+                    max="220"
+                    value="120"
+                    step="10"
+                  />
+                  <span><span id="leftMarginValue">120</span>px</span>
+                </label>
+
+                <label class="range-label" for="barHeightSlider">
+                  <span>Bar Height:</span>
+                  <input
+                    type="range"
+                    id="barHeightSlider"
+                    min="0.5"
+                    max="1.0"
+                    step="0.025"
+                    value="0.72"
+                  />
+                  <span id="barHeightValue">0.72</span>
+                </label>
+              </div>
+            </details>
 
             <button type="button" id="resetDefaultsButton">
               Reset controls

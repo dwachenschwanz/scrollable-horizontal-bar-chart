@@ -329,6 +329,28 @@ h2 {
   display: none;
 }
 
+.advanced-controls {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 10px;
+}
+
+.advanced-controls summary {
+  color: #334155;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.advanced-controls summary:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 4px;
+}
+
+.advanced-controls-content {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+}
+
 label {
   display: grid;
   align-items: center;

@@ -90,3 +90,10 @@ test("index shell includes collapsible controls sidebar affordance", () => {
   assert.doesNotMatch(indexHtml, /id="sidebarToggleIcon" aria-hidden="true">&gt;<\/span>/);
   assert.match(indexHtml, /id="controlsContent"/);
 });
+
+test("index shell tucks layout tuning controls into advanced display controls", () => {
+  assert.match(indexHtml, /<details class="advanced-controls" id="advancedDisplayControls">/);
+  assert.match(indexHtml, /<summary>Advanced<\/summary>/);
+  assert.match(indexHtml, /id="leftMarginSlider"/);
+  assert.match(indexHtml, /id="barHeightSlider"/);
+});

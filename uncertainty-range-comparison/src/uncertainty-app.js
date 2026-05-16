@@ -42,6 +42,7 @@ const SIDEBAR_TOGGLE_ICONS = {
 
 const defaultSettings = {
   activeTab: "display",
+  advancedDisplayOpen: false,
   autoScale: true,
   barHeight: "0.72",
   datasetKey: "capitalPlan",
@@ -126,6 +127,7 @@ const state = {
 };
 
 const elements = {
+  advancedDisplayControls: document.getElementById("advancedDisplayControls"),
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
   barHeightValue: document.getElementById("barHeightValue"),
@@ -359,6 +361,7 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
   state.windowSize = Number.parseInt(defaultSettings.windowSize, 10);
 
   elements.windowSizeSelector.value = defaultSettings.windowSize;
+  elements.advancedDisplayControls.open = defaultSettings.advancedDisplayOpen;
   elements.toggleLabels.checked = defaultSettings.showLabels;
   elements.toggleMean.checked = defaultSettings.showMean;
   elements.showDataTableCheckbox.checked = defaultSettings.showDataTable;
