@@ -74,24 +74,54 @@
           </section>
         </section>
 
-        <aside class="controls-sidebar" id="controlsSidebar" aria-label="Chart controls">
-          <div class="sidebar-toolbar">
-            <button
-              type="button"
-              class="sidebar-drag-handle"
-              id="sidebarDragHandle"
-              aria-label="Drag controls panel"
-              title="Drag controls panel"
-            ></button>
+        <aside
+          class="controls-sidebar"
+          id="controlsSidebar"
+          aria-label="Chart controls"
+        >
+          <div
+            class="sidebar-header"
+            id="sidebarDragHandle"
+            tabindex="0"
+            aria-label="Drag controls panel"
+            title="Drag controls panel"
+          >
+            <span
+              class="sidebar-control-icon"
+              role="img"
+              aria-label="Drag controls"
+              title="Drag controls"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 7h10" />
+                <path d="M18 7h2" />
+                <path d="M4 17h2" />
+                <path d="M10 17h10" />
+                <path d="M4 12h5" />
+                <path d="M13 12h7" />
+                <circle cx="16" cy="7" r="2" />
+                <circle cx="8" cy="17" r="2" />
+                <circle cx="11" cy="12" r="2" />
+              </svg>
+            </span>
             <button
               type="button"
               class="sidebar-toggle"
               id="sidebarToggle"
               aria-expanded="true"
               aria-controls="controlsContent"
+              aria-label="Collapse controls"
               title="Collapse controls"
             >
-              <span id="sidebarToggleIcon" aria-hidden="true">&gt;</span>
+              <span
+                class="sidebar-toggle-icon"
+                id="sidebarToggleIcon"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="m15 6-6 6 6 6" />
+                </svg>
+              </span>
               <span class="sr-only" id="sidebarToggleText">Collapse controls</span>
             </button>
           </div>

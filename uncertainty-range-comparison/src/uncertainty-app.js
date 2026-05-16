@@ -15,6 +15,30 @@ const UNCERTAINTY_BAR_COLOR = "#2caffe";
 const UNCERTAINTY_BAR_BORDER_COLOR = "#258ec9";
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "uncertaintySidebarCollapsed";
 const SIDEBAR_POSITION_STORAGE_KEY = "uncertaintySidebarPosition";
+const SIDEBAR_TOGGLE_ICONS = {
+  collapse: `
+    <svg viewBox="0 0 24 24" focusable="false">
+      <path d="m15 6-6 6 6 6" />
+    </svg>
+  `,
+  expand: `
+    <svg viewBox="0 0 24 24" focusable="false">
+      <path d="M3 5h18v14H3z" />
+      <path d="M8 5v14" />
+      <path d="M12 8h3" />
+      <path d="M18 8h1" />
+      <path d="M12 16h1" />
+      <path d="M16 16h3" />
+      <path d="M12 12h2" />
+      <path d="M17 12h2" />
+      <circle cx="16.5" cy="8" r="1.2" />
+      <circle cx="14.5" cy="16" r="1.2" />
+      <circle cx="15.5" cy="12" r="1.2" />
+      <path d="M5 12h3" />
+      <path d="m6 10-2 2 2 2" />
+    </svg>
+  `,
+};
 
 const defaultSettings = {
   activeTab: "display",
@@ -91,6 +115,7 @@ const state = {
   rows: [],
   scrollAnimationFrame: null,
   sidebarDrag: null,
+  suppressSidebarToggleClick: false,
   sliceCache: null,
   sliceCacheKey: "",
   sortedRowsCache: null,
@@ -223,15 +248,15 @@ function persistSidebarPosition(position) {
 }
 
 function getSidebarBounds() {
+  const workspaceRect = elements.workspace.getBoundingClientRect();
+  const sidebarWidth = elements.controlsSidebar.offsetWidth;
+  const sidebarHeight = elements.controlsSidebar.offsetHeight;
+
   return {
-    maxLeft: Math.max(
-      0,
-      elements.workspace.clientWidth - elements.controlsSidebar.offsetWidth
-    ),
-    maxTop: Math.max(
-      0,
-      elements.workspace.clientHeight - elements.controlsSidebar.offsetHeight
-    ),
+    maxLeft: window.innerWidth - workspaceRect.left - sidebarWidth,
+    maxTop: window.innerHeight - workspaceRect.top - sidebarHeight,
+    minLeft: -workspaceRect.left,
+    minTop: -workspaceRect.top,
   };
 }
 
@@ -248,8 +273,8 @@ function getCurrentSidebarPosition() {
 function setSidebarPosition(left, top, { persist = false } = {}) {
   const bounds = getSidebarBounds();
   const nextPosition = {
-    left: Math.min(Math.max(left, 0), bounds.maxLeft),
-    top: Math.min(Math.max(top, 0), bounds.maxTop),
+    left: Math.min(Math.max(left, bounds.minLeft), bounds.maxLeft),
+    top: Math.min(Math.max(top, bounds.minTop), bounds.maxTop),
   };
 
   elements.controlsSidebar.style.left = `${nextPosition.left}px`;
@@ -285,7 +310,13 @@ function setSidebarCollapsed(isCollapsed, { persist = false } = {}) {
   elements.sidebarToggle.title = isCollapsed
     ? "Expand controls"
     : "Collapse controls";
-  elements.sidebarToggleIcon.textContent = isCollapsed ? "<" : ">";
+  elements.sidebarToggle.setAttribute(
+    "aria-label",
+    isCollapsed ? "Expand controls" : "Collapse controls"
+  );
+  elements.sidebarToggleIcon.innerHTML = isCollapsed
+    ? SIDEBAR_TOGGLE_ICONS.expand
+    : SIDEBAR_TOGGLE_ICONS.collapse;
   elements.sidebarToggleText.textContent = isCollapsed
     ? "Expand controls"
     : "Collapse controls";
@@ -790,29 +821,40 @@ function rangesOverlap(firstStart, firstEnd, secondStart, secondEnd) {
   return firstStart < secondEnd && secondStart < firstEnd;
 }
 
+function getRangeOverlapWidth(firstStart, firstEnd, secondStart, secondEnd) {
+  return Math.max(
+    0,
+    Math.min(firstEnd, secondEnd) - Math.max(firstStart, secondStart)
+  );
+}
+
 function clampPixelPosition(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function positionBaseLabel(label, chart, baseX, yCenter, barTop, meanX = null) {
+function positionBaseLabel(label, chart, baseX, yCenter, meanX = null) {
   const labelOffset = 8;
   const markerClearance = 14;
   const plotLeft = chart.plotLeft;
   const plotRight = chart.plotLeft + chart.plotWidth;
-  const labelWidth = label.getBBox().width;
+  const labelBox = label.getBBox();
+  const labelWidth = labelBox.width;
+  const labelY = yCenter + labelBox.height / 3;
+  const minX = plotLeft + labelOffset;
+  const maxX = plotRight - labelWidth - labelOffset;
   const rightX = clampPixelPosition(
     baseX + labelOffset,
-    plotLeft + labelOffset,
-    plotRight - labelWidth - labelOffset
+    minX,
+    maxX
   );
   const leftX = clampPixelPosition(
     baseX - labelWidth - labelOffset,
-    plotLeft + labelOffset,
-    plotRight - labelWidth - labelOffset
+    minX,
+    maxX
   );
 
   if (meanX === null) {
-    label.attr({ x: rightX, y: yCenter + 5 });
+    label.attr({ x: rightX, y: labelY });
     return;
   }
 
@@ -832,18 +874,47 @@ function positionBaseLabel(label, chart, baseX, yCenter, barTop, meanX = null) {
   );
 
   if (!rightOverlapsMean) {
-    label.attr({ x: rightX, y: yCenter + 5 });
+    label.attr({ x: rightX, y: labelY });
     return;
   }
 
   if (!leftOverlapsMean) {
-    label.attr({ x: leftX, y: yCenter + 5 });
+    label.attr({ x: leftX, y: labelY });
     return;
   }
 
+  const candidates = [
+    rightX,
+    leftX,
+    clampPixelPosition(meanEnd + labelOffset, minX, maxX),
+    clampPixelPosition(meanStart - labelWidth - labelOffset, minX, maxX),
+  ];
+  const bestCandidate = candidates.reduce((bestX, candidateX) => {
+    const candidateOverlap = getRangeOverlapWidth(
+      candidateX,
+      candidateX + labelWidth,
+      meanStart,
+      meanEnd
+    );
+    const bestOverlap = getRangeOverlapWidth(
+      bestX,
+      bestX + labelWidth,
+      meanStart,
+      meanEnd
+    );
+
+    if (candidateOverlap !== bestOverlap) {
+      return candidateOverlap < bestOverlap ? candidateX : bestX;
+    }
+
+    return Math.abs(candidateX - baseX) < Math.abs(bestX - baseX)
+      ? candidateX
+      : bestX;
+  }, rightX);
+
   label.attr({
-    x: rightX,
-    y: Math.max(chart.plotTop + 12, barTop - 5),
+    x: bestCandidate,
+    y: labelY,
   });
 }
 
@@ -964,7 +1035,7 @@ function drawUncertaintyRanges(chart) {
           pointerEvents: "none",
         })
         .add(layer);
-      positionBaseLabel(label, chart, baseX, yCenter, y, meanX);
+      positionBaseLabel(label, chart, baseX, yCenter, meanX);
     }
 
     if (meanX !== null) {
@@ -1284,19 +1355,27 @@ function onScrollChange(value) {
 }
 
 function startSidebarDrag(event) {
-  if (event.button !== 0 || elements.workspace.classList.contains("sidebar-collapsed")) {
+  const isCollapsed = elements.workspace.classList.contains("sidebar-collapsed");
+  const startedOnToggle = Boolean(event.target.closest?.(".sidebar-toggle"));
+
+  if (event.button !== 0 || (startedOnToggle && !isCollapsed)) {
     return;
   }
 
-  event.preventDefault();
+  if (!startedOnToggle || isCollapsed) {
+    event.preventDefault();
+  }
+
   const currentPosition = getCurrentSidebarPosition();
 
   state.sidebarDrag = {
+    didMove: false,
     originLeft: currentPosition.left,
     originTop: currentPosition.top,
     pointerId: event.pointerId,
     startX: event.clientX,
     startY: event.clientY,
+    startedOnToggle,
   };
   elements.sidebarDragHandle.classList.add("is-dragging");
   elements.sidebarDragHandle.setPointerCapture?.(event.pointerId);
@@ -1308,9 +1387,16 @@ function moveSidebarDrag(event) {
   }
 
   event.preventDefault();
+  const deltaX = event.clientX - state.sidebarDrag.startX;
+  const deltaY = event.clientY - state.sidebarDrag.startY;
+
+  if (Math.hypot(deltaX, deltaY) > 4) {
+    state.sidebarDrag.didMove = true;
+  }
+
   setSidebarPosition(
-    state.sidebarDrag.originLeft + event.clientX - state.sidebarDrag.startX,
-    state.sidebarDrag.originTop + event.clientY - state.sidebarDrag.startY
+    state.sidebarDrag.originLeft + deltaX,
+    state.sidebarDrag.originTop + deltaY
   );
 }
 
@@ -1319,13 +1405,36 @@ function endSidebarDrag(event) {
     return;
   }
 
+  const isCollapsed = elements.workspace.classList.contains("sidebar-collapsed");
+  const shouldExpandFromCollapsedIcon =
+    event.type === "pointerup" &&
+    isCollapsed &&
+    state.sidebarDrag.startedOnToggle &&
+    !state.sidebarDrag.didMove;
+  const shouldSuppressToggleClick =
+    event.type === "pointerup" &&
+    isCollapsed &&
+    state.sidebarDrag.startedOnToggle;
   const currentPosition = getCurrentSidebarPosition();
   setSidebarPosition(currentPosition.left, currentPosition.top, {
     persist: true,
   });
   elements.sidebarDragHandle.classList.remove("is-dragging");
-  elements.sidebarDragHandle.releasePointerCapture?.(event.pointerId);
+  if (elements.sidebarDragHandle.hasPointerCapture?.(event.pointerId)) {
+    elements.sidebarDragHandle.releasePointerCapture(event.pointerId);
+  }
   state.sidebarDrag = null;
+  state.suppressSidebarToggleClick = shouldSuppressToggleClick;
+
+  if (shouldExpandFromCollapsedIcon) {
+    setSidebarCollapsed(false, { persist: true });
+  }
+
+  if (shouldSuppressToggleClick) {
+    window.setTimeout(() => {
+      state.suppressSidebarToggleClick = false;
+    }, 250);
+  }
 }
 
 function nudgeSidebarPosition(event) {
@@ -1368,6 +1477,9 @@ function bindEvents() {
       renderChart();
     }
   }, 120);
+  const debouncedSidebarClamp = debounce(() => {
+    clampSidebarPosition({ persist: true });
+  }, 120);
 
   elements.controlsTabs.forEach((tab, index) => {
     tab.addEventListener("click", () => {
@@ -1390,12 +1502,24 @@ function bindEvents() {
     });
   });
 
-  elements.sidebarToggle.addEventListener("click", () => {
+  elements.sidebarToggle.addEventListener("click", (event) => {
+    if (state.suppressSidebarToggleClick) {
+      event.preventDefault();
+      state.suppressSidebarToggleClick = false;
+      return;
+    }
+
     setSidebarCollapsed(
       !elements.workspace.classList.contains("sidebar-collapsed"),
       { persist: true }
     );
   });
+  elements.sidebarDragHandle.addEventListener("pointerdown", startSidebarDrag);
+  elements.sidebarDragHandle.addEventListener("pointermove", moveSidebarDrag);
+  elements.sidebarDragHandle.addEventListener("pointerup", endSidebarDrag);
+  elements.sidebarDragHandle.addEventListener("pointercancel", endSidebarDrag);
+  elements.sidebarDragHandle.addEventListener("keydown", nudgeSidebarPosition);
+  window.addEventListener("resize", debouncedSidebarClamp);
 
   elements.windowSizeSelector.addEventListener("change", (event) => {
     state.windowSize =
@@ -1469,6 +1593,7 @@ export function initializeUncertaintyApp() {
   state.rows = cloneDatasetRows(defaultSettings.datasetKey);
   applyDefaultSettings({ preserveRows: true });
   applyStoredSidebarState();
+  applyStoredSidebarPosition();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
   updateCurrencyInputState();

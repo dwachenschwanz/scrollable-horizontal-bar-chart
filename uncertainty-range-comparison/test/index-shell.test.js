@@ -72,8 +72,21 @@ test("index shell includes uncertainty input table", () => {
 
 test("index shell includes collapsible controls sidebar affordance", () => {
   assert.match(indexHtml, /<div class="workspace" id="workspace">/);
-  assert.match(indexHtml, /<aside class="controls-sidebar" id="controlsSidebar"/);
+  assert.match(indexHtml, /class="controls-sidebar"/);
+  assert.match(indexHtml, /id="controlsSidebar"/);
+  assert.match(indexHtml, /class="sidebar-header"/);
+  assert.match(indexHtml, /id="sidebarDragHandle"/);
+  assert.match(indexHtml, /aria-label="Drag controls panel"/);
+  assert.match(indexHtml, /class="sidebar-control-icon"/);
+  assert.match(indexHtml, /aria-label="Drag controls"/);
+  assert.match(indexHtml, /title="Drag controls"/);
+  assert.doesNotMatch(indexHtml, /class="sidebar-grip"/);
+  assert.doesNotMatch(indexHtml, /class="sidebar-title">Controls<\/span>/);
   assert.match(indexHtml, /id="sidebarToggle"/);
+  assert.match(indexHtml, /aria-label="Collapse controls"/);
   assert.match(indexHtml, /aria-controls="controlsContent"/);
+  assert.match(indexHtml, /class="sidebar-toggle-icon"/);
+  assert.match(indexHtml, /<path d="m15 6-6 6 6 6" \/>/);
+  assert.doesNotMatch(indexHtml, /id="sidebarToggleIcon" aria-hidden="true">&gt;<\/span>/);
   assert.match(indexHtml, /id="controlsContent"/);
 });

@@ -21,7 +21,7 @@ The chart renders each bar from its low value to its high value, with a base div
 - Sample datasets for capital planning, product cases, and operations
 - Sort by base, uncertainty spread, or name
 - Configurable bars per page with a custom scrollbar
-- Collapsible controls sidebar with persisted state
+- Draggable, collapsible controls overlay that can float outside the chart workspace while staying inside the viewport
 - Adjustable left margin and bar height
 - Auto-scale or manual axis bounds
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
