@@ -1,14 +1,14 @@
 import {
+  createAxisFormatControls,
+  createChartWindowControls,
+  createControlTabs,
+  createDataTableControls,
+  createFloatingSidebarController,
+  createUncertaintyChartController,
+  createUncertaintyChartOptions,
   debounce,
   escapeHtml,
-} from "../../src/shared/chart-core.js";
-import { createAxisFormatControls } from "../../src/shared/axis-format-controls.js";
-import {
-  createControlTabs,
-  createFloatingSidebarController,
-} from "../../src/shared/control-shell.js";
-import { createChartWindowControls } from "../../src/shared/chart-window-controls.js";
-import { createDataTableControls } from "../../src/shared/data-table-controls.js";
+} from "../../src/chartkit/index.js";
 import {
   buildSlice,
   getAutoScaleBounds,
@@ -16,10 +16,6 @@ import {
   sanitizeAxisBounds,
   sortRows,
 } from "./uncertainty-utils.js";
-import {
-  createUncertaintyChartController,
-  createUncertaintyChartOptions,
-} from "./uncertainty-chart-controller.js";
 
 const TRACK_HEIGHT = 300;
 const UNCERTAINTY_BAR_COLOR = "#2caffe";

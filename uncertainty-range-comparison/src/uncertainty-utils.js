@@ -9,7 +9,7 @@ import {
   isValidCurrencyCode,
   parseNumericInput,
   sanitizeCurrencyCode,
-} from "../../src/shared/chart-core.js";
+} from "../../src/chartkit/index.js";
 
 export {
   clampValue,
