@@ -50,20 +50,56 @@
             id="dataTablePanel"
             aria-label="Uncertainty inputs"
           >
-            <div class="data-table-toolbar">
-              <h2>Inputs</h2>
-            </div>
-
             <div class="data-table-wrapper">
               <table class="data-table data-input-table">
                 <thead>
                   <tr>
-                    <th scope="col">Bar</th>
-                    <th scope="col">Low</th>
-                    <th scope="col">Base</th>
-                    <th scope="col">High</th>
-                    <th scope="col">Mean</th>
-                    <th scope="col">Spread</th>
+                    <th scope="col">Portfolio Elements</th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="low"
+                      >
+                        Low
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="base"
+                      >
+                        Base
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="high"
+                      >
+                        High
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="mean"
+                      >
+                        Mean
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="spread"
+                      >
+                        Spread
+                      </button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="dataTableBody"></tbody>
@@ -200,8 +236,14 @@
               <span>Sort:</span>
               <select id="sortSelector">
                 <option value="unsorted">Unsorted</option>
+                <option value="lowAsc">Low ascending</option>
+                <option value="lowDesc">Low descending</option>
                 <option value="baseAsc">Base low to high</option>
                 <option value="baseDesc" selected>Base high to low</option>
+                <option value="highAsc">High ascending</option>
+                <option value="highDesc">High descending</option>
+                <option value="meanAsc">Mean ascending</option>
+                <option value="meanDesc">Mean descending</option>
                 <option value="spreadAsc">Spread low to high</option>
                 <option value="spreadDesc">Spread high to low</option>
                 <option value="nameAsc">Name A-Z</option>

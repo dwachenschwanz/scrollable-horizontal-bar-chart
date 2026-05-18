@@ -66,6 +66,27 @@ test("sortRows sorts by uncertainty spread", () => {
   );
 });
 
+test("sortRows sorts by low, high, and mean values", () => {
+  const rows = [
+    { sourceIndex: 0, name: "A", low: 10, base: 20, high: 30 },
+    { sourceIndex: 1, name: "B", low: 0, base: 10, high: 50 },
+    { sourceIndex: 2, name: "C", low: 5, base: 5, high: 20 },
+  ];
+
+  assert.deepEqual(
+    sortRows(rows, "lowAsc").map((item) => item.name),
+    ["B", "C", "A"]
+  );
+  assert.deepEqual(
+    sortRows(rows, "highDesc").map((item) => item.name),
+    ["B", "A", "C"]
+  );
+  assert.deepEqual(
+    sortRows(rows, "meanAsc").map((item) => item.name),
+    ["C", "B", "A"]
+  );
+});
+
 test("buildSlice pads missing rows with empty placeholders", () => {
   const slice = buildSlice(
     [

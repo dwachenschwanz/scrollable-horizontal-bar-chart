@@ -61,10 +61,18 @@ test("index shell keeps expected default checked controls", () => {
 });
 
 test("index shell includes uncertainty input table", () => {
-  assert.match(indexHtml, /<th scope="col">Low<\/th>/);
-  assert.match(indexHtml, /<th scope="col">Base<\/th>/);
-  assert.match(indexHtml, /<th scope="col">High<\/th>/);
-  assert.match(indexHtml, /<th scope="col">Mean<\/th>/);
+  assert.doesNotMatch(indexHtml, /<h2>Inputs<\/h2>/);
+  assert.match(indexHtml, /<th scope="col">Portfolio Elements<\/th>/);
+  assert.match(indexHtml, />\s*Low\s*<\/button>/);
+  assert.match(indexHtml, />\s*Base\s*<\/button>/);
+  assert.match(indexHtml, />\s*High\s*<\/button>/);
+  assert.match(indexHtml, />\s*Mean\s*<\/button>/);
+  assert.match(indexHtml, />\s*Spread\s*<\/button>/);
+  assert.match(indexHtml, /data-table-sort="low"/);
+  assert.match(indexHtml, /data-table-sort="base"/);
+  assert.match(indexHtml, /data-table-sort="high"/);
+  assert.match(indexHtml, /data-table-sort="mean"/);
+  assert.match(indexHtml, /data-table-sort="spread"/);
   assert.doesNotMatch(indexHtml, /id="addRowButton"/);
   assert.doesNotMatch(indexHtml, /id="normalizeRowsButton"/);
   assert.doesNotMatch(indexHtml, /<span class="sr-only">Actions<\/span>/);

@@ -53,25 +53,54 @@ export function sortRows(rows, sortMode) {
     compareNamesNatural(a.name, b.name) || a.sourceIndex - b.sourceIndex;
   const byNameDesc = (a, b) =>
     compareNamesNatural(b.name, a.name) || a.sourceIndex - b.sourceIndex;
-  const byBaseAsc = (a, b) => a.base - b.base || byNameAsc(a, b);
-  const byBaseDesc = (a, b) => b.base - a.base || byNameAsc(a, b);
-  const bySpreadAsc = (a, b) =>
-    getUncertaintySpread(a) - getUncertaintySpread(b) || byNameAsc(a, b);
-  const bySpreadDesc = (a, b) =>
-    getUncertaintySpread(b) - getUncertaintySpread(a) || byNameAsc(a, b);
+  const getNumericSortValue = (row, field) => {
+    if (field === "mean") {
+      return row.mean ?? calculateUncertaintyMean(row.low, row.base, row.high);
+    }
+
+    if (field === "spread") {
+      return row.spread ?? getUncertaintySpread(row);
+    }
+
+    return row[field];
+  };
+  const byNumericAsc = (field) => (a, b) =>
+    getNumericSortValue(a, field) - getNumericSortValue(b, field) ||
+    byNameAsc(a, b);
+  const byNumericDesc = (field) => (a, b) =>
+    getNumericSortValue(b, field) - getNumericSortValue(a, field) ||
+    byNameAsc(a, b);
 
   switch (sortMode) {
+    case "lowAsc":
+      nextRows.sort(byNumericAsc("low"));
+      break;
+    case "lowDesc":
+      nextRows.sort(byNumericDesc("low"));
+      break;
     case "baseAsc":
-      nextRows.sort(byBaseAsc);
+      nextRows.sort(byNumericAsc("base"));
       break;
     case "baseDesc":
-      nextRows.sort(byBaseDesc);
+      nextRows.sort(byNumericDesc("base"));
+      break;
+    case "highAsc":
+      nextRows.sort(byNumericAsc("high"));
+      break;
+    case "highDesc":
+      nextRows.sort(byNumericDesc("high"));
+      break;
+    case "meanAsc":
+      nextRows.sort(byNumericAsc("mean"));
+      break;
+    case "meanDesc":
+      nextRows.sort(byNumericDesc("mean"));
       break;
     case "spreadAsc":
-      nextRows.sort(bySpreadAsc);
+      nextRows.sort(byNumericAsc("spread"));
       break;
     case "spreadDesc":
-      nextRows.sort(bySpreadDesc);
+      nextRows.sort(byNumericDesc("spread"));
       break;
     case "nameAsc":
       nextRows.sort(byNameAsc);

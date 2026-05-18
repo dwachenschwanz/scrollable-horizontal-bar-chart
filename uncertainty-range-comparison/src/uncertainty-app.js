@@ -39,6 +39,7 @@ const SIDEBAR_TOGGLE_ICONS = {
     </svg>
   `,
 };
+const TABLE_SORT_FIELDS = ["low", "base", "high", "mean", "spread"];
 
 const defaultSettings = {
   activeTab: "display",
@@ -151,6 +152,7 @@ const elements = {
   sidebarToggleText: document.getElementById("sidebarToggleText"),
   sliderStatus: document.getElementById("sliderStatus"),
   sortSelector: document.getElementById("sortSelector"),
+  tableSortButtons: Array.from(document.querySelectorAll("[data-table-sort]")),
   toggleLabels: document.getElementById("toggleLabels"),
   toggleMean: document.getElementById("toggleMean"),
   windowSizeSelector: document.getElementById("windowSizeSelector"),
@@ -195,6 +197,50 @@ function setActiveControlsTab(targetTabName) {
     const isActive = panel.dataset.tabPanel === targetTabName;
     panel.classList.toggle("is-active", isActive);
     panel.hidden = !isActive;
+  });
+}
+
+function getTableSortDescriptor(sortMode = elements.sortSelector.value) {
+  const match = new RegExp(`^(${TABLE_SORT_FIELDS.join("|")})(Asc|Desc)$`).exec(
+    sortMode
+  );
+
+  if (!match) {
+    return { direction: null, field: null };
+  }
+
+  return {
+    direction: match[2] === "Asc" ? "ascending" : "descending",
+    field: match[1],
+  };
+}
+
+function updateTableSortHeaders() {
+  const activeSort = getTableSortDescriptor();
+
+  elements.tableSortButtons.forEach((button) => {
+    const field = button.dataset.tableSort;
+    const isActive = activeSort.field === field;
+    const header = button.closest("th");
+    const nextDirection =
+      isActive && activeSort.direction === "ascending"
+        ? "descending"
+        : "ascending";
+
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute(
+      "aria-label",
+      `Sort by ${button.textContent.trim()} ${nextDirection}`
+    );
+
+    if (isActive) {
+      button.dataset.sortDirection =
+        activeSort.direction === "ascending" ? "asc" : "desc";
+      header?.setAttribute("aria-sort", activeSort.direction);
+    } else {
+      delete button.dataset.sortDirection;
+      header?.setAttribute("aria-sort", "none");
+    }
   });
 }
 
@@ -399,6 +445,12 @@ function invalidateRowsCache() {
   state.sortedRowsCacheKey = "";
   state.sliceCache = null;
   state.sliceCacheKey = "";
+}
+
+function setSortMode(sortMode, { resetScroll = true } = {}) {
+  elements.sortSelector.value = sortMode;
+  invalidateRowsCache();
+  renderChart({ forceTableRender: true, resetScroll });
 }
 
 function getNormalizedRows() {
@@ -1215,6 +1267,8 @@ function updateTableHighlights() {
 
 function renderDataTable({ force = false } = {}) {
   updateDataTableVisibility();
+  updateTableSortHeaders();
+
   if (!elements.showDataTableCheckbox.checked) {
     state.tableRows = [];
     state.tableRenderKey = "";
@@ -1539,9 +1593,20 @@ function bindEvents() {
     renderDataTable({ force: true })
   );
   elements.leftMarginSlider.addEventListener("input", () => renderChart());
-  elements.sortSelector.addEventListener("change", () => {
-    invalidateRowsCache();
-    renderChart({ forceTableRender: true, resetScroll: true });
+  elements.sortSelector.addEventListener("change", (event) => {
+    setSortMode(event.target.value);
+  });
+  elements.tableSortButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const field = button.dataset.tableSort;
+      const activeSort = getTableSortDescriptor();
+      const direction =
+        activeSort.field === field && activeSort.direction === "ascending"
+          ? "Desc"
+          : "Asc";
+
+      setSortMode(`${field}${direction}`);
+    });
   });
   elements.barHeightSlider.addEventListener("input", () => {
     updateBarHeightDisplay();
