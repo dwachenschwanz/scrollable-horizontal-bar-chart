@@ -1,160 +1,234 @@
-# Scrollable Horizontal Bar Chart
+# Chart Comparison Demos
 
-A Vite + vanilla JavaScript app for exploring bar-chart data with Highcharts.
+This repository contains two related Vite + vanilla JavaScript chart apps built on a shared `chartkit` codebase.
 
-The app supports horizontal and vertical bar layouts, sorting, paging through visible bars, `Intl.NumberFormat`-based numeric formatting, and a synced data table below the chart.
+- **Scrollable bar chart**: the root app at `index.html`
+- **Uncertainty range comparison**: the nested app at `uncertainty-range-comparison/index.html`
 
-## Features
+Both apps use Highcharts for rendering, but the reusable chart logic now lives in `src/chartkit/`. The demos provide browser controls, sample data, and tables around that shared chart layer.
 
-- Horizontal and vertical bar orientation
-- Sort by source order, value, or name
-- Stable secondary tie-breakers for sorting
-- Configurable bars per page with a custom scrollbar for the visible window
-- Advanced disclosure for less-frequent layout tuning controls
-- Auto-scale or manual axis bounds
-- `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
-- Uppercase currency input with validation and safe fallback to `USD`
-- Currency-aware value labels inside bars
-- Draggable, collapsible controls overlay that stays inside the viewport
-- Full data table below the chart with sortable headers
-- Table row highlighting for rows currently visible in the chart
-- One-click reset back to default settings while preserving the current dataset
-- GitHub Pages-ready Vite configuration
+## The Dual-App Model
 
-## Getting Started
+The root app is a general scrollable bar chart. It plots one value per category and supports horizontal or vertical orientation, sorting, paging through visible bars, axis formatting, value labels, and a synchronized data table.
 
-### Requirements
+The uncertainty app compares ranges instead of single values. Each row has `low`, `base`, and `high` values. The chart draws each range from low to high, marks the base value inside the range, and can show a weighted mean marker:
 
-- Node.js 18+ recommended
-- npm
-
-### Install
-
-```bash
-npm install
+```text
+mean = 0.25 * low + 0.5 * base + 0.25 * high
 ```
 
-### Run locally
+The apps intentionally share the same interaction model:
 
-```bash
-npm run dev
-```
+- floating collapsible controls
+- display, axis, and format sections
+- custom visible-window scrolling
+- horizontal or vertical chart orientation
+- auto or manual axis bounds
+- `Intl.NumberFormat`-based axis and label formatting
+- synchronized data tables with visible-row highlighting
 
-Then open the local Vite URL shown in the terminal.
+The important architectural point is that the apps are no longer two disconnected implementations. They are two demos using one shared chart foundation.
 
-### Run tests
+## Shared Chartkit Layer
 
-```bash
-npm test
-```
+`src/chartkit/index.js` is the stable embeddable API. This is the entrypoint a future Angular app should depend on.
 
-The project uses Node's built-in test runner, so no extra test framework setup is required.
+It exports:
 
-## Scripts
+- `createBarChartViewModel`
+- `createUncertaintyChartViewModel`
+- `mountBarChart`
+- `mountUncertaintyChart`
+- `mountUncertaintyRangeChart`
 
-```bash
-npm run dev
-npm run build
-npm run preview
-npm test
-```
+The view-model functions handle framework-neutral chart preparation:
+
+- sorting
+- visible-window slicing
+- axis bounds
+- normalized uncertainty rows
+- formatted visible values
+- Highcharts option creation
+
+The mount functions own the Highcharts lifecycle:
+
+- create chart
+- update chart
+- destroy chart
+
+`src/chartkit/demo-controls.js` exports browser-demo helpers only. These are useful for the current Vite demos, but they are not intended as the long-term Angular integration surface.
 
 ## Project Structure
 
 ```text
-index.html                       App shell and control markup
-src/main.js                      Lightweight app entry
-src/chart-app.js                 Chart logic, controls, sorting, formatting, and table sync
-src/chart-utils.js               Pure chart utilities for sorting, slicing, bounds, and formatting helpers
-src/style.css                    App styles and layout
-test/chart-utils.test.js         Unit tests for sorting, slicing, bounds, formatting, and layout helpers
-test/index-shell.test.js         Smoke tests for default control state in index.html
-vite.config.js                   Vite config and GitHub Pages base path
-.github/workflows/deploy-pages.yml  GitHub Pages deployment workflow
+index.html                                  Root scrollable bar chart shell
+src/chart-app.js                            Root demo wiring and control state
+src/chart-utils.js                          Compatibility wrapper around chartkit bar utilities
+src/chartkit/index.js                       Stable embeddable chart API
+src/chartkit/demo-controls.js               Demo-only browser control helpers
+src/chartkit/bar-chart-model.js             Bar chart view-model builder
+src/chartkit/bar-chart-controller.js        Bar chart Highcharts controller
+src/chartkit/uncertainty-chart-model.js     Uncertainty chart view-model builder
+src/chartkit/uncertainty-chart-controller.js Uncertainty chart Highcharts controller
+src/chartkit/chart-mounts.js                Framework-neutral chart mount lifecycle
+src/shared/                                 Shared demo controls, formatting, and core utilities
+uncertainty-range-comparison/               Nested uncertainty range comparison app
+docs/angular-integration.md                 Angular integration notes and examples
+vite.chartkit.config.js                     Library build config for chartkit
+scripts/smoke-chartkit-build.mjs            Built-package smoke test
 ```
 
-## Default Behavior
+## Requirements
 
-On first load, the app starts with:
+- Node.js `22.12.0` is recorded in `.nvmrc`
+- npm
 
-- `Bars per page`: `5`
-- `Orientation`: `Horizontal`
-- `Sort`: `Value ↓`
-- `Show values in bars`: enabled
-- `Show data table`: enabled
-- `Notation`: `Compact`
-- `Style`: `Currency`
-- `Currency`: `USD`
+Use the project Node version with:
 
-## Using the App
+```sh
+nvm use
+```
 
-### Display tab
+Install dependencies from the repository root:
 
-- Change bars per page
-- Toggle value labels inside bars
-- Show or hide the data table
-- Switch between horizontal and vertical orientation
-- Change the sort order
-- Open `Advanced` to adjust left margin and bar height
-- Reset the controls to default settings
+```sh
+npm install
+```
 
-### Axis tab
+## Development
 
-- Toggle auto-scaling
-- Set manual axis min and max values
+Run the root scrollable bar chart:
 
-### Format tab
+```sh
+npm run dev
+```
 
-- Set locale
-- Choose notation such as standard, compact, scientific, or engineering
-- Switch between decimal and currency formatting
-- Choose a currency code
-- Invalid currency codes are highlighted and fall back to `USD`
-- Set max fraction digits
-- Toggle grouping separators
+Run the root app on a fixed port:
 
-## Data Table
+```sh
+npm run dev:bar
+```
 
-When enabled, the table shows the full sorted dataset below the chart.
+Run the uncertainty app on a fixed port:
 
-- Rows currently visible in the chart are highlighted
-- Click `Category` or `Value` headers to sort the chart and table together
-- The table stays in sync with sorting, scrolling, dataset changes, and formatting
-- The reset button does not change the currently selected dataset
+```sh
+npm run dev:uncertainty
+```
 
-## Sorting Notes
+Run both apps at the same time:
 
-- `Value ↑` and `Value ↓` sort numerically
-- `Name A-Z` and `Name Z-A` use natural string sorting, so `Category 2` sorts before `Category 10`
-- Sorting uses stable secondary tie-breakers for more predictable output
+```sh
+npm run dev:both
+```
 
-## Deployment
+The default fixed ports are:
 
-This project is configured for GitHub Pages using GitHub Actions.
+- bar chart: `http://localhost:5173`
+- uncertainty chart: `http://localhost:5174`
 
-### Build for production
+## Builds
 
-```bash
+Build the root Vite app:
+
+```sh
 npm run build
 ```
 
-### GitHub Pages notes
+Build the nested uncertainty app:
+
+```sh
+npm --prefix uncertainty-range-comparison run build
+```
+
+Build the reusable chartkit package artifact:
+
+```sh
+npm run build:chartkit
+```
+
+The chartkit build writes ES modules to:
+
+```text
+dist/chartkit/
+```
+
+The chartkit package build keeps `highcharts` external, so a host app such as Angular should install and own `highcharts`.
+
+## Tests
+
+Run the full Node test suite:
+
+```sh
+npm test
+```
+
+Build and smoke-test the chartkit package artifact:
+
+```sh
+npm run test:chartkit-build
+```
+
+The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected public exports exist.
+
+## App Features
+
+The scrollable bar chart supports:
+
+- horizontal and vertical bar orientation
+- multiple sample datasets
+- value and name sorting
+- visible-window scrolling
+- auto-scale and manual axis bounds
+- compact, standard, scientific, engineering, decimal, and currency formatting
+- value labels inside bars
+- sortable synchronized data table
+
+The uncertainty range comparison supports:
+
+- horizontal and vertical range orientation
+- low, base, high, mean, and spread calculations
+- base labels and base divider markers
+- optional mean marker shown as an `x`
+- range-aware sorting
+- matching tooltip style for range bars
+- vertical label fallback when labels do not fit inside bars
+- synchronized data table with input adjustment warnings
+
+## Angular Path
+
+See [docs/angular-integration.md](docs/angular-integration.md) for a concrete Angular usage pattern.
+
+The intended split is:
+
+- Angular owns templates, forms, application state, and data loading.
+- `chartkit` owns chart view models and the Highcharts lifecycle.
+
+A typical Angular component should:
+
+1. Create a mount in `ngAfterViewInit`.
+2. Build a view model when inputs or form state change.
+3. Pass `viewModel.chartOptions` to `mount.update(...)`.
+4. Call `mount.destroy()` in `ngOnDestroy`.
+
+## Deployment
+
+The root app is configured for GitHub Pages.
+
+```sh
+npm run build
+```
+
+Notes:
 
 - `vite.config.js` uses `base: "/scrollable-horizontal-bar-chart/"`
-- The GitHub Pages workflow builds from `dist/`
-- In GitHub repository settings, Pages should use `GitHub Actions` as the source
-- The live site is available at [https://dwachenschwanz.github.io/scrollable-horizontal-bar-chart/](https://dwachenschwanz.github.io/scrollable-horizontal-bar-chart/)
-- After pushing to `main`, open that URL once the Pages workflow finishes successfully
+- the GitHub Pages workflow builds from `dist/`
+- repository Pages settings should use `GitHub Actions`
+- live site: [https://dwachenschwanz.github.io/scrollable-horizontal-bar-chart/](https://dwachenschwanz.github.io/scrollable-horizontal-bar-chart/)
 
-## Testing
+## Development Notes
 
-- `npm test` runs the Node-based test suite
-- Unit tests cover sort behavior, visible-slice padding, auto-scale bounds, currency validation, label width, and point padding
-- Shell smoke tests verify key default selections and checked controls in `index.html`
-
-## Notes
-
-- The demo datasets are generated in `src/chart-app.js`
-- `dataset1` includes values up to the tens of thousands to exercise numeric formatting and axis behavior
-- Auto-scale bounds, sorted rows, visible slices, table row references, and number formatters are cached to keep redraws lighter
-- Highcharts credits are disabled in the chart configuration
+- The root app imports public chart logic from `src/chartkit/index.js`.
+- Demo UI helpers come from `src/chartkit/demo-controls.js`.
+- The nested uncertainty app imports shared chartkit modules from the root `src/chartkit/` directory.
+- The compatibility utility files remain so existing app tests can keep their focused imports.
+- Highcharts credits are disabled by the chart controllers.

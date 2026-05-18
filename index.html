@@ -279,12 +279,26 @@
 
             <label for="yMinInput">
               <span>Axis Min:</span>
-              <input type="number" id="yMinInput" value="0" step="10" />
+              <span class="axis-bound-control">
+                <input type="number" id="yMinInput" value="0" step="10" />
+                <output
+                  class="axis-bound-value"
+                  id="yMinFormattedValue"
+                  for="yMinInput"
+                ></output>
+              </span>
             </label>
 
             <label for="yMaxInput">
               <span>Axis Max:</span>
-              <input type="number" id="yMaxInput" value="100" step="10" />
+              <span class="axis-bound-control">
+                <input type="number" id="yMaxInput" value="100" step="10" />
+                <output
+                  class="axis-bound-value"
+                  id="yMaxFormattedValue"
+                  for="yMaxInput"
+                ></output>
+              </span>
             </label>
           </div>
 

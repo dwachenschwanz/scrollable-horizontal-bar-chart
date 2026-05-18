@@ -61,8 +61,13 @@ test("sanitizeAxisBounds swaps reversed min and max", () => {
   assert.deepEqual(sanitizeAxisBounds("50", "10"), { min: 10, max: 50 });
 });
 
-test("getAutoScaleBounds rounds outward to tens", () => {
+test("getAutoScaleBounds anchors positive ranges at zero with a display-friendly max", () => {
   assert.deepEqual(getAutoScaleBounds([3, 18, 44]), { min: 0, max: 50 });
+  assert.deepEqual(getAutoScaleBounds([23, 38, 44]), { min: 0, max: 50 });
+  assert.deepEqual(getAutoScaleBounds([12000, 38000, 44415]), {
+    min: 0,
+    max: 50000,
+  });
   assert.deepEqual(getAutoScaleBounds([-3, 18, 44]), { min: -10, max: 50 });
 });
 

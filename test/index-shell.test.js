@@ -63,6 +63,13 @@ test("index shell includes currency validation status element", () => {
   );
 });
 
+test("index shell includes formatted axis bound readouts", () => {
+  assert.match(indexHtml, /id="yMinFormattedValue"/);
+  assert.match(indexHtml, /for="yMinInput"/);
+  assert.match(indexHtml, /id="yMaxFormattedValue"/);
+  assert.match(indexHtml, /for="yMaxInput"/);
+});
+
 test("index shell includes draggable collapsible controls overlay", () => {
   assert.match(indexHtml, /<div class="workspace" id="workspace">/);
   assert.match(indexHtml, /class="controls-sidebar"/);
