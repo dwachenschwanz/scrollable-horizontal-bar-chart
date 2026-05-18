@@ -1,21 +1,16 @@
 import {
+  createUncertaintyChartViewModel,
+  mountUncertaintyChart,
+} from "../../src/chartkit/index.js";
+import {
   createAxisFormatControls,
   createChartWindowControls,
   createControlTabs,
   createDataTableControls,
   createFloatingSidebarController,
-  createUncertaintyChartController,
-  createUncertaintyChartOptions,
   debounce,
   escapeHtml,
-} from "../../src/chartkit/index.js";
-import {
-  buildSlice,
-  getAutoScaleBounds,
-  normalizeUncertaintyValues,
-  sanitizeAxisBounds,
-  sortRows,
-} from "./uncertainty-utils.js";
+} from "../../src/chartkit/demo-controls.js";
 
 const TRACK_HEIGHT = 300;
 const UNCERTAINTY_BAR_COLOR = "#2caffe";
@@ -87,18 +82,14 @@ const sampleDatasets = {
 };
 
 const state = {
-  autoScaleBoundsCache: null,
-  autoScaleBoundsCacheKey: "",
   chart: null,
-  chartController: null,
+  chartMount: null,
   currentDatasetKey: defaultSettings.datasetKey,
   formatterCache: new Map(),
   nextRowId: 1,
   rows: [],
-  sliceCache: null,
-  sliceCacheKey: "",
-  sortedRowsCache: null,
-  sortedRowsCacheKey: "",
+  viewModelCache: null,
+  viewModelCacheKey: "",
 };
 
 const elements = {
@@ -197,10 +188,7 @@ const windowControls = createChartWindowControls({
   initialWindowSize: Number.parseInt(defaultSettings.windowSize, 10),
   minThumbHeight: 32,
   onScrollPosition: () => updateChartWindow(),
-  onWindowChange: () => {
-    state.sliceCache = null;
-    state.sliceCacheKey = "";
-  },
+  onWindowChange: () => invalidateViewModelCache(),
   trackHeight: TRACK_HEIGHT,
 });
 const dataTableControls = createDataTableControls({
@@ -213,7 +201,7 @@ const dataTableControls = createDataTableControls({
   getRenderKey: () => getTableRenderKey(),
   getSortMode: () => elements.sortSelector.value,
   getVisibleIndexes: () =>
-    windowControls.getVisibleIndexes(getSortedRows().length),
+    windowControls.getVisibleIndexes(getViewModel().sortedRows.length),
   onAfterRender: () => updateDataStatus(),
   renderRows: () => getDataTableRowsMarkup(),
   sortFields: ["low", "base", "high", "mean", "spread"],
@@ -272,7 +260,7 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
 
 function resetToDefaults() {
   applyDefaultSettings({ preserveRows: true });
-  invalidateRowsCache();
+  invalidateViewModelCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
   updateChartHeightDisplay();
@@ -282,77 +270,21 @@ function resetToDefaults() {
   renderChart({ forceTableRender: true, resetScroll: true });
 }
 
-function invalidateRowsCache() {
-  state.autoScaleBoundsCache = null;
-  state.autoScaleBoundsCacheKey = "";
-  state.sortedRowsCache = null;
-  state.sortedRowsCacheKey = "";
-  state.sliceCache = null;
-  state.sliceCacheKey = "";
+function invalidateViewModelCache() {
+  state.viewModelCache = null;
+  state.viewModelCacheKey = "";
 }
 
 function setSortMode(sortMode, { resetScroll = true } = {}) {
   elements.sortSelector.value = sortMode;
-  invalidateRowsCache();
+  invalidateViewModelCache();
   renderChart({ forceTableRender: true, resetScroll });
-}
-
-function getNormalizedRows() {
-  return state.rows.map((row, sourceIndex) => {
-    const normalized = normalizeUncertaintyValues(row.low, row.base, row.high);
-    return {
-      ...row,
-      ...normalized,
-      name: row.name.trim() || `Bar ${sourceIndex + 1}`,
-      sourceIndex,
-    };
-  });
 }
 
 function getRowsCacheKey() {
   return state.rows
     .map((row) => [row.id, row.name, row.low, row.base, row.high].join(":"))
     .join("|");
-}
-
-function getAutoScaleBoundsCacheKey() {
-  return getRowsCacheKey();
-}
-
-function getSortedRowsCacheKey() {
-  return `${getRowsCacheKey()}|${elements.sortSelector.value}`;
-}
-
-function getSortedRows() {
-  const cacheKey = getSortedRowsCacheKey();
-  if (state.sortedRowsCache && state.sortedRowsCacheKey === cacheKey) {
-    return state.sortedRowsCache;
-  }
-
-  state.sortedRowsCache = sortRows(getNormalizedRows(), elements.sortSelector.value);
-  state.sortedRowsCacheKey = cacheKey;
-  return state.sortedRowsCache;
-}
-
-function getSliceCacheKey() {
-  return `${getSortedRowsCacheKey()}|${windowControls.currentStart}|${windowControls.windowSize}`;
-}
-
-function getSlice() {
-  const cacheKey = getSliceCacheKey();
-  if (state.sliceCache && state.sliceCacheKey === cacheKey) {
-    return state.sliceCache;
-  }
-
-  const result = buildSlice(
-    getSortedRows(),
-    windowControls.currentStart,
-    windowControls.windowSize
-  );
-
-  state.sliceCache = result;
-  state.sliceCacheKey = cacheKey;
-  return result;
 }
 
 function updateLeftMarginDisplay() {
@@ -371,88 +303,72 @@ function updateChartHeightDisplay() {
   );
 }
 
-function getAutoBounds() {
-  const cacheKey = getAutoScaleBoundsCacheKey();
-  if (!state.autoScaleBoundsCache || state.autoScaleBoundsCacheKey !== cacheKey) {
-    state.autoScaleBoundsCache = getAutoScaleBounds(getNormalizedRows());
-    state.autoScaleBoundsCacheKey = cacheKey;
-  }
-
-  return state.autoScaleBoundsCache;
-}
-
-function getAxisBounds() {
-  const autoBounds = getAutoBounds();
-
-  if (elements.autoScaleCheckbox.checked) {
-    elements.yMinInput.value = String(autoBounds.min);
-    elements.yMaxInput.value = String(autoBounds.max);
-    axisControls.updateAxisBoundDisplays(autoBounds);
-    return autoBounds;
-  }
-
-  const bounds = sanitizeAxisBounds(
-    elements.yMinInput.value,
-    elements.yMaxInput.value,
-    autoBounds
-  );
-
-  elements.yMinInput.value = String(bounds.min);
-  elements.yMaxInput.value = String(bounds.max);
-  axisControls.updateAxisBoundDisplays(bounds);
-  return bounds;
-}
-
-function getChartOrientation() {
-  return elements.orientationSelector.value;
-}
-
-function getVisibleRangeData(slice) {
-  const rangeFormatter = axisControls.getValueAxisFormatter();
-  const markerFormatter =
-    axisControls.getStandardCurrencyFormatter() ?? rangeFormatter;
-
-  return slice.rows.map((row, index) => {
-    if (row.empty) {
-      return {
-        empty: true,
-        index,
-        row,
-      };
-    }
-
-    return {
-      color: UNCERTAINTY_BAR_COLOR,
-      formattedBase: markerFormatter.format(row.base),
-      formattedHigh: markerFormatter.format(row.high),
-      formattedLow: markerFormatter.format(row.low),
-      formattedMean: markerFormatter.format(row.mean),
-      formattedSpread: rangeFormatter.format(row.spread),
-      index,
-      row,
-    };
-  });
-}
-
-function getChartOptions() {
-  const axisBounds = getAxisBounds();
-  const orientation = getChartOrientation();
-  const slice = getSlice();
-  const valueAxisFormatter = axisControls.getValueAxisFormatter();
-  const visibleRangeData = getVisibleRangeData(slice);
-
-  return createUncertaintyChartOptions({
-    axisBounds,
+function getViewModelSettings() {
+  return {
+    autoScale: elements.autoScaleCheckbox.checked,
     barHeight: elements.barHeightSlider.value,
     chartHeight: elements.chartHeightSlider.value,
+    color: UNCERTAINTY_BAR_COLOR,
+    currentStart: windowControls.currentStart,
     leftMargin: elements.leftMarginSlider.value,
-    orientation,
-    rows: visibleRangeData,
+    orientation: elements.orientationSelector.value,
     showLabels: elements.toggleLabels.checked,
     showMean: elements.toggleMean.checked,
-    slice,
-    valueAxisFormatter,
+    sort: elements.sortSelector.value,
+    windowSize: windowControls.windowSize,
+    yMax: elements.yMaxInput.value,
+    yMin: elements.yMinInput.value,
+  };
+}
+
+function getViewModelCacheKey() {
+  const settings = getViewModelSettings();
+
+  return [
+    getRowsCacheKey(),
+    settings.autoScale,
+    settings.barHeight,
+    settings.chartHeight,
+    settings.color,
+    settings.currentStart,
+    settings.leftMargin,
+    settings.orientation,
+    settings.showLabels,
+    settings.showMean,
+    settings.sort,
+    settings.windowSize,
+    settings.autoScale ? "" : settings.yMax,
+    settings.autoScale ? "" : settings.yMin,
+    ...axisControls.getFormatRenderKeyParts(),
+  ].join("|");
+}
+
+function getViewModel() {
+  const cacheKey = getViewModelCacheKey();
+
+  if (state.viewModelCache && state.viewModelCacheKey === cacheKey) {
+    return state.viewModelCache;
+  }
+
+  const rangeFormatter = axisControls.getValueAxisFormatter();
+
+  state.viewModelCache = createUncertaintyChartViewModel({
+    formatters: {
+      markerFormatter: axisControls.getStandardCurrencyFormatter() ?? rangeFormatter,
+      rangeFormatter,
+      valueAxisFormatter: rangeFormatter,
+    },
+    rows: state.rows,
+    settings: getViewModelSettings(),
   });
+  state.viewModelCacheKey = cacheKey;
+  return state.viewModelCache;
+}
+
+function syncAxisBoundsControls(axisBounds) {
+  elements.yMinInput.value = String(axisBounds.min);
+  elements.yMaxInput.value = String(axisBounds.max);
+  axisControls.updateAxisBoundDisplays(axisBounds);
 }
 
 function getTableRenderKey() {
@@ -468,7 +384,7 @@ function getDataTableRowsMarkup() {
   const tableFormatter =
     axisControls.getStandardCurrencyFormatter() ??
     axisControls.getValueAxisFormatter();
-  const allRows = getSortedRows();
+  const allRows = getViewModel().sortedRows;
 
   return allRows
     .map((row, sortedIndex) => {
@@ -496,7 +412,7 @@ function getDataTableRowsMarkup() {
 }
 
 function updateDataStatus(message = "") {
-  const adjustedCount = getNormalizedRows().filter(
+  const adjustedCount = getViewModel().normalizedRows.filter(
     (row) => row.baseWasClamped || row.lowHighWereSwapped
   ).length;
 
@@ -511,14 +427,12 @@ function updateDataStatus(message = "") {
       : `${state.rows.length} bars.`;
 }
 
-function getChartController() {
-  if (!state.chartController) {
-    state.chartController = createUncertaintyChartController(
-      elements.chartSurface
-    );
+function getChartMount() {
+  if (!state.chartMount) {
+    state.chartMount = mountUncertaintyChart(elements.chartSurface);
   }
 
-  return state.chartController;
+  return state.chartMount;
 }
 
 function renderChart({ forceTableRender = false, resetScroll = false } = {}) {
@@ -530,9 +444,10 @@ function renderChart({ forceTableRender = false, resetScroll = false } = {}) {
   updateLeftMarginDisplay();
   windowControls.updateScrollbar();
 
-  const options = getChartOptions();
+  const viewModel = getViewModel();
 
-  state.chart = getChartController().render(options);
+  syncAxisBoundsControls(viewModel.axisBounds);
+  state.chart = getChartMount().update(viewModel.chartOptions);
 
   dataTableControls.render({ force: forceTableRender });
 }
@@ -542,15 +457,16 @@ function updateChartWindow() {
     return;
   }
 
-  const options = getChartOptions();
-  state.chart = getChartController().render(options);
+  const viewModel = getViewModel();
+  syncAxisBoundsControls(viewModel.axisBounds);
+  state.chart = getChartMount().update(viewModel.chartOptions);
   dataTableControls.updateHighlights();
 }
 
 function changeDataset(datasetKey) {
   state.currentDatasetKey = datasetKey;
   state.rows = cloneDatasetRows(datasetKey);
-  invalidateRowsCache();
+  invalidateViewModelCache();
   renderChart({ forceTableRender: true, resetScroll: true });
 }
 
