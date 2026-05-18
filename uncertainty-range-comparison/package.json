@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:both": "npm --prefix .. run dev:both",
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test"

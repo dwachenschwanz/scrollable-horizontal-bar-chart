@@ -17,6 +17,11 @@ test("index shell keeps expected default selected options", () => {
   );
   assert.match(
     indexHtml,
+    /<option value="horizontal" selected>Horizontal<\/option>/,
+    "Orientation should default to horizontal"
+  );
+  assert.match(
+    indexHtml,
     /<option value="baseDesc" selected>Base high to low<\/option>/,
     "Sort should default to base high to low"
   );
@@ -102,6 +107,7 @@ test("index shell includes collapsible controls sidebar affordance", () => {
 test("index shell tucks layout tuning controls into advanced display controls", () => {
   assert.match(indexHtml, /<details class="advanced-controls" id="advancedDisplayControls">/);
   assert.match(indexHtml, /<summary>Advanced<\/summary>/);
+  assert.match(indexHtml, /id="orientationSelector"/);
   assert.match(indexHtml, /id="leftMarginSlider"/);
   assert.match(indexHtml, /id="barHeightSlider"/);
   assert.match(indexHtml, /id="chartHeightSlider"/);

@@ -1,5 +1,10 @@
 import Highcharts from "highcharts";
 import {
+  createSafeNumberFormatter,
+  debounce,
+  escapeHtml,
+} from "../../src/shared/chart-core.js";
+import {
   buildSlice,
   getAutoScaleBounds,
   getHorizontalCategoryLabelWidth,
@@ -49,6 +54,7 @@ const defaultSettings = {
   chartHeight: "400",
   datasetKey: "capitalPlan",
   leftMargin: "120",
+  orientation: "horizontal",
   showDataTable: true,
   showLabels: true,
   showMean: true,
@@ -147,6 +153,7 @@ const elements = {
   dynamicSliderStyle: document.getElementById("dynamic-slider-style"),
   leftMarginSlider: document.getElementById("leftMarginSlider"),
   leftMarginValue: document.getElementById("leftMarginValue"),
+  orientationSelector: document.getElementById("orientationSelector"),
   resetDefaultsButton: document.getElementById("resetDefaultsButton"),
   showDataTableCheckbox: document.getElementById("showDataTableCheckbox"),
   scrollbar: document.getElementById("scrollbar"),
@@ -418,6 +425,7 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
   elements.leftMarginSlider.value = defaultSettings.leftMargin;
   elements.barHeightSlider.value = defaultSettings.barHeight;
   elements.chartHeightSlider.value = defaultSettings.chartHeight;
+  elements.orientationSelector.value = defaultSettings.orientation;
   elements.sortSelector.value = defaultSettings.sort;
   elements.autoScaleCheckbox.checked = defaultSettings.autoScale;
   elements.yMinInput.value = defaultSettings.yMin;
@@ -515,15 +523,6 @@ function getSlice() {
 
 function updateDataTableVisibility() {
   elements.dataTablePanel.hidden = !elements.showDataTableCheckbox.checked;
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
 
 function getMaxStart() {
@@ -661,31 +660,6 @@ function getSanitizedCurrencyCode() {
   );
 }
 
-function createSafeNumberFormatter(locale, options, fallbackOptions = {}) {
-  const cacheKey = JSON.stringify({
-    fallbackOptions,
-    locale: locale ?? "",
-    options,
-  });
-  if (state.formatterCache.has(cacheKey)) {
-    return state.formatterCache.get(cacheKey);
-  }
-
-  let formatter;
-  try {
-    formatter = new Intl.NumberFormat(locale, options);
-  } catch (error) {
-    console.warn(
-      "Invalid Intl.NumberFormat options, using safe defaults instead.",
-      error
-    );
-    formatter = new Intl.NumberFormat(undefined, fallbackOptions);
-  }
-
-  state.formatterCache.set(cacheKey, formatter);
-  return formatter;
-}
-
 function getValueAxisFormatter() {
   const locale = elements.xAxisLocaleInput.value.trim() || undefined;
   const maximumFractionDigits = Number.parseInt(
@@ -712,16 +686,21 @@ function getValueAxisFormatter() {
     options.currencyDisplay = "symbol";
   }
 
-  return createSafeNumberFormatter(locale, options, {
-    notation: "standard",
-    style: style === "currency" ? "currency" : "decimal",
-    ...(style === "currency"
-      ? {
-          currency: defaultSettings.xAxisCurrency,
-          currencyDisplay: "symbol",
-        }
-      : {}),
-  });
+  return createSafeNumberFormatter(
+    state.formatterCache,
+    locale,
+    options,
+    {
+      notation: "standard",
+      style: style === "currency" ? "currency" : "decimal",
+      ...(style === "currency"
+        ? {
+            currency: defaultSettings.xAxisCurrency,
+            currencyDisplay: "symbol",
+          }
+        : {}),
+    }
+  );
 }
 
 function getMarkerValueFormatter() {
@@ -750,16 +729,25 @@ function getMarkerValueFormatter() {
     );
   }
 
-  return createSafeNumberFormatter(locale, options, {
-    currency: defaultSettings.xAxisCurrency,
-    currencyDisplay: "symbol",
-    notation: "standard",
-    style: "currency",
-    useGrouping: elements.xAxisGroupingCheckbox.checked,
-  });
+  return createSafeNumberFormatter(
+    state.formatterCache,
+    locale,
+    options,
+    {
+      currency: defaultSettings.xAxisCurrency,
+      currencyDisplay: "symbol",
+      notation: "standard",
+      style: "currency",
+      useGrouping: elements.xAxisGroupingCheckbox.checked,
+    }
+  );
 }
 
-function getCategoryAxisOptions(categories) {
+function getChartOrientation() {
+  return elements.orientationSelector.value;
+}
+
+function getCategoryAxisOptions(categories, isVertical) {
   const categoryLabelWidth = getHorizontalCategoryLabelWidth(
     elements.leftMarginSlider.value
   );
@@ -768,23 +756,58 @@ function getCategoryAxisOptions(categories) {
     categories,
     max: categories.length - 0.5,
     min: -0.5,
-    reversed: true,
+    reversed: !isVertical,
     tickLength: 0,
     tickPositions: categories.map((_, index) => index),
     title: {
       text: null,
     },
-    labels: {
-      reserveSpace: false,
-      useHTML: true,
-      x: -8,
-      formatter() {
-        const label = typeof this.value === "string" ? this.value : "";
-        return `<span class="chart-axis-label" title="${escapeHtml(label)}" style="width:${categoryLabelWidth}px">${escapeHtml(label)}</span>`;
-      },
-    },
+    labels: isVertical
+      ? {}
+      : {
+          reserveSpace: false,
+          useHTML: true,
+          x: -8,
+          formatter() {
+            const label = typeof this.value === "string" ? this.value : "";
+            return `<span class="chart-axis-label" title="${escapeHtml(label)}" style="width:${categoryLabelWidth}px">${escapeHtml(label)}</span>`;
+          },
+        },
     scrollbar: {
       enabled: true,
+    },
+  };
+}
+
+function getValueAxisOptions(axisBounds, valueAxisFormatter, isVertical) {
+  return {
+    gridLineWidth: 1,
+    labels: isVertical
+      ? {
+          formatter() {
+            return valueAxisFormatter.format(this.value);
+          },
+        }
+      : {
+          align: "center",
+          formatter() {
+            return valueAxisFormatter.format(this.value);
+          },
+          x: 0,
+          y: 10,
+        },
+    max: axisBounds.max,
+    min: axisBounds.min,
+    opposite: !isVertical,
+    tickLength: 0,
+    title: {
+      align: "middle",
+      offset: 0,
+      rotation: 0,
+      style: { fontWeight: "bold", fontSize: 15 },
+      text: null,
+      x: 0,
+      y: isVertical ? 0 : -20,
     },
   };
 }
@@ -987,6 +1010,203 @@ function positionBaseLabel(label, chart, baseX, yCenter, meanX = null) {
   });
 }
 
+function getBestVerticalLabelBaseline({
+  baseY,
+  labelHeight,
+  maxY,
+  meanY = null,
+  minY,
+}) {
+  const labelOffset = 8;
+  const markerClearance = 14;
+  const candidates = [
+    baseY - labelOffset,
+    baseY + labelHeight + labelOffset,
+  ];
+
+  if (meanY !== null) {
+    candidates.push(
+      meanY - markerClearance - labelOffset,
+      meanY + markerClearance + labelHeight + labelOffset
+    );
+  }
+
+  const validCandidates = candidates.filter(
+    (candidateY) => candidateY >= minY && candidateY <= maxY
+  );
+
+  if (validCandidates.length === 0) {
+    return null;
+  }
+
+  return validCandidates.reduce((bestY, candidateY) => {
+    const candidateOverlap =
+      meanY === null
+        ? 0
+        : getRangeOverlapWidth(
+            candidateY - labelHeight,
+            candidateY,
+            meanY - markerClearance,
+            meanY + markerClearance
+          );
+    const bestOverlap =
+      meanY === null
+        ? 0
+        : getRangeOverlapWidth(
+            bestY - labelHeight,
+            bestY,
+            meanY - markerClearance,
+            meanY + markerClearance
+          );
+
+    if (candidateOverlap !== bestOverlap) {
+      return candidateOverlap < bestOverlap ? candidateY : bestY;
+    }
+
+    return Math.abs(candidateY - baseY) < Math.abs(bestY - baseY)
+      ? candidateY
+      : bestY;
+  }, validCandidates[0]);
+}
+
+function getClampedCenter(value, min, max) {
+  return min <= max ? clampPixelPosition(value, min, max) : value;
+}
+
+function drawVerticalBaseLabel({
+  barThickness,
+  baseY,
+  categoryCenter,
+  chart,
+  layer,
+  meanY,
+  rangeBottom,
+  rangeTop,
+  renderer,
+  text,
+}) {
+  const fontStyles = {
+    fontSize: "12px",
+    fontWeight: "700",
+    pointerEvents: "none",
+  };
+  const insidePadding = 4;
+  const measure = renderer
+    .text(text, 0, 0)
+    .attr({
+      align: "center",
+    })
+    .css(fontStyles)
+    .add(layer);
+  const textBox = measure.getBBox();
+  measure.destroy();
+  const fitsInsideBarWidth = textBox.width <= barThickness - insidePadding * 2;
+  const insideBaseline = fitsInsideBarWidth
+    ? getBestVerticalLabelBaseline({
+        baseY,
+        labelHeight: textBox.height,
+        maxY: rangeBottom - insidePadding,
+        meanY,
+        minY: rangeTop + insidePadding + textBox.height,
+      })
+    : null;
+
+  if (insideBaseline !== null) {
+    renderer
+      .text(text, categoryCenter, insideBaseline)
+      .attr({
+        align: "center",
+      })
+      .css({
+        ...fontStyles,
+        color: "#ffffff",
+      })
+      .add(layer);
+    return;
+  }
+
+  const pillPaddingX = 6;
+  const pillPaddingY = 4;
+  const pillWidth = textBox.width + pillPaddingX * 2;
+  const pillHeight = textBox.height + pillPaddingY * 2;
+  const plotPadding = 2;
+  const minCenterX = chart.plotLeft + pillWidth / 2 + plotPadding;
+  const maxCenterX =
+    chart.plotLeft + chart.plotWidth - pillWidth / 2 - plotPadding;
+  const pillCenterX = getClampedCenter(categoryCenter, minCenterX, maxCenterX);
+  const minBaseline = chart.plotTop + pillHeight + plotPadding;
+  const maxBaseline = chart.plotTop + chart.plotHeight - plotPadding;
+  const pillBaseline =
+    getBestVerticalLabelBaseline({
+      baseY,
+      labelHeight: pillHeight,
+      maxY: maxBaseline,
+      meanY,
+      minY: minBaseline,
+    }) ??
+    (minBaseline <= maxBaseline
+      ? clampPixelPosition(baseY - 8, minBaseline, maxBaseline)
+      : chart.plotTop + pillHeight);
+  const pillLeft = pillCenterX - pillWidth / 2;
+  const pillTop = pillBaseline - pillHeight;
+  const pillBottom = pillTop + pillHeight;
+  const connectorEndY =
+    baseY < pillTop ? pillTop : baseY > pillBottom ? pillBottom : null;
+
+  if (connectorEndY !== null) {
+    renderer
+      .path([
+        ["M", categoryCenter, baseY],
+        ["L", pillCenterX, connectorEndY],
+      ])
+      .attr({
+        stroke: "#334155",
+        "stroke-linecap": "round",
+        "stroke-width": 1.5,
+      })
+      .css({
+        pointerEvents: "none",
+      })
+      .add(layer);
+  }
+
+  renderer
+    .rect(pillLeft, pillTop, pillWidth, pillHeight, 4)
+    .attr({
+      fill: "#ffffff",
+      opacity: 0.96,
+      stroke: "#cbd5e1",
+      "stroke-width": 1,
+    })
+    .css({
+      pointerEvents: "none",
+    })
+    .add(layer);
+
+  renderer
+    .text(text, pillCenterX, pillTop + pillPaddingY - textBox.y)
+    .attr({
+      align: "center",
+    })
+    .css({
+      ...fontStyles,
+      color: "#0f172a",
+    })
+    .add(layer);
+}
+
+function attachRangeTooltip(range, chart, tooltipElement, item) {
+  range.element.addEventListener("mouseenter", (event) => {
+    showUncertaintyTooltip(chart, tooltipElement, item, event);
+  });
+  range.element.addEventListener("mousemove", (event) => {
+    positionUncertaintyTooltip(chart, tooltipElement, event);
+  });
+  range.element.addEventListener("mouseleave", () => {
+    hideUncertaintyTooltip(tooltipElement);
+  });
+}
+
 function drawUncertaintyRanges(chart) {
   const config = chart.options.custom?.uncertainty;
   if (!config) {
@@ -996,10 +1216,11 @@ function drawUncertaintyRanges(chart) {
 
   destroyUncertaintyLayer(chart);
 
-  const xAxis = chart.xAxis[0];
-  const yAxis = chart.yAxis[0];
-  const axisMin = xAxis.min ?? config.axisBounds.min;
-  const axisMax = xAxis.max ?? config.axisBounds.max;
+  const isVertical = config.orientation === "vertical";
+  const valueAxis = isVertical ? chart.yAxis[0] : chart.xAxis[0];
+  const categoryAxis = isVertical ? chart.xAxis[0] : chart.yAxis[0];
+  const axisMin = valueAxis.min ?? config.axisBounds.min;
+  const axisMax = valueAxis.max ?? config.axisBounds.max;
   const renderer = chart.renderer;
   const clipRect = renderer.clipRect(
     chart.plotLeft,
@@ -1013,10 +1234,11 @@ function drawUncertaintyRanges(chart) {
     .clip(clipRect)
     .add();
   const tooltipElement = createUncertaintyTooltip(chart);
+  const categorySpan = isVertical ? chart.plotWidth : chart.plotHeight;
   const categoryStep =
     config.rows.length > 1
-      ? Math.abs(yAxis.toPixels(1) - yAxis.toPixels(0))
-      : chart.plotHeight / Math.max(config.rows.length, 1);
+      ? Math.abs(categoryAxis.toPixels(1) - categoryAxis.toPixels(0))
+      : categorySpan / Math.max(config.rows.length, 1);
   const maxBarThickness = Math.max(8, categoryStep - 6);
   const barThickness = Math.max(
     6,
@@ -1036,18 +1258,85 @@ function drawUncertaintyRanges(chart) {
       return;
     }
 
-    const xLow = xAxis.toPixels(visibleLow);
-    const xHigh = xAxis.toPixels(visibleHigh);
-    const x = Math.min(xLow, xHigh);
-    const width = Math.max(1, Math.abs(xHigh - xLow));
-    const yCenter = yAxis.toPixels(item.index);
-    const y = yCenter - barThickness / 2;
+    const categoryCenter = categoryAxis.toPixels(item.index);
     const baseIsVisible = row.base >= visibleLow && row.base <= visibleHigh;
     const meanIsVisible = row.mean >= visibleLow && row.mean <= visibleHigh;
-    const meanX =
-      config.showMean && meanIsVisible ? xAxis.toPixels(row.mean) : null;
+    const meanPosition =
+      config.showMean && meanIsVisible ? valueAxis.toPixels(row.mean) : null;
     const titleText = `${row.name}: Low ${item.formattedLow}, Base ${item.formattedBase}, High ${item.formattedHigh}, Mean ${item.formattedMean}, Spread ${item.formattedSpread}`;
 
+    if (isVertical) {
+      const yLow = valueAxis.toPixels(visibleLow);
+      const yHigh = valueAxis.toPixels(visibleHigh);
+      const x = categoryCenter - barThickness / 2;
+      const y = Math.min(yLow, yHigh);
+      const height = Math.max(1, Math.abs(yHigh - yLow));
+      const range = renderer
+        .rect(x, y, barThickness, height, 0)
+        .attr({
+          "aria-label": titleText,
+          fill: item.color,
+          role: "img",
+          stroke: UNCERTAINTY_BAR_BORDER_COLOR,
+          "stroke-width": 1,
+        })
+        .add(layer);
+      attachRangeTooltip(range, chart, tooltipElement, item);
+
+      if (!baseIsVisible) {
+        if (meanPosition !== null) {
+          drawMeanMarker(renderer, layer, categoryCenter, meanPosition, barThickness);
+        }
+        return;
+      }
+
+      const baseY = valueAxis.toPixels(row.base);
+      const lineLeft = x + 2;
+      const lineRight = x + barThickness - 2;
+
+      renderer
+        .path([
+          ["M", lineLeft, baseY],
+          ["L", lineRight, baseY],
+        ])
+        .attr({
+          stroke: "#ffffff",
+          "stroke-linecap": "round",
+          "stroke-width": 2,
+        })
+        .css({
+          pointerEvents: "none",
+        })
+        .add(layer);
+
+      if (config.showLabels) {
+        drawVerticalBaseLabel({
+          barThickness,
+          baseY,
+          categoryCenter,
+          chart,
+          layer,
+          meanY: meanPosition,
+          rangeBottom: y + height,
+          rangeTop: y,
+          renderer,
+          text: item.formattedBase,
+        });
+      }
+
+      if (meanPosition !== null) {
+        drawMeanMarker(renderer, layer, categoryCenter, meanPosition, barThickness);
+      }
+
+      return;
+    }
+
+    const xLow = valueAxis.toPixels(visibleLow);
+    const xHigh = valueAxis.toPixels(visibleHigh);
+    const x = Math.min(xLow, xHigh);
+    const width = Math.max(1, Math.abs(xHigh - xLow));
+    const yCenter = categoryCenter;
+    const y = yCenter - barThickness / 2;
     const range = renderer
       .rect(x, y, width, barThickness, 0)
       .attr({
@@ -1058,24 +1347,16 @@ function drawUncertaintyRanges(chart) {
         "stroke-width": 1,
       })
       .add(layer);
-    range.element.addEventListener("mouseenter", (event) => {
-      showUncertaintyTooltip(chart, tooltipElement, item, event);
-    });
-    range.element.addEventListener("mousemove", (event) => {
-      positionUncertaintyTooltip(chart, tooltipElement, event);
-    });
-    range.element.addEventListener("mouseleave", () => {
-      hideUncertaintyTooltip(tooltipElement);
-    });
+    attachRangeTooltip(range, chart, tooltipElement, item);
 
     if (!baseIsVisible) {
-      if (config.showMean && meanIsVisible) {
-        drawMeanMarker(renderer, layer, xAxis.toPixels(row.mean), yCenter, barThickness);
+      if (meanPosition !== null) {
+        drawMeanMarker(renderer, layer, meanPosition, yCenter, barThickness);
       }
       return;
     }
 
-    const baseX = xAxis.toPixels(row.base);
+    const baseX = valueAxis.toPixels(row.base);
     const lineTop = y + 2;
     const lineBottom = y + barThickness - 2;
 
@@ -1104,11 +1385,11 @@ function drawUncertaintyRanges(chart) {
           pointerEvents: "none",
         })
         .add(layer);
-      positionBaseLabel(label, chart, baseX, yCenter, meanX);
+      positionBaseLabel(label, chart, baseX, yCenter, meanPosition);
     }
 
-    if (meanX !== null) {
-      drawMeanMarker(renderer, layer, meanX, yCenter, barThickness);
+    if (meanPosition !== null) {
+      drawMeanMarker(renderer, layer, meanPosition, yCenter, barThickness);
     }
   });
 
@@ -1143,9 +1424,16 @@ function getVisibleRangeData(slice) {
 
 function getChartOptions() {
   const axisBounds = getAxisBounds();
+  const isVertical = getChartOrientation() === "vertical";
   const slice = getSlice();
   const valueAxisFormatter = getValueAxisFormatter();
   const visibleRangeData = getVisibleRangeData(slice);
+  const categoryAxisOptions = getCategoryAxisOptions(slice.categories, isVertical);
+  const valueAxisOptions = getValueAxisOptions(
+    axisBounds,
+    valueAxisFormatter,
+    isVertical
+  );
 
   return {
     chart: {
@@ -1165,6 +1453,7 @@ function getChartOptions() {
       uncertainty: {
         axisBounds,
         barHeight: Number.parseFloat(elements.barHeightSlider.value),
+        orientation: getChartOrientation(),
         rows: visibleRangeData,
         showLabels: elements.toggleLabels.checked,
         showMean: elements.toggleMean.checked,
@@ -1199,31 +1488,8 @@ function getChartOptions() {
     tooltip: {
       enabled: false,
     },
-    xAxis: {
-      gridLineWidth: 1,
-      labels: {
-        align: "center",
-        formatter() {
-          return valueAxisFormatter.format(this.value);
-        },
-        x: 0,
-        y: 10,
-      },
-      max: axisBounds.max,
-      min: axisBounds.min,
-      opposite: true,
-      tickLength: 0,
-      title: {
-        align: "middle",
-        offset: 0,
-        rotation: 0,
-        style: { fontWeight: "bold", fontSize: 15 },
-        text: null,
-        x: 0,
-        y: -20,
-      },
-    },
-    yAxis: getCategoryAxisOptions(slice.categories),
+    xAxis: isVertical ? categoryAxisOptions : valueAxisOptions,
+    yAxis: isVertical ? valueAxisOptions : categoryAxisOptions,
   };
 }
 
@@ -1351,6 +1617,17 @@ function createChart(options) {
 }
 
 function updateExistingChart(options) {
+  const currentOrientation = state.chart.options.custom?.uncertainty?.orientation;
+  const nextOrientation = options.custom?.uncertainty?.orientation;
+
+  if (currentOrientation !== nextOrientation) {
+    destroyUncertaintyLayer(state.chart);
+    state.chart.destroy();
+    state.chart = null;
+    createChart(options);
+    return;
+  }
+
   state.chart.update(
     {
       chart: {
@@ -1607,6 +1884,7 @@ function bindEvents() {
   elements.showDataTableCheckbox.addEventListener("change", () =>
     renderDataTable({ force: true })
   );
+  elements.orientationSelector.addEventListener("change", () => renderChart());
   elements.leftMarginSlider.addEventListener("input", () => renderChart());
   elements.sortSelector.addEventListener("change", (event) => {
     setSortMode(event.target.value);
@@ -1663,17 +1941,6 @@ function bindEvents() {
   elements.scrollbar.addEventListener("input", (event) => {
     onScrollChange(event.target.value);
   });
-}
-
-function debounce(callback, delay) {
-  let timeoutId = null;
-
-  return (...args) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
-      callback(...args);
-    }, delay);
-  };
 }
 
 export function initializeUncertaintyApp() {
