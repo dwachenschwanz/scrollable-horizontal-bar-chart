@@ -1,9 +1,13 @@
 import Highcharts from "highcharts";
 import {
-  createSafeNumberFormatter,
   debounce,
   escapeHtml,
 } from "../../src/shared/chart-core.js";
+import {
+  createStandardCurrencyFormatter,
+  createValueAxisFormatter,
+  getSanitizedFormatCurrency,
+} from "../../src/shared/format-options.js";
 import {
   readBooleanPreference,
   readJsonPreference,
@@ -17,7 +21,6 @@ import {
   isValidCurrencyCode,
   normalizeUncertaintyValues,
   sanitizeAxisBounds,
-  sanitizeCurrencyCode,
   sortRows,
 } from "./uncertainty-utils.js";
 
@@ -629,93 +632,37 @@ function getAxisBounds() {
 }
 
 function getSanitizedCurrencyCode() {
-  return sanitizeCurrencyCode(
-    elements.xAxisCurrencyInput.value,
+  return getSanitizedFormatCurrency(
+    getFormatSettings(),
     defaultSettings.xAxisCurrency
   );
 }
 
-function getValueAxisFormatter() {
-  const locale = elements.xAxisLocaleInput.value.trim() || undefined;
-  const maximumFractionDigits = Number.parseInt(
-    elements.xAxisFractionDigitsInput.value,
-    10
-  );
-  const style = elements.xAxisStyleSelect.value;
-
-  const options = {
+function getFormatSettings() {
+  return {
+    currency: elements.xAxisCurrencyInput.value,
+    fractionDigits: elements.xAxisFractionDigitsInput.value,
+    locale: elements.xAxisLocaleInput.value,
     notation: elements.xAxisNotationSelect.value,
-    style,
+    style: elements.xAxisStyleSelect.value,
     useGrouping: elements.xAxisGroupingCheckbox.checked,
   };
+}
 
-  if (!Number.isNaN(maximumFractionDigits)) {
-    options.maximumFractionDigits = Math.min(
-      6,
-      Math.max(0, maximumFractionDigits)
-    );
-  }
-
-  if (style === "currency") {
-    options.currency = getSanitizedCurrencyCode();
-    options.currencyDisplay = "symbol";
-  }
-
-  return createSafeNumberFormatter(
-    state.formatterCache,
-    locale,
-    options,
-    {
-      notation: "standard",
-      style: style === "currency" ? "currency" : "decimal",
-      ...(style === "currency"
-        ? {
-            currency: defaultSettings.xAxisCurrency,
-            currencyDisplay: "symbol",
-          }
-        : {}),
-    }
-  );
+function getValueAxisFormatter() {
+  return createValueAxisFormatter({
+    fallbackCurrency: defaultSettings.xAxisCurrency,
+    formatterCache: state.formatterCache,
+    settings: getFormatSettings(),
+  });
 }
 
 function getMarkerValueFormatter() {
-  if (elements.xAxisStyleSelect.value !== "currency") {
-    return null;
-  }
-
-  const locale = elements.xAxisLocaleInput.value.trim() || undefined;
-  const maximumFractionDigits = Number.parseInt(
-    elements.xAxisFractionDigitsInput.value,
-    10
-  );
-
-  const options = {
-    currency: getSanitizedCurrencyCode(),
-    currencyDisplay: "symbol",
-    notation: "standard",
-    style: "currency",
-    useGrouping: elements.xAxisGroupingCheckbox.checked,
-  };
-
-  if (!Number.isNaN(maximumFractionDigits)) {
-    options.maximumFractionDigits = Math.min(
-      6,
-      Math.max(0, maximumFractionDigits)
-    );
-  }
-
-  return createSafeNumberFormatter(
-    state.formatterCache,
-    locale,
-    options,
-    {
-      currency: defaultSettings.xAxisCurrency,
-      currencyDisplay: "symbol",
-      notation: "standard",
-      style: "currency",
-      useGrouping: elements.xAxisGroupingCheckbox.checked,
-    }
-  );
+  return createStandardCurrencyFormatter({
+    fallbackCurrency: defaultSettings.xAxisCurrency,
+    formatterCache: state.formatterCache,
+    settings: getFormatSettings(),
+  });
 }
 
 function getChartOrientation() {
