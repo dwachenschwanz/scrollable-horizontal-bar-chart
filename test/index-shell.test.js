@@ -80,6 +80,7 @@ test("index shell tucks layout tuning controls into advanced display controls", 
   assert.match(indexHtml, /<summary>Advanced<\/summary>/);
   assert.match(indexHtml, /id="leftMarginSlider"/);
   assert.match(indexHtml, /id="barHeightSlider"/);
+  assert.match(indexHtml, /id="chartHeightSlider"/);
 });
 
 test("index shell includes sortable data table headers", () => {

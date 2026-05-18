@@ -414,7 +414,8 @@ input[type="number"] {
 }
 
 #leftMarginValue,
-#barHeightValue {
+#barHeightValue,
+#chartHeightValue {
   display: inline-block;
   min-width: 3.5ch;
   text-align: right;
@@ -503,7 +504,43 @@ input[type="number"] {
   grid-column: 2;
   width: 100%;
   min-width: 320px;
-  height: 400px;
+  height: var(--chart-height, 400px);
+}
+
+.bar-tooltip {
+  min-width: 170px;
+  max-width: min(260px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  color: #0f172a;
+  font-size: 13px;
+  line-height: 1.35;
+  pointer-events: none;
+  text-align: left;
+  white-space: normal;
+}
+
+.bar-tooltip-title {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.bar-tooltip-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 14px;
+}
+
+.bar-tooltip-grid span {
+  color: #64748b;
+}
+
+.bar-tooltip-grid strong {
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
 }
 
 .chart-axis-label {

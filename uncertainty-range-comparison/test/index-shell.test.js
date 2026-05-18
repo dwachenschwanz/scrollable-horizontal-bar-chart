@@ -104,4 +104,5 @@ test("index shell tucks layout tuning controls into advanced display controls", 
   assert.match(indexHtml, /<summary>Advanced<\/summary>/);
   assert.match(indexHtml, /id="leftMarginSlider"/);
   assert.match(indexHtml, /id="barHeightSlider"/);
+  assert.match(indexHtml, /id="chartHeightSlider"/);
 });

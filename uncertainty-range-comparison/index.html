@@ -224,7 +224,10 @@
 
             <label class="checkbox-label" for="toggleMean">
               <input type="checkbox" id="toggleMean" checked />
-              <span>Plot mean marker</span>
+              <span class="mean-marker-label">
+                Plot mean marker
+                <span class="mean-marker-symbol" aria-hidden="true">x</span>
+              </span>
             </label>
 
             <label class="checkbox-label" for="showDataTableCheckbox">
@@ -279,6 +282,19 @@
                     value="0.72"
                   />
                   <span id="barHeightValue">0.72</span>
+                </label>
+
+                <label class="range-label" for="chartHeightSlider">
+                  <span>Chart Height:</span>
+                  <input
+                    type="range"
+                    id="chartHeightSlider"
+                    min="300"
+                    max="720"
+                    step="20"
+                    value="400"
+                  />
+                  <span><span id="chartHeightValue">400</span>px</span>
                 </label>
               </div>
             </details>

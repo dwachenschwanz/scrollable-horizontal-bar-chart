@@ -45,6 +45,7 @@ const defaultSettings = {
   advancedDisplayOpen: false,
   autoScale: true,
   barHeight: "0.75",
+  chartHeight: "400",
   datasetKey: "dataset1",
   leftMargin: "100",
   orientation: "horizontal",
@@ -116,6 +117,9 @@ const elements = {
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
   barHeightValue: document.getElementById("barHeightValue"),
+  chartContainer: document.getElementById("chart-container"),
+  chartHeightSlider: document.getElementById("chartHeightSlider"),
+  chartHeightValue: document.getElementById("chartHeightValue"),
   controlsPanels: Array.from(document.querySelectorAll("[data-tab-panel]")),
   controlsTabs: Array.from(document.querySelectorAll("[data-tab-target]")),
   controlsContent: document.getElementById("controlsContent"),
@@ -375,6 +379,7 @@ function applyDefaultSettings({ preserveDataset = false } = {}) {
   elements.orientationSelector.value = defaultSettings.orientation;
   elements.leftMarginSlider.value = defaultSettings.leftMargin;
   elements.barHeightSlider.value = defaultSettings.barHeight;
+  elements.chartHeightSlider.value = defaultSettings.chartHeight;
   elements.sortSelector.value = defaultSettings.sort;
   elements.autoScaleCheckbox.checked = defaultSettings.autoScale;
   elements.yMinInput.value = defaultSettings.yMin;
@@ -394,6 +399,7 @@ function resetToDefaults() {
   invalidateSortedPairsCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
+  updateChartHeightDisplay();
   updateCurrencyInputState();
   updateDataTableVisibility();
   updateYAxisInputState();
@@ -512,6 +518,14 @@ function updateLeftMarginDisplay() {
 
 function updateBarHeightDisplay() {
   elements.barHeightValue.textContent = elements.barHeightSlider.value;
+}
+
+function updateChartHeightDisplay() {
+  elements.chartHeightValue.textContent = elements.chartHeightSlider.value;
+  elements.chartContainer.style.setProperty(
+    "--chart-height",
+    `${elements.chartHeightSlider.value}px`
+  );
 }
 
 function updateYAxisInputState() {
@@ -703,6 +717,25 @@ function getBarValueFormatter() {
   });
 }
 
+function getBarTooltipMarkup(point, valueFormatter) {
+  const name = point.name || "";
+  const value =
+    typeof point.y === "number" ? valueFormatter.format(point.y) : "";
+
+  if (!name || !value) {
+    return false;
+  }
+
+  return `
+    <div class="bar-tooltip">
+      <div class="bar-tooltip-title">${escapeHtml(name)}</div>
+      <div class="bar-tooltip-grid">
+        <span>Value</span><strong>${escapeHtml(value)}</strong>
+      </div>
+    </div>
+  `;
+}
+
 function getChartOrientation() {
   return elements.orientationSelector.value;
 }
@@ -743,7 +776,7 @@ function getChartOptions() {
   return {
     chart: {
       type: isVertical ? "column" : "bar",
-      height: 400,
+      height: Number.parseInt(elements.chartHeightSlider.value, 10),
       animation: false,
       marginLeft: Number.parseInt(elements.leftMarginSlider.value, 10),
       marginRight: 60,
@@ -798,6 +831,21 @@ function getChartOptions() {
         },
       },
     },
+    tooltip: {
+      animation: false,
+      backgroundColor: "transparent",
+      borderWidth: 0,
+      padding: 0,
+      shadow: false,
+      useHTML: true,
+      formatter() {
+        const point = this.point ?? this;
+        return getBarTooltipMarkup(
+          point,
+          barValueFormatter ?? valueAxisFormatter
+        );
+      },
+    },
     series: [
       {
         name: "Values",
@@ -816,6 +864,7 @@ function getChartConfig(options) {
     yAxis: options.yAxis,
     credits: { enabled: false },
     plotOptions: options.plotOptions,
+    tooltip: options.tooltip,
     series: options.series,
   };
 }
@@ -906,11 +955,13 @@ function updateExistingChart(options) {
   state.chart.update(
     {
       chart: {
+        height: options.chart.height,
         marginLeft: options.chart.marginLeft,
         marginRight: options.chart.marginRight,
         spacingLeft: options.chart.spacingLeft,
         spacingRight: options.chart.spacingRight,
       },
+      tooltip: options.tooltip,
     },
     false,
     false,
@@ -1194,6 +1245,10 @@ function bindEvents() {
     updateBarHeightDisplay();
     renderChart();
   });
+  elements.chartHeightSlider.addEventListener("input", () => {
+    updateChartHeightDisplay();
+    renderChart();
+  });
   elements.autoScaleCheckbox.addEventListener("change", () => {
     updateYAxisInputState();
     renderChart();
@@ -1247,6 +1302,7 @@ export function initializeChartApp() {
   applyStoredSidebarPosition();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
+  updateChartHeightDisplay();
   updateCurrencyInputState();
   normalizeCurrencyInput();
   updateCurrencyValidationState();

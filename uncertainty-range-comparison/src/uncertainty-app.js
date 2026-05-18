@@ -46,6 +46,7 @@ const defaultSettings = {
   advancedDisplayOpen: false,
   autoScale: true,
   barHeight: "0.72",
+  chartHeight: "400",
   datasetKey: "capitalPlan",
   leftMargin: "120",
   showDataTable: true,
@@ -132,6 +133,9 @@ const elements = {
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
   barHeightValue: document.getElementById("barHeightValue"),
+  chartContainer: document.getElementById("chart-container"),
+  chartHeightSlider: document.getElementById("chartHeightSlider"),
+  chartHeightValue: document.getElementById("chartHeightValue"),
   controlsPanels: Array.from(document.querySelectorAll("[data-tab-panel]")),
   controlsTabs: Array.from(document.querySelectorAll("[data-tab-target]")),
   controlsContent: document.getElementById("controlsContent"),
@@ -413,6 +417,7 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
   elements.showDataTableCheckbox.checked = defaultSettings.showDataTable;
   elements.leftMarginSlider.value = defaultSettings.leftMargin;
   elements.barHeightSlider.value = defaultSettings.barHeight;
+  elements.chartHeightSlider.value = defaultSettings.chartHeight;
   elements.sortSelector.value = defaultSettings.sort;
   elements.autoScaleCheckbox.checked = defaultSettings.autoScale;
   elements.yMinInput.value = defaultSettings.yMin;
@@ -432,6 +437,7 @@ function resetToDefaults() {
   invalidateRowsCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
+  updateChartHeightDisplay();
   updateCurrencyInputState();
   updateDataTableVisibility();
   updateYAxisInputState();
@@ -560,6 +566,14 @@ function updateLeftMarginDisplay() {
 
 function updateBarHeightDisplay() {
   elements.barHeightValue.textContent = elements.barHeightSlider.value;
+}
+
+function updateChartHeightDisplay() {
+  elements.chartHeightValue.textContent = elements.chartHeightSlider.value;
+  elements.chartContainer.style.setProperty(
+    "--chart-height",
+    `${elements.chartHeightSlider.value}px`
+  );
 }
 
 function updateYAxisInputState() {
@@ -1084,7 +1098,7 @@ function drawUncertaintyRanges(chart) {
       const label = renderer
         .text(item.formattedBase, baseX + 8, yCenter + 5)
         .css({
-          color: "#0f172a",
+          color: "#ffffff",
           fontSize: "12px",
           fontWeight: "700",
           pointerEvents: "none",
@@ -1141,7 +1155,7 @@ function getChartOptions() {
           drawUncertaintyRanges(this);
         },
       },
-      height: 400,
+      height: Number.parseInt(elements.chartHeightSlider.value, 10),
       marginLeft: Number.parseInt(elements.leftMarginSlider.value, 10),
       marginRight: 72,
       spacingLeft: 0,
@@ -1340,6 +1354,7 @@ function updateExistingChart(options) {
   state.chart.update(
     {
       chart: {
+        height: options.chart.height,
         marginLeft: options.chart.marginLeft,
         marginRight: options.chart.marginRight,
         spacingLeft: options.chart.spacingLeft,
@@ -1612,6 +1627,10 @@ function bindEvents() {
     updateBarHeightDisplay();
     renderChart();
   });
+  elements.chartHeightSlider.addEventListener("input", () => {
+    updateChartHeightDisplay();
+    renderChart();
+  });
   elements.autoScaleCheckbox.addEventListener("change", () => {
     updateYAxisInputState();
     renderChart();
@@ -1664,6 +1683,7 @@ export function initializeUncertaintyApp() {
   applyStoredSidebarPosition();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
+  updateChartHeightDisplay();
   updateCurrencyInputState();
   normalizeCurrencyInput();
   updateCurrencyValidationState();

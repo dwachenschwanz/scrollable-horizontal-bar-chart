@@ -395,6 +395,19 @@ label {
   gap: 10px;
 }
 
+.mean-marker-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mean-marker-symbol {
+  color: #0f172a;
+  font-size: 0.95em;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .range-label {
   grid-template-columns: 1fr;
 }
@@ -436,7 +449,8 @@ input[type="number"] {
 }
 
 #leftMarginValue,
-#barHeightValue {
+#barHeightValue,
+#chartHeightValue {
   display: inline-block;
   min-width: 3.5ch;
   text-align: right;
@@ -530,7 +544,7 @@ input[type="number"] {
   position: relative;
   width: 100%;
   min-width: 320px;
-  height: 400px;
+  height: var(--chart-height, 400px);
 }
 
 .uncertainty-tooltip {
