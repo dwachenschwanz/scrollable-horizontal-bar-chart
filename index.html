@@ -14,7 +14,7 @@
     <main class="page">
       <h1>Scrollable Bar Chart with Adjustable Margin and Features</h1>
 
-      <div class="workspace">
+      <div class="workspace" id="workspace">
         <section class="chart-panel">
           <div id="chart-container">
             <label class="dataset-select" for="datasetSelector">
@@ -51,8 +51,24 @@
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th scope="col">Category</th>
-                    <th scope="col">Value</th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="name"
+                      >
+                        Category
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none">
+                      <button
+                        type="button"
+                        class="table-sort-button"
+                        data-table-sort="value"
+                      >
+                        Value
+                      </button>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="dataTableBody"></tbody>
@@ -61,7 +77,59 @@
           </section>
         </section>
 
-        <aside class="controls-sidebar" aria-label="Chart controls">
+        <aside
+          class="controls-sidebar"
+          id="controlsSidebar"
+          aria-label="Chart controls"
+        >
+          <div
+            class="sidebar-header"
+            id="sidebarDragHandle"
+            tabindex="0"
+            aria-label="Drag controls panel"
+            title="Drag controls panel"
+          >
+            <span
+              class="sidebar-control-icon"
+              role="img"
+              aria-label="Drag controls"
+              title="Drag controls"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M4 7h10" />
+                <path d="M18 7h2" />
+                <path d="M4 17h2" />
+                <path d="M10 17h10" />
+                <path d="M4 12h5" />
+                <path d="M13 12h7" />
+                <circle cx="16" cy="7" r="2" />
+                <circle cx="8" cy="17" r="2" />
+                <circle cx="11" cy="12" r="2" />
+              </svg>
+            </span>
+            <button
+              type="button"
+              class="sidebar-toggle"
+              id="sidebarToggle"
+              aria-expanded="true"
+              aria-controls="controlsContent"
+              aria-label="Collapse controls"
+              title="Collapse controls"
+            >
+              <span
+                class="sidebar-toggle-icon"
+                id="sidebarToggleIcon"
+                aria-hidden="true"
+              >
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="m15 6-6 6 6 6" />
+                </svg>
+              </span>
+              <span class="sr-only" id="sidebarToggleText">Collapse controls</span>
+            </button>
+          </div>
+
+          <div class="controls-content" id="controlsContent">
           <div class="controls-tabs" role="tablist" aria-label="Control sections">
             <button
               type="button"
@@ -135,32 +203,6 @@
               </select>
             </label>
 
-            <label class="range-label" for="leftMarginSlider">
-              <span>Left Margin:</span>
-              <input
-                type="range"
-                id="leftMarginSlider"
-                min="0"
-                max="200"
-                value="100"
-                step="10"
-              />
-              <span><span id="leftMarginValue">100</span>px</span>
-            </label>
-
-            <label class="range-label" for="barHeightSlider">
-              <span>Bar Height:</span>
-              <input
-                type="range"
-                id="barHeightSlider"
-                min="0.5"
-                max="1.0"
-                step="0.025"
-                value="0.75"
-              />
-              <span id="barHeightValue">0.75</span>
-            </label>
-
             <label for="sortSelector">
               <span>Sort:</span>
               <select id="sortSelector">
@@ -171,6 +213,38 @@
                 <option value="nameDesc">Name Z-A</option>
               </select>
             </label>
+
+            <details class="advanced-controls" id="advancedDisplayControls">
+              <summary>Advanced</summary>
+
+              <div class="advanced-controls-content">
+                <label class="range-label" for="leftMarginSlider">
+                  <span>Left Margin:</span>
+                  <input
+                    type="range"
+                    id="leftMarginSlider"
+                    min="0"
+                    max="200"
+                    value="100"
+                    step="10"
+                  />
+                  <span><span id="leftMarginValue">100</span>px</span>
+                </label>
+
+                <label class="range-label" for="barHeightSlider">
+                  <span>Bar Height:</span>
+                  <input
+                    type="range"
+                    id="barHeightSlider"
+                    min="0.5"
+                    max="1.0"
+                    step="0.025"
+                    value="0.75"
+                  />
+                  <span id="barHeightValue">0.75</span>
+                </label>
+              </div>
+            </details>
 
             <button type="button" id="resetDefaultsButton">
               Reset to defaults
@@ -268,6 +342,7 @@
               <input type="checkbox" id="xAxisGroupingCheckbox" checked />
               <span>Use Grouping</span>
             </label>
+          </div>
           </div>
         </aside>
       </div>

@@ -62,3 +62,29 @@ test("index shell includes currency validation status element", () => {
     "Currency status element should exist for inline validation"
   );
 });
+
+test("index shell includes draggable collapsible controls overlay", () => {
+  assert.match(indexHtml, /<div class="workspace" id="workspace">/);
+  assert.match(indexHtml, /class="controls-sidebar"/);
+  assert.match(indexHtml, /id="controlsSidebar"/);
+  assert.match(indexHtml, /class="sidebar-header"/);
+  assert.match(indexHtml, /id="sidebarDragHandle"/);
+  assert.match(indexHtml, /aria-label="Drag controls panel"/);
+  assert.match(indexHtml, /id="sidebarToggle"/);
+  assert.match(indexHtml, /aria-label="Collapse controls"/);
+  assert.match(indexHtml, /id="controlsContent"/);
+});
+
+test("index shell tucks layout tuning controls into advanced display controls", () => {
+  assert.match(indexHtml, /<details class="advanced-controls" id="advancedDisplayControls">/);
+  assert.match(indexHtml, /<summary>Advanced<\/summary>/);
+  assert.match(indexHtml, /id="leftMarginSlider"/);
+  assert.match(indexHtml, /id="barHeightSlider"/);
+});
+
+test("index shell includes sortable data table headers", () => {
+  assert.match(indexHtml, /data-table-sort="name"/);
+  assert.match(indexHtml, /data-table-sort="value"/);
+  assert.match(indexHtml, />\s*Category\s*<\/button>/);
+  assert.match(indexHtml, />\s*Value\s*<\/button>/);
+});

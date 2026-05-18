@@ -10,13 +10,13 @@ The app supports horizontal and vertical bar layouts, sorting, paging through vi
 - Sort by source order, value, or name
 - Stable secondary tie-breakers for sorting
 - Configurable bars per page with a custom scrollbar for the visible window
-- Adjustable left margin and bar height
+- Advanced disclosure for less-frequent layout tuning controls
 - Auto-scale or manual axis bounds
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
 - Uppercase currency input with validation and safe fallback to `USD`
 - Currency-aware value labels inside bars
-- Tabbed controls sidebar
-- Full data table below the chart
+- Draggable, collapsible controls overlay that stays inside the viewport
+- Full data table below the chart with sortable headers
 - Table row highlighting for rows currently visible in the chart
 - One-click reset back to default settings while preserving the current dataset
 - GitHub Pages-ready Vite configuration
@@ -94,8 +94,8 @@ On first load, the app starts with:
 - Toggle value labels inside bars
 - Show or hide the data table
 - Switch between horizontal and vertical orientation
-- Adjust left margin and bar height
 - Change the sort order
+- Open `Advanced` to adjust left margin and bar height
 - Reset the controls to default settings
 
 ### Axis tab
@@ -118,6 +118,7 @@ On first load, the app starts with:
 When enabled, the table shows the full sorted dataset below the chart.
 
 - Rows currently visible in the chart are highlighted
+- Click `Category` or `Value` headers to sort the chart and table together
 - The table stays in sync with sorting, scrolling, dataset changes, and formatting
 - The reset button does not change the currently selected dataset
 
