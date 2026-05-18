@@ -5,6 +5,12 @@ import {
   escapeHtml,
 } from "../../src/shared/chart-core.js";
 import {
+  readBooleanPreference,
+  readJsonPreference,
+  writeBooleanPreference,
+  writeJsonPreference,
+} from "../../src/shared/preferences.js";
+import {
   buildSlice,
   getAutoScaleBounds,
   getHorizontalCategoryLabelWidth,
@@ -256,54 +262,23 @@ function updateTableSortHeaders() {
 }
 
 function getStoredSidebarCollapsed() {
-  try {
-    return window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
+  return readBooleanPreference(SIDEBAR_COLLAPSED_STORAGE_KEY);
 }
 
 function persistSidebarCollapsed(isCollapsed) {
-  try {
-    window.localStorage.setItem(
-      SIDEBAR_COLLAPSED_STORAGE_KEY,
-      String(isCollapsed)
-    );
-  } catch {
-    // Local storage can be unavailable in private browsing or embedded previews.
-  }
+  writeBooleanPreference(SIDEBAR_COLLAPSED_STORAGE_KEY, isCollapsed);
 }
 
 function getStoredSidebarPosition() {
-  try {
-    const rawPosition = window.localStorage.getItem(SIDEBAR_POSITION_STORAGE_KEY);
-    if (!rawPosition) {
-      return null;
-    }
-
-    const position = JSON.parse(rawPosition);
-    if (
-      Number.isFinite(position?.left) &&
-      Number.isFinite(position?.top)
-    ) {
-      return position;
-    }
-  } catch {
-    // Local storage can be unavailable or contain stale values.
-  }
-
-  return null;
+  return readJsonPreference(
+    SIDEBAR_POSITION_STORAGE_KEY,
+    (position) =>
+      Number.isFinite(position?.left) && Number.isFinite(position?.top)
+  );
 }
 
 function persistSidebarPosition(position) {
-  try {
-    window.localStorage.setItem(
-      SIDEBAR_POSITION_STORAGE_KEY,
-      JSON.stringify(position)
-    );
-  } catch {
-    // Local storage can be unavailable in private browsing or embedded previews.
-  }
+  writeJsonPreference(SIDEBAR_POSITION_STORAGE_KEY, position);
 }
 
 function getSidebarBounds() {
