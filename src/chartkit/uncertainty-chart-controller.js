@@ -261,22 +261,25 @@ function clampPixelPosition(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-function positionBaseLabel(label, chart, baseX, yCenter, meanX = null) {
+function getBestHorizontalLabelX({
+  baseX,
+  labelWidth,
+  maxX,
+  meanX = null,
+  minX,
+}) {
   const labelOffset = 8;
   const markerClearance = 14;
-  const plotLeft = chart.plotLeft;
-  const plotRight = chart.plotLeft + chart.plotWidth;
-  const labelBox = label.getBBox();
-  const labelWidth = labelBox.width;
-  const labelY = yCenter + labelBox.height / 3;
-  const minX = plotLeft + labelOffset;
-  const maxX = plotRight - labelWidth - labelOffset;
+
+  if (minX > maxX) {
+    return null;
+  }
+
   const rightX = clampPixelPosition(baseX + labelOffset, minX, maxX);
   const leftX = clampPixelPosition(baseX - labelWidth - labelOffset, minX, maxX);
 
   if (meanX === null) {
-    label.attr({ x: rightX, y: labelY });
-    return;
+    return rightX;
   }
 
   const meanStart = meanX - markerClearance;
@@ -295,13 +298,11 @@ function positionBaseLabel(label, chart, baseX, yCenter, meanX = null) {
   );
 
   if (!rightOverlapsMean) {
-    label.attr({ x: rightX, y: labelY });
-    return;
+    return rightX;
   }
 
   if (!leftOverlapsMean) {
-    label.attr({ x: leftX, y: labelY });
-    return;
+    return leftX;
   }
 
   const candidates = [
@@ -333,10 +334,11 @@ function positionBaseLabel(label, chart, baseX, yCenter, meanX = null) {
       : bestX;
   }, rightX);
 
-  label.attr({
-    x: bestCandidate,
-    y: labelY,
-  });
+  return bestCandidate;
+}
+
+function getCenteredTextBaseline(yCenter, textBox) {
+  return yCenter - textBox.y - textBox.height / 2;
 }
 
 function getBestVerticalLabelBaseline({
@@ -511,6 +513,118 @@ function drawVerticalBaseLabel({
 
   renderer
     .text(text, pillCenterX, pillTop + pillPaddingY - textBox.y)
+    .attr({
+      align: "center",
+    })
+    .css({
+      ...fontStyles,
+      color: "#0f172a",
+    })
+    .add(layer);
+}
+
+function drawHorizontalBaseLabel({
+  barThickness,
+  baseX,
+  chart,
+  layer,
+  meanX,
+  rangeLeft,
+  rangeRight,
+  renderer,
+  text,
+  yCenter,
+}) {
+  const fontStyles = {
+    fontSize: "12px",
+    fontWeight: "700",
+    pointerEvents: "none",
+  };
+  const insidePadding = 4;
+  const measure = renderer
+    .text(text, 0, 0)
+    .css(fontStyles)
+    .add(layer);
+  const textBox = measure.getBBox();
+  measure.destroy();
+  const insideX = getBestHorizontalLabelX({
+    baseX,
+    labelWidth: textBox.width,
+    maxX: rangeRight - insidePadding - textBox.width,
+    meanX,
+    minX: rangeLeft + insidePadding,
+  });
+
+  if (insideX !== null && textBox.height <= barThickness - insidePadding * 2) {
+    renderer
+      .text(text, insideX, getCenteredTextBaseline(yCenter, textBox))
+      .css({
+        ...fontStyles,
+        color: "#ffffff",
+      })
+      .add(layer);
+    return;
+  }
+
+  const pillPaddingX = 6;
+  const pillPaddingY = 4;
+  const pillWidth = textBox.width + pillPaddingX * 2;
+  const pillHeight = textBox.height + pillPaddingY * 2;
+  const plotPadding = 2;
+  const plotMinX = chart.plotLeft + plotPadding;
+  const plotMaxX = chart.plotLeft + chart.plotWidth - pillWidth - plotPadding;
+  const pillX =
+    getBestHorizontalLabelX({
+      baseX,
+      labelWidth: pillWidth,
+      maxX: plotMaxX,
+      meanX,
+      minX: plotMinX,
+    }) ??
+    (plotMinX <= plotMaxX
+      ? clampPixelPosition(baseX + 8, plotMinX, plotMaxX)
+      : chart.plotLeft);
+  const minCenterY = chart.plotTop + pillHeight / 2 + plotPadding;
+  const maxCenterY =
+    chart.plotTop + chart.plotHeight - pillHeight / 2 - plotPadding;
+  const pillCenterY = getClampedCenter(yCenter, minCenterY, maxCenterY);
+  const pillY = pillCenterY - pillHeight / 2;
+  const pillRight = pillX + pillWidth;
+  const connectorEndX =
+    baseX < pillX ? pillX : baseX > pillRight ? pillRight : null;
+
+  if (connectorEndX !== null) {
+    renderer
+      .path([
+        ["M", baseX, yCenter],
+        ["L", connectorEndX, pillCenterY],
+      ])
+      .attr({
+        stroke: "#334155",
+        "stroke-linecap": "round",
+        "stroke-width": 1.5,
+      })
+      .css({
+        pointerEvents: "none",
+      })
+      .add(layer);
+  }
+
+  renderer
+    .rect(pillX, pillY, pillWidth, pillHeight, 4)
+    .attr({
+      fill: "#ffffff",
+      opacity: 0.96,
+      stroke: "#cbd5e1",
+      "stroke-width": 1,
+    })
+    .css({
+      pointerEvents: "none",
+    })
+    .add(layer);
+
+  renderer
+    .text(text, pillX + pillWidth / 2, pillY + pillPaddingY - textBox.y)
     .attr({
       align: "center",
     })
@@ -714,16 +828,18 @@ function drawUncertaintyRanges(chart) {
       .add(layer);
 
     if (config.showLabels) {
-      const label = renderer
-        .text(item.formattedBase, baseX + 8, yCenter + 5)
-        .css({
-          color: "#ffffff",
-          fontSize: "12px",
-          fontWeight: "700",
-          pointerEvents: "none",
-        })
-        .add(layer);
-      positionBaseLabel(label, chart, baseX, yCenter, meanPosition);
+      drawHorizontalBaseLabel({
+        barThickness,
+        baseX,
+        chart,
+        layer,
+        meanX: meanPosition,
+        rangeLeft: x,
+        rangeRight: x + width,
+        renderer,
+        text: item.formattedBase,
+        yCenter,
+      });
     }
 
     if (meanPosition !== null) {

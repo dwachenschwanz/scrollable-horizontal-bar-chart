@@ -1,0 +1,2926 @@
+{
+    "data": {
+        "data": {
+            "data": [
+                {
+                    "name": "NPV Operating Profit",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 1704.2971739097256,
+                            "low": 509.6427525424649,
+                            "base": 1461.7072363489929,
+                            "high": 2864.87137460821,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 1704.2971739097256,
+                            "low": 509.6427525424649,
+                            "base": 1461.7072363489929,
+                            "high": 2864.87137460821,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 857.5125397799793,
+                            "low": 303.12469740240965,
+                            "base": 762.864790397633,
+                            "high": 1431.6895417908156,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 589.2479786049087,
+                            "low": 226.52739700994852,
+                            "base": 496.29768437568237,
+                            "high": 1004.9464694448636,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 317.5569459736959,
+                            "low": 171.819832586787,
+                            "base": 263.3373865795073,
+                            "high": 480.67035364944405,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 314.8322080580761,
+                            "low": 110.380955058388,
+                            "base": 249.10583053927445,
+                            "high": 525.0558531174702,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 262.8660608371668,
+                            "low": 19.02722724456242,
+                            "base": 280.0843010636349,
+                            "high": 496.8082654602363,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 236.68954458039002,
+                            "low": 101.06650410911647,
+                            "base": 191.242437043481,
+                            "high": 389.77999457561293,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 213.516560357064,
+                            "low": 72.04348347022447,
+                            "base": 197.01953503522034,
+                            "high": 354.47505495247657,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 56.052565896020255,
+                            "low": 0.9614974504630251,
+                            "base": 38.77680093137161,
+                            "high": 121.72567486444242,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 56.052565896020255,
+                            "low": 0.9614974504630251,
+                            "base": 38.77680093137161,
+                            "high": 121.72567486444242,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 28.914504255728794,
+                            "low": -2.6164789601279006,
+                            "base": 21.14751771816582,
+                            "high": 64.79896174708584,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 26.4336132011706,
+                            "low": 12.448889692108644,
+                            "base": 23.438487134906815,
+                            "high": 40.98863794267399,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 15.217547338081841,
+                            "low": 4.158812786097182,
+                            "base": 11.386550189605575,
+                            "high": 27.361348508896857,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 7.78118998330719,
+                            "low": -55.22228241602455,
+                            "base": -5.604955824186941,
+                            "high": 88.75502157763573,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 7.303537169945576,
+                            "low": 0.7997593722859286,
+                            "base": 6.372175786880753,
+                            "high": 13.773977647406038,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 5.511795703903106,
+                            "low": -55.65618339099331,
+                            "base": -7.484368725324796,
+                            "high": 84.1265997706086,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": -4.867384436950832,
+                            "low": -4.867384436950832,
+                            "base": -4.867384436950832,
+                            "high": -4.867384436950832,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": -4.867384436950832,
+                            "low": -4.867384436950832,
+                            "base": -4.867384436950832,
+                            "high": -4.867384436950832,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "npvOperatingProfit",
+                            "mean": -4.867384436950832,
+                            "low": -4.867384436950832,
+                            "base": -4.867384436950832,
+                            "high": -4.867384436950832,
+                            "display": "NPV Operating Profit",
+                            "units": "million dollars"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Margin (Base Year +3)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 126.3622135416626,
+                            "low": 34.091750000000005,
+                            "base": 96.94781249998928,
+                            "high": 229.85875000000004,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 110.7720703125,
+                            "low": 34.091750000000005,
+                            "base": 94.8009375,
+                            "high": 185.56900000000002,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 98.296875,
+                            "low": 39.3546,
+                            "base": 82.55000000000001,
+                            "high": 160.4862,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 34.21845000000182,
+                            "low": 17.33216625000056,
+                            "base": 27.938924999999998,
+                            "high": 53.99667,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 26.54212640625017,
+                            "low": 9.135970593750207,
+                            "base": 19.989060000000755,
+                            "high": 50.90963718750001,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 13.953153645832112,
+                            "low": 3.9714875,
+                            "base": 9.019812499998427,
+                            "high": 26.8032125,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 4.746641795239723,
+                            "low": 0.6053951662500657,
+                            "base": 2.2254401750002413,
+                            "high": 10.813407054625998,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 4.198485022949674,
+                            "low": 0.7242110400000786,
+                            "base": 3.2878678291670234,
+                            "high": 8.394121451042578,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 2.9286038651784785,
+                            "low": 0.3185643214285633,
+                            "base": 2.4692625,
+                            "high": 6.334928571429527,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 2.9286038651784785,
+                            "low": 0.3185643214285633,
+                            "base": 2.4692625,
+                            "high": 6.334928571429527,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 2.466125976562514,
+                            "low": 0.9612093750000101,
+                            "base": 1.8714937500000137,
+                            "high": 4.4611171875,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.20390625000006024,
+                            "low": 0.06706250000002309,
+                            "base": 0.18408203125007214,
+                            "high": 0.33712500000004947,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year +3)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Margin (Base Year + 5)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 443.08828125,
+                            "low": 136.36700000000002,
+                            "base": 379.20375,
+                            "high": 742.2760000000001,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 443.08828125,
+                            "low": 136.36700000000002,
+                            "base": 379.20375,
+                            "high": 742.2760000000001,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 142.1840953125,
+                            "low": 49.34371125,
+                            "base": 127.3878,
+                            "high": 252.040555,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 124.24725000000002,
+                            "low": 47.76496,
+                            "base": 104.64800000000001,
+                            "high": 211.90032000000002,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 95.8979250000038,
+                            "low": 49.346600625001955,
+                            "base": 85.19861250000336,
+                            "high": 143.06692875000567,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 53.59467832031249,
+                            "low": 23.423117812500003,
+                            "base": 43.48422695312501,
+                            "high": 87.65214937500001,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 48.53270833332893,
+                            "low": 17.204999999998435,
+                            "base": 44.99999999999591,
+                            "high": 79.75666666665943,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 37.0945312499987,
+                            "low": 13.70249999999914,
+                            "base": 26.25,
+                            "high": 62.748000000000005,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 23.622726562498016,
+                            "low": 2.310954749999885,
+                            "base": 21.297680625,
+                            "high": 44.94703719999492,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 16.416352065600957,
+                            "low": 3.185597780000072,
+                            "base": 13.69632553635448,
+                            "high": 33.649671813698674,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 13.130192767856247,
+                            "low": 1.2563099999999143,
+                            "base": 9.406714285713644,
+                            "high": 27.284842857140994,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 13.130192767856247,
+                            "low": 1.2563099999999143,
+                            "base": 9.406714285713644,
+                            "high": 27.284842857140994,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 11.522525878417865,
+                            "low": 2.2998091724999647,
+                            "base": 8.49275936249987,
+                            "high": 22.44919109999994,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 8.393280328125,
+                            "low": 0.8726454000000001,
+                            "base": 6.540732,
+                            "high": 16.952287275000003,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 5.401378125,
+                            "low": 3.023097,
+                            "base": 4.4946,
+                            "high": 8.044541999999998,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 4.691654296875001,
+                            "low": 1.92241875,
+                            "base": 3.7323281250000004,
+                            "high": 7.732603125,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 3.14384765625,
+                            "low": 1.1019375,
+                            "base": 2.84765625,
+                            "high": 5.1816562500000005,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 5)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Margin (Base Year + 10)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 443.08828125,
+                            "low": 136.36700000000002,
+                            "base": 379.20375,
+                            "high": 742.2760000000001,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 443.08828125,
+                            "low": 136.36700000000002,
+                            "base": 379.20375,
+                            "high": 742.2760000000001,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 246.51112499999994,
+                            "low": 88.3131,
+                            "base": 219.5028,
+                            "high": 410.35611000000006,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 115.82578125,
+                            "low": 42.21,
+                            "base": 92.16,
+                            "high": 191.52,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 106.81593749999762,
+                            "low": 34.85799999999739,
+                            "base": 85.35499999999593,
+                            "high": 192.6911624999974,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 89.684296875,
+                            "low": 8.931645,
+                            "base": 95.3865,
+                            "high": 167.15946,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 68.43690000000365,
+                            "low": 0.0,
+                            "base": 71.34385781250077,
+                            "high": 124.56258937500687,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 61.25106093750002,
+                            "low": 26.769277499999998,
+                            "base": 49.696259375,
+                            "high": 100.17388500000001,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 58.239250000000006,
+                            "low": 20.646,
+                            "base": 54.0,
+                            "high": 95.70800000000001,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 18.54570849609375,
+                            "low": 3.5988,
+                            "base": 15.47286875,
+                            "high": 38.014353125,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 18.54570849609375,
+                            "low": 3.5988,
+                            "base": 15.47286875,
+                            "high": 38.014353125,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 15.984582499999638,
+                            "low": 0.9334199999997879,
+                            "base": 7.47018,
+                            "high": 34.84204,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 15.984582499999638,
+                            "low": 0.9334199999997879,
+                            "base": 7.47018,
+                            "high": 34.84204,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 11.1910404375,
+                            "low": 1.1635272,
+                            "base": 8.720976,
+                            "high": 22.603049700000007,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 10.504284375000001,
+                            "low": 6.046194,
+                            "base": 9.524550000000001,
+                            "high": 15.117690000000001,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 4.691654296875001,
+                            "low": 1.92241875,
+                            "base": 3.7323281250000004,
+                            "high": 7.732603125,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 2.5828125000000557,
+                            "low": 0.7394999999998813,
+                            "base": 2.0843750000000822,
+                            "high": 4.632750000000257,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossMarginBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Margin (Base Year + 10)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Revenue (Base Year +3)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 137.87210937499555,
+                            "low": 41.50300000000001,
+                            "base": 104.16656249998861,
+                            "high": 243.91125000000005,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 122.87109375,
+                            "low": 49.19325,
+                            "base": 103.1875,
+                            "high": 200.60775,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 120.8619140625,
+                            "low": 41.50300000000001,
+                            "base": 101.88843750000001,
+                            "high": 200.12900000000002,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 38.02050000000203,
+                            "low": 19.25796250000062,
+                            "base": 31.043249999999997,
+                            "high": 59.996300000000005,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 37.917323437500244,
+                            "low": 13.051386562500296,
+                            "base": 28.55580000000108,
+                            "high": 72.72805312500002,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 15.111718749998678,
+                            "low": 4.30125,
+                            "base": 9.768749999998295,
+                            "high": 29.028750000000002,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 6.327731546387341,
+                            "low": 0.8070501750000876,
+                            "base": 2.9667265000003216,
+                            "high": 14.41531505750133,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 5.5969856738287325,
+                            "low": 0.9654432000001049,
+                            "base": 4.383045083333809,
+                            "high": 11.19017389583455,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 3.2881679687500185,
+                            "low": 1.2816125000000136,
+                            "base": 2.495325000000018,
+                            "high": 5.94815625,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 3.1155360267856143,
+                            "low": 0.3388982142857056,
+                            "base": 2.626875,
+                            "high": 6.739285714286731,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 3.1155360267856143,
+                            "low": 0.3388982142857056,
+                            "base": 2.626875,
+                            "high": 6.739285714286731,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.23437500000006928,
+                            "low": 0.07708333333335987,
+                            "base": 0.21158854166674956,
+                            "high": 0.38750000000005685,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus3",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +3)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Revenue (Base Year + 5)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 483.44765625,
+                            "low": 166.01200000000003,
+                            "base": 407.55375000000004,
+                            "high": 800.5160000000001,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 483.44765625,
+                            "low": 166.01200000000003,
+                            "base": 407.55375000000004,
+                            "high": 800.5160000000001,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 155.3090625,
+                            "low": 59.7062,
+                            "base": 130.81,
+                            "high": 264.8754,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 154.54792968750002,
+                            "low": 53.634468749999996,
+                            "base": 138.465,
+                            "high": 273.957125,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 106.5532500000042,
+                            "low": 54.82955625000217,
+                            "base": 94.66512500000374,
+                            "high": 158.96325416667298,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 76.56382617187501,
+                            "low": 33.461596875,
+                            "base": 62.12032421875001,
+                            "high": 125.21735625000001,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 52.56249999999522,
+                            "low": 18.299999999998334,
+                            "base": 46.29999999999579,
+                            "high": 85.9999999999922,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 41.21614583333189,
+                            "low": 15.224999999999046,
+                            "base": 29.166666666666668,
+                            "high": 69.72,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 28.808203124997576,
+                            "low": 2.8182374999998596,
+                            "base": 25.97278125,
+                            "high": 54.8134599999938,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 21.833677955566902,
+                            "low": 4.695012400000106,
+                            "base": 19.204163064583774,
+                            "high": 46.402804080209386,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 15.360638876952981,
+                            "low": 3.065867549999953,
+                            "base": 11.321667749999827,
+                            "high": 29.926937999999918,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 13.968290178570477,
+                            "low": 1.336499999999909,
+                            "base": 10.007142857142174,
+                            "high": 29.02642857142659,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 13.968290178570477,
+                            "low": 1.336499999999909,
+                            "base": 10.007142857142174,
+                            "high": 29.02642857142659,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 10.1123859375,
+                            "low": 1.0513800000000002,
+                            "base": 7.8804,
+                            "high": 20.424442500000005,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 6.2555390625000005,
+                            "low": 2.563225,
+                            "base": 4.9764375,
+                            "high": 10.3101375,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 5.811609374999999,
+                            "low": 3.300297,
+                            "base": 4.8906,
+                            "high": 8.549441999999999,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 3.603515625,
+                            "low": 1.2375,
+                            "base": 3.22265625,
+                            "high": 6.028125,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus5",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year + 5)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                },
+                {
+                    "name": "Gross Revenue (Base Year +10)",
+                    "meanLabel": true,
+                    "headerMap": [
+                        {
+                            "key": "low",
+                            "text": "10"
+                        },
+                        {
+                            "key": "base",
+                            "text": "50"
+                        },
+                        {
+                            "key": "high",
+                            "text": "90"
+                        },
+                        {
+                            "key": "mean",
+                            "text": "Mean"
+                        }
+                    ],
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 483.44765625,
+                            "low": 166.01200000000003,
+                            "base": 407.55375000000004,
+                            "high": 800.5160000000001,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 483.44765625,
+                            "low": 166.01200000000003,
+                            "base": 407.55375000000004,
+                            "high": 800.5160000000001,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 267.946875,
+                            "low": 95.9925,
+                            "base": 238.59,
+                            "high": 446.0392500000001,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 133.51992187499704,
+                            "low": 43.572499999996744,
+                            "base": 106.6937499999949,
+                            "high": 240.86395312499675,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 128.6953125,
+                            "low": 46.9,
+                            "base": 102.4,
+                            "high": 212.8,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 109.37109375000001,
+                            "low": 10.892249999999999,
+                            "base": 116.325,
+                            "high": 203.853,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 87.50151562500001,
+                            "low": 38.241825,
+                            "base": 70.99465624999999,
+                            "high": 143.10555000000002,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 76.04100000000406,
+                            "low": 0.0,
+                            "base": 79.27095312500086,
+                            "high": 138.40287708334097,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 63.075,
+                            "low": 21.96,
+                            "base": 55.56,
+                            "high": 103.20000000000002,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 24.665712890625002,
+                            "low": 5.304,
+                            "base": 21.695124999999997,
+                            "high": 52.4216875,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 24.665712890625002,
+                            "low": 5.304,
+                            "base": 21.695124999999997,
+                            "high": 52.4216875,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 17.004874999999615,
+                            "low": 0.9929999999997743,
+                            "base": 7.947,
+                            "high": 37.066,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 17.004874999999615,
+                            "low": 0.9929999999997743,
+                            "base": 7.947,
+                            "high": 37.066,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 13.48318125,
+                            "low": 1.4018400000000002,
+                            "base": 10.507200000000001,
+                            "high": 27.232590000000005,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 11.302078125,
+                            "low": 6.600594,
+                            "base": 10.01805,
+                            "high": 15.928128000000001,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 6.2555390625000005,
+                            "low": 2.563225,
+                            "base": 4.9764375,
+                            "high": 10.3101375,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 2.968750000000064,
+                            "low": 0.8499999999998636,
+                            "base": 2.395833333333428,
+                            "high": 5.325000000000296,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "key": "grossRevenueBaseYearPlus10",
+                            "mean": 0.0,
+                            "low": 0.0,
+                            "base": 0.0,
+                            "high": 0.0,
+                            "display": "Gross Revenue (Base Year +10)",
+                            "units": "$M"
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                }
+            ],
+            "legends": [
+                {
+                    "tag": "2022 Active",
+                    "color": "#538DD0"
+                }
+            ],
+            "siblingLegends": [],
+            "settings": {
+                "showTable": "false",
+                "showLabels": "false",
+                "charsInLabel": 5,
+                "verticalDivider": 100,
+                "groupByDisplay": "false",
+                "decimals": 2,
+                "showTooltip": "true",
+                "showChartExplanation": "true",
+                "timestampMode": "lastRecalc",
+                "defaultPrecision": null
+            }
+        }
+    },
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6IkRhdmUiLCJlbWFpbCI6ImR3YWNoZW5zY2h3YW56QHNtYXJ0b3JnLmNvbSIsImlzQWRtaW4iOnRydWUsImV4cCI6MTc3OTIyMjMyNX0.OKilvJDG8PQM29KT1FaalPpnwkROu3vkk8Axhhyd5iVdSpWxJ1ahl0gSY4YHOGW8XBvLmgq4ynRE-TS9X4Ur_cQJt_JkB2BxJLSJv8UuFnRpHMsD4PPaFXf_48N0LZXXdTvbk7pOzWCckM-G6NMTQN5bcly_5hM-wILWHOf3LIWNYeaX1WNPIMSUDVAIfquXiqWR_Y5kpYnWuQ8JpHmtmEaJYx05zi5VENZ348kzQWAvMV7dhOnys6LvEyRgOqRFIj0Ko_wsbFGoH5AnDnVfX8fvwsK7EFnyvDdH3VP8hfkYR-rPvb-AwdtMMC3wD8fg-zv4Klg9Gv9Pr_iJzb8d3Q"
+}

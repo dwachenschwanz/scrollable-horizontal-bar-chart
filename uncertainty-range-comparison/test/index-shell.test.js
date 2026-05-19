@@ -7,11 +7,6 @@ const indexHtml = readFileSync(new URL("../index.html", import.meta.url), "utf8"
 test("index shell keeps expected default selected options", () => {
   assert.match(
     indexHtml,
-    /<option value="capitalPlan" selected>Capital Plan<\/option>/,
-    "Dataset should default to Capital Plan"
-  );
-  assert.match(
-    indexHtml,
     /<option value="5" selected>5<\/option>/,
     "Bars per page should default to 5"
   );

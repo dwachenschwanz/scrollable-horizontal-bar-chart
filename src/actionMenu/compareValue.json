@@ -1,0 +1,325 @@
+{
+    "data": {
+        "data": {
+            "data": [
+                {
+                    "name": "NPV Operating Profit",
+                    "headerMap": [
+                        {
+                            "lookup": "Outputs",
+                            "key": "npvOperatingProfit",
+                            "text": "NPV Operating Profit"
+                        }
+                    ],
+                    "yTitle": "NPV Operating Profit",
+                    "unit": "NPV Operating Profit (million dollars)",
+                    "minValue": null,
+                    "maxValue": null,
+                    "shouldTotal": true,
+                    "mainRows": [
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 1530.27,
+                            "y": 1530.27
+                        },
+                        {
+                            "name": "Flushables",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Country:Argentina",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 1530.27,
+                            "y": 1530.27
+                        },
+                        {
+                            "name": "Super Tee",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 890.17,
+                            "y": 890.17
+                        },
+                        {
+                            "name": "Cubic Balls",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 530.03,
+                            "y": 530.03
+                        },
+                        {
+                            "name": "Oven",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 302.61,
+                            "y": 302.61
+                        },
+                        {
+                            "name": "Freezer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 273.1,
+                            "y": 273.1
+                        },
+                        {
+                            "name": "Energy Efficient Refrigerator",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 261.26,
+                            "y": 261.26
+                        },
+                        {
+                            "name": "Shoe Inserts",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:ConsumerProducts",
+                                "Country:Brazil",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 202.85,
+                            "y": 202.85
+                        },
+                        {
+                            "name": "Range Top",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:IndustrialProducts",
+                                "Project_Status:Proposed"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 194.9,
+                            "y": 194.9
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 60.6,
+                            "y": 60.6
+                        },
+                        {
+                            "name": "Pocket Pals",
+                            "tags": [
+                                "all",
+                                "Project_Health:Red",
+                                "Line_Of_Business:ConsumerProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 60.6,
+                            "y": 60.6
+                        },
+                        {
+                            "name": "Solar Dryer",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 26.28,
+                            "y": 26.28
+                        },
+                        {
+                            "name": "Auto Bowl",
+                            "tags": [
+                                "all",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 21.66,
+                            "y": 21.66
+                        },
+                        {
+                            "name": "Zip Shoes",
+                            "tags": [
+                                "all",
+                                "Project_Health:Green",
+                                "Line_Of_Business:SportingGoods"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 11.6,
+                            "y": 11.6
+                        },
+                        {
+                            "name": "Self-Sterilizing Keyboard",
+                            "tags": [
+                                "all",
+                                "Project_Health:Yellow",
+                                "Line_Of_Business:IndustrialProducts"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 7.03,
+                            "y": 7.03
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 0.8,
+                            "y": 0.8
+                        },
+                        {
+                            "name": "Test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "name": "test",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": 0.0,
+                            "y": 0.0
+                        },
+                        {
+                            "name": "Breath Strips",
+                            "tags": [
+                                "all",
+                                "Project_Status:Proposed",
+                                "Country:Austria",
+                                "Project_Health:Green",
+                                "Line_Of_Business:HouseholdAppliances"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": -1.26,
+                            "y": -1.26
+                        },
+                        {
+                            "name": "dddxd",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": -4.87,
+                            "y": -4.87
+                        },
+                        {
+                            "name": "asDSSDa",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": -4.87,
+                            "y": -4.87
+                        },
+                        {
+                            "name": "ewff",
+                            "tags": [
+                                "all"
+                            ],
+                            "color": "#538DD0",
+                            "colorTag": "2022 Active",
+                            "groups": null,
+                            "npvOperatingProfit": -4.87,
+                            "y": -4.87
+                        }
+                    ],
+                    "mainDrillDown": [],
+                    "siblingRows": [],
+                    "siblingDrillDown": []
+                }
+            ],
+            "legends": [
+                {
+                    "tag": "2022 Active",
+                    "color": "#538DD0"
+                }
+            ],
+            "siblingLegends": [],
+            "settings": {
+                "showTable": "false",
+                "showLabels": "false",
+                "charsInLabel": 5,
+                "verticalDivider": 100,
+                "groupByDisplay": "false",
+                "decimals": 2,
+                "showTooltip": "true",
+                "showChartExplanation": "true",
+                "timestampMode": "lastRecalc",
+                "defaultPrecision": null
+            }
+        }
+    },
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6IkRhdmUiLCJlbWFpbCI6ImR3YWNoZW5zY2h3YW56QHNtYXJ0b3JnLmNvbSIsImlzQWRtaW4iOnRydWUsImV4cCI6MTc3OTIyMTkwNX0.DbTAeyMUTFTql_1tz75Kc5e1Gfvf79iPbuFMlUqfZtbUhTS6XaTZlYJJYzdoE3VtPGR6LYX3GMLdzRfIHGWVlwZShO7NG_xdw5IXrIbPzqLQCXtN4FfHf61egynxmnZzJkSRGA9LjQNlwRrCxdDnAon7AKRTF7weDFXipTK3PCzERiLfDPwCl_4SL5Cjc4uWASVy_euNyGKID6gHs6XsH84vQHLAu7xVBaqzo_GALqMrVUxHBTC_MW4-6tmNac0gj-JHfbWC9L4JsyJR9OLz6V3yf6eSs1_HbJB_A-NkkiCeQiotq9ORgYsM_c6ljsM4-_-h45KlIeNHevdGMGMFlA"
+}

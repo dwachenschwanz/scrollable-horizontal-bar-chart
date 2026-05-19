@@ -18,7 +18,7 @@ The chart renders each bar from its low value to its high value, with a base div
 - Read-only low/base/high table for every bar
 - Calculated weighted mean for every bar
 - Optional mean marker plotted as an `X`
-- Sample datasets for capital planning, product cases, and operations
+- Built-in demo datasets loaded from `src/actionMenu/compareUncertainty.json`
 - Sort by base, uncertainty spread, or name
 - Configurable bars per page with a custom scrollbar
 - Draggable, collapsible controls overlay that can float outside the chart workspace while staying inside the viewport
@@ -55,7 +55,9 @@ npm run build
 index.html                    App shell and controls
 src/main.js                   Lightweight app entry
 src/uncertainty-app.js        Chart logic, controls, input table, sorting, and formatting
+src/uncertainty-datasets.js   Adapter for the built-in compareUncertainty JSON source
 src/uncertainty-utils.js      Pure utilities for ranges, sorting, slices, bounds, and formatting helpers
+src/actionMenu/compareUncertainty.json
 src/style.css                 App styles and layout
 test/uncertainty-utils.test.js
 test/index-shell.test.js

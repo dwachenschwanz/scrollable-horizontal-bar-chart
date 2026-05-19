@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
+import { extractCompareUncertaintyDatasets } from "../src/uncertainty-datasets.js";
 import {
   buildSlice,
   calculateUncertaintyMean,
@@ -15,6 +17,32 @@ import {
   toAxisRange,
   toAxisValue,
 } from "../src/uncertainty-utils.js";
+
+const compareUncertaintySource = JSON.parse(
+  readFileSync(
+    new URL("../src/actionMenu/compareUncertainty.json", import.meta.url),
+    "utf8"
+  )
+);
+
+test("extractCompareUncertaintyDatasets loads built-in JSON datasets", () => {
+  const sourceDatasets = compareUncertaintySource.data.data.data;
+  const datasets = extractCompareUncertaintyDatasets(compareUncertaintySource);
+
+  assert.equal(datasets.length, sourceDatasets.length);
+  assert.deepEqual(
+    datasets.map((dataset) => dataset.name),
+    sourceDatasets.map((dataset) => dataset.name)
+  );
+  assert.match(datasets[0].key, /^[a-z0-9-]+$/);
+  assert.equal(datasets[0].rows.length, sourceDatasets[0].mainRows.length);
+  assert.deepEqual(Object.keys(datasets[0].rows[0]).sort(), [
+    "base",
+    "high",
+    "low",
+    "name",
+  ]);
+});
 
 test("normalizeUncertaintyValues orders low and high and clamps base", () => {
   assert.deepEqual(normalizeUncertaintyValues("30", "40", "10"), {

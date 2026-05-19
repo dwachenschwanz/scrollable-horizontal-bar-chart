@@ -11,18 +11,22 @@ import {
   debounce,
   escapeHtml,
 } from "../../src/chartkit/demo-controls.js";
+import compareUncertaintySource from "./actionMenu/compareUncertainty.json";
+import { extractCompareUncertaintyDatasets } from "./uncertainty-datasets.js";
 
 const TRACK_HEIGHT = 300;
 const UNCERTAINTY_BAR_COLOR = "#2caffe";
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "uncertaintySidebarCollapsed";
 const SIDEBAR_POSITION_STORAGE_KEY = "uncertaintySidebarPosition";
+const demoDatasets = extractCompareUncertaintyDatasets(compareUncertaintySource);
+const defaultDatasetKey = demoDatasets[0]?.key ?? "";
 const defaultSettings = {
   activeTab: "display",
   advancedDisplayOpen: false,
   autoScale: true,
   barHeight: "0.72",
   chartHeight: "400",
-  datasetKey: "capitalPlan",
+  datasetKey: defaultDatasetKey,
   leftMargin: "120",
   orientation: "horizontal",
   showDataTable: true,
@@ -38,47 +42,6 @@ const defaultSettings = {
   xAxisStyle: "currency",
   yMax: "100",
   yMin: "0",
-};
-
-const sampleDatasets = {
-  capitalPlan: [
-    { name: "Plant Expansion", low: 34, base: 48, high: 68 },
-    { name: "Distribution Hub", low: 18, base: 34, high: 58 },
-    { name: "Automation Upgrade", low: 22, base: 39, high: 51 },
-    { name: "Fleet Renewal", low: 8, base: 24, high: 44 },
-    { name: "Analytics Platform", low: 12, base: 21, high: 33 },
-    { name: "Customer Portal", low: 5, base: 16, high: 29 },
-    { name: "Supplier Program", low: -4, base: 11, high: 23 },
-    { name: "Energy Storage", low: 15, base: 28, high: 62 },
-    { name: "Safety Systems", low: 3, base: 14, high: 24 },
-    { name: "Regional Office", low: 6, base: 18, high: 35 },
-    { name: "Packaging Line", low: 11, base: 26, high: 41 },
-    { name: "Training Rollout", low: 2, base: 9, high: 17 },
-  ],
-  productCases: [
-    { name: "Core Refresh", low: 52, base: 71, high: 96 },
-    { name: "AI Assistant", low: 24, base: 58, high: 103 },
-    { name: "Mobile Redesign", low: 33, base: 47, high: 64 },
-    { name: "Partner API", low: 14, base: 32, high: 49 },
-    { name: "New Market", low: -12, base: 19, high: 74 },
-    { name: "Self Serve", low: 26, base: 44, high: 69 },
-    { name: "Billing Tools", low: 8, base: 25, high: 37 },
-    { name: "Enterprise SSO", low: 19, base: 35, high: 46 },
-    { name: "Retention Offers", low: 4, base: 18, high: 34 },
-    { name: "Telemetry", low: 6, base: 17, high: 27 },
-  ],
-  operations: [
-    { name: "Freight Savings", low: 11, base: 27, high: 43 },
-    { name: "Labor Planning", low: 6, base: 18, high: 36 },
-    { name: "Warehouse Lease", low: -21, base: -8, high: 12 },
-    { name: "Vendor Rebate", low: 9, base: 22, high: 31 },
-    { name: "Scrap Reduction", low: 4, base: 13, high: 24 },
-    { name: "Demand Shift", low: -16, base: 7, high: 39 },
-    { name: "Service Desk", low: 2, base: 8, high: 19 },
-    { name: "Quality Audit", low: 3, base: 10, high: 18 },
-    { name: "Energy Contract", low: 12, base: 21, high: 45 },
-    { name: "Inventory Buffer", low: -9, base: 3, high: 20 },
-  ],
 };
 
 const state = {
@@ -212,16 +175,33 @@ function createRow(row) {
   state.nextRowId += 1;
 
   return {
-    base: String(row.base),
-    high: String(row.high),
+    base: String(row.base ?? 0),
+    high: String(row.high ?? 0),
     id,
-    low: String(row.low),
-    name: row.name,
+    low: String(row.low ?? 0),
+    name: String(row.name ?? ""),
   };
 }
 
+function getDataset(datasetKey) {
+  return (
+    demoDatasets.find((dataset) => dataset.key === datasetKey) ??
+    demoDatasets[0] ?? { key: "", name: "", rows: [] }
+  );
+}
+
 function cloneDatasetRows(datasetKey) {
-  return sampleDatasets[datasetKey].map((row) => createRow(row));
+  return getDataset(datasetKey).rows.map((row) => createRow(row));
+}
+
+function populateDatasetSelector() {
+  elements.datasetSelector.innerHTML = demoDatasets
+    .map(
+      (dataset) =>
+        `<option value="${escapeHtml(dataset.key)}">${escapeHtml(dataset.name)}</option>`
+    )
+    .join("");
+  elements.datasetSelector.disabled = demoDatasets.length === 0;
 }
 
 function applyDefaultSettings({ preserveRows = true } = {}) {
@@ -464,8 +444,9 @@ function updateChartWindow() {
 }
 
 function changeDataset(datasetKey) {
-  state.currentDatasetKey = datasetKey;
-  state.rows = cloneDatasetRows(datasetKey);
+  const dataset = getDataset(datasetKey);
+  state.currentDatasetKey = dataset.key;
+  state.rows = cloneDatasetRows(dataset.key);
   invalidateViewModelCache();
   renderChart({ forceTableRender: true, resetScroll: true });
 }
@@ -529,6 +510,8 @@ function bindEvents() {
 }
 
 export function initializeUncertaintyApp() {
+  populateDatasetSelector();
+  elements.datasetSelector.value = defaultSettings.datasetKey;
   state.rows = cloneDatasetRows(defaultSettings.datasetKey);
   applyDefaultSettings({ preserveRows: true });
   sidebarController.applyStoredState();
