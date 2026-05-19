@@ -175,7 +175,7 @@ The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/dem
 The scrollable bar chart supports:
 
 - horizontal and vertical bar orientation
-- multiple sample datasets
+- built-in demo datasets loaded from `src/actionMenu/compareValue.json`
 - value and name sorting
 - visible-window scrolling
 - auto-scale and manual axis bounds

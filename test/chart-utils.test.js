@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
+import { extractCompareValueDatasets } from "../src/value-datasets.js";
 import {
   buildSlice,
   getAutoScaleBounds,
@@ -11,6 +13,29 @@ import {
   sanitizeCurrencyCode,
   sortPairs,
 } from "../src/chart-utils.js";
+
+const compareValueSource = JSON.parse(
+  readFileSync(
+    new URL("../src/actionMenu/compareValue.json", import.meta.url),
+    "utf8"
+  )
+);
+
+test("extractCompareValueDatasets loads built-in JSON datasets", () => {
+  const sourceDatasets = compareValueSource.data.data.data;
+  const datasets = extractCompareValueDatasets(compareValueSource);
+
+  assert.equal(datasets.length, sourceDatasets.length);
+  assert.deepEqual(
+    datasets.map((dataset) => dataset.name),
+    sourceDatasets.map((dataset) => dataset.name)
+  );
+  assert.match(datasets[0].key, /^[a-z0-9-]+$/);
+  assert.equal(datasets[0].categories.length, sourceDatasets[0].mainRows.length);
+  assert.equal(datasets[0].data.length, sourceDatasets[0].mainRows.length);
+  assert.equal(datasets[0].categories[0], sourceDatasets[0].mainRows[0].name);
+  assert.equal(datasets[0].data[0], sourceDatasets[0].mainRows[0].y);
+});
 
 test("sortPairs sorts value ascending with name tiebreaker", () => {
   const pairs = [

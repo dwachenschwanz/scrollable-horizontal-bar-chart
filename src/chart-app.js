@@ -11,18 +11,21 @@ import {
   debounce,
   escapeHtml,
 } from "./chartkit/demo-controls.js";
+import compareValueSource from "./actionMenu/compareValue.json";
+import { extractCompareValueDatasets } from "./value-datasets.js";
 
-const CATEGORY_COUNT = 40;
 const TRACK_HEIGHT = 300;
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "chartSidebarCollapsed";
 const SIDEBAR_POSITION_STORAGE_KEY = "chartSidebarPosition";
+const demoDatasets = extractCompareValueDatasets(compareValueSource);
+const defaultDatasetKey = demoDatasets[0]?.key ?? "";
 const defaultSettings = {
   activeTab: "display",
   advancedDisplayOpen: false,
   autoScale: true,
   barHeight: "0.75",
   chartHeight: "400",
-  datasetKey: "dataset1",
+  datasetKey: defaultDatasetKey,
   leftMargin: "100",
   orientation: "horizontal",
   showDataTable: true,
@@ -37,34 +40,6 @@ const defaultSettings = {
   xAxisStyle: "currency",
   yMax: "100",
   yMin: "0",
-};
-
-function createSeededRandom(seed) {
-  let value = seed >>> 0;
-  return () => {
-    value = (value * 1664525 + 1013904223) >>> 0;
-    return value / 4294967296;
-  };
-}
-
-function createDataset(seed, maxValue) {
-  const random = createSeededRandom(seed);
-  return Array.from(
-    { length: CATEGORY_COUNT },
-    () => Math.floor(random() * maxValue)
-  );
-}
-
-const fullCategories = Array.from(
-  { length: CATEGORY_COUNT },
-  (_, index) => `Category ${index + 1}`
-);
-fullCategories[4] = "This is a long Category 5";
-
-const datasets = {
-  dataset1: createDataset(17, 50000),
-  dataset2: createDataset(29, 100),
-  dataset3: createDataset(43, 100),
 };
 
 const state = {
@@ -166,7 +141,7 @@ const windowControls = createChartWindowControls({
     scrollbar: elements.scrollbar,
     sliderStatus: elements.sliderStatus,
   },
-  getTotal: () => fullCategories.length,
+  getTotal: () => getCurrentDataset().data.length,
   initialWindowSize: Number.parseInt(defaultSettings.windowSize, 10),
   onScrollPosition: () => updateChartWindow(),
   onWindowChange: () => invalidateViewModelCache(),
@@ -232,7 +207,24 @@ function resetToDefaults() {
 }
 
 function getCurrentDataset() {
-  return datasets[state.currentDatasetKey];
+  return getCurrentDatasetByKey(state.currentDatasetKey);
+}
+
+function getCurrentDatasetByKey(datasetKey) {
+  return (
+    demoDatasets.find((dataset) => dataset.key === datasetKey) ??
+    demoDatasets[0] ?? { categories: [], data: [], key: "", name: "" }
+  );
+}
+
+function populateDatasetSelector() {
+  elements.datasetSelector.innerHTML = demoDatasets
+    .map(
+      (dataset) =>
+        `<option value="${escapeHtml(dataset.key)}">${escapeHtml(dataset.name)}</option>`
+    )
+    .join("");
+  elements.datasetSelector.disabled = demoDatasets.length === 0;
 }
 
 function invalidateViewModelCache() {
@@ -306,8 +298,8 @@ function getViewModel() {
   }
 
   state.viewModelCache = createBarChartViewModel({
-    categories: fullCategories,
-    data: getCurrentDataset(),
+    categories: getCurrentDataset().categories,
+    data: getCurrentDataset().data,
     formatters: {
       barValueFormatter: axisControls.getStandardCurrencyFormatter(),
       valueAxisFormatter: axisControls.getValueAxisFormatter(),
@@ -413,7 +405,7 @@ function bindEvents() {
   elements.windowSizeSelector.addEventListener("change", (event) => {
     windowControls.setWindowSize(
       event.target.value === "max"
-        ? fullCategories.length
+        ? getCurrentDataset().data.length
         : Number.parseInt(event.target.value, 10)
     );
     renderChart();
@@ -445,7 +437,7 @@ function bindEvents() {
   elements.yMinInput.addEventListener("input", debouncedManualAxisRender);
   elements.yMaxInput.addEventListener("input", debouncedManualAxisRender);
   elements.datasetSelector.addEventListener("change", (event) => {
-    state.currentDatasetKey = event.target.value;
+    state.currentDatasetKey = getCurrentDatasetByKey(event.target.value).key;
     invalidateViewModelCache();
     renderChart({ forceTableRender: true, resetScroll: true });
   });
@@ -457,6 +449,8 @@ function bindEvents() {
 }
 
 export function initializeChartApp() {
+  populateDatasetSelector();
+  elements.datasetSelector.value = defaultSettings.datasetKey;
   applyDefaultSettings();
   sidebarController.applyStoredState();
   sidebarController.applyStoredPosition();

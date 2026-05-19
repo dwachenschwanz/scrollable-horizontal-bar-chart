@@ -441,10 +441,11 @@ input[type="number"] {
 
 #chart-container {
   display: grid;
-  grid-template-columns: var(--slider-column-width) minmax(320px, min(600px, calc(100vw - 96px)));
+  grid-template-columns: var(--slider-column-width) minmax(320px, 1fr);
   justify-content: center;
   column-gap: 15px;
   row-gap: 6px;
+  width: 100%;
   max-width: 100%;
   overflow-x: auto;
   padding: 0 10px;
