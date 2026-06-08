@@ -1,7 +1,19 @@
 import { resolve } from "node:path";
+import { copyFile } from "node:fs/promises";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  plugins: [
+    {
+      name: "copy-chartkit-css",
+      async closeBundle() {
+        await copyFile(
+          resolve(__dirname, "src/shared/chart-resize.css"),
+          resolve(__dirname, "dist/chartkit/chart-resize.css"),
+        );
+      },
+    },
+  ],
   build: {
     emptyOutDir: true,
     lib: {

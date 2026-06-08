@@ -13,6 +13,24 @@ npm run build:chartkit
 
 The output lives in `dist/chartkit/`. The build keeps `highcharts` external, so the Angular app should install and own the `highcharts` dependency.
 
+The package exposes these chartkit entrypoints:
+
+```ts
+import {
+  createBarChartViewModel,
+  createChartHeightResizeControls,
+  mountBarChart,
+} from "scrollable-horizontal-bar-chart";
+
+import "scrollable-horizontal-bar-chart/chart-resize.css";
+```
+
+The current browser demos can still import demo-only helpers from:
+
+```ts
+import { createControlTabs } from "scrollable-horizontal-bar-chart/demo-controls";
+```
+
 ## Recommended Ownership
 
 Angular should own:
@@ -386,6 +404,44 @@ export class BarChartComponent implements AfterViewInit, OnDestroy {
 
 If the Angular app uses signals, keep `chartHeight` in a writable signal instead of replacing the `settings` object directly. The important part is that the `onChange` callback updates Angular-owned state before rendering the next view model.
 
+### Resize CSS Contract
+
+The helper expects the resize row and pill elements to use these classes:
+
+- `.chart-resize-row`
+- `.chart-resize-handle`
+- `.chart-resize-handle.is-dragging`
+
+Angular can import the packaged stylesheet globally:
+
+```ts
+import "scrollable-horizontal-bar-chart/chart-resize.css";
+```
+
+Or include it in `angular.json`:
+
+```json
+{
+  "styles": [
+    "node_modules/scrollable-horizontal-bar-chart/dist/chartkit/chart-resize.css",
+    "src/styles.css"
+  ]
+}
+```
+
+The stylesheet uses these optional custom properties for theme tuning:
+
+```css
+:host {
+  --chart-resize-accent: #93c5fd;
+  --chart-resize-accent-shadow: rgba(147, 197, 253, 0.28);
+  --chart-resize-handle-active: #3b82f6;
+  --chart-resize-active-inset: rgba(37, 99, 235, 0.22);
+}
+```
+
+If the Angular component uses view encapsulation, put the import in a global stylesheet or copy the classes into the component stylesheet so the helper-applied `.is-dragging` state remains styled.
+
 ## Import Paths
 
 During local development, the Angular app can point at the built artifact:
@@ -394,4 +450,10 @@ During local development, the Angular app can point at the built artifact:
 import { mountBarChart } from "../path-to-repo/dist/chartkit/index.js";
 ```
 
-For a workspace package, expose `dist/chartkit/index.js` as the package entrypoint and keep `highcharts` as a peer dependency.
+For a workspace package, import from the package name instead:
+
+```ts
+import { mountBarChart } from "scrollable-horizontal-bar-chart";
+```
+
+Keep `highcharts` installed in the Angular app; chartkit treats it as a host-owned dependency.

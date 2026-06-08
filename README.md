@@ -159,6 +159,24 @@ dist/chartkit/
 
 The chartkit package build keeps `highcharts` external, so a host app such as Angular should install and own `highcharts`.
 
+The package export map points consumers at the built chartkit files:
+
+```js
+import {
+  createBarChartViewModel,
+  createChartHeightResizeControls,
+  mountBarChart,
+} from "scrollable-horizontal-bar-chart";
+
+import "scrollable-horizontal-bar-chart/chart-resize.css";
+```
+
+The demo-control entrypoint remains available for the current browser demos:
+
+```js
+import { createControlTabs } from "scrollable-horizontal-bar-chart/demo-controls";
+```
+
 ## Tests
 
 Run the full Node test suite:

@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "exports": {
+    ".": "./dist/chartkit/index.js",
+    "./demo-controls": "./dist/chartkit/demo-controls.js",
+    "./chart-resize.css": "./dist/chartkit/chart-resize.css"
+  },
+  "style": "./dist/chartkit/chart-resize.css",
   "scripts": {
     "dev": "vite",
     "dev:bar": "vite --host 127.0.0.1 --port 5173 --strictPort",
