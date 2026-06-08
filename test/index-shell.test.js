@@ -96,3 +96,13 @@ test("index shell includes sortable data table headers", () => {
   assert.match(indexHtml, />\s*Category\s*<\/button>/);
   assert.match(indexHtml, />\s*Value\s*<\/button>/);
 });
+
+test("index shell includes chart resize handle", () => {
+  assert.match(indexHtml, /class="chart-resize-handle"/);
+  assert.match(indexHtml, /id="chartResizeHandle"/);
+  assert.match(indexHtml, /role="separator"/);
+  assert.match(indexHtml, /aria-label="Resize chart"/);
+  assert.match(indexHtml, /aria-controls="container"/);
+  assert.match(indexHtml, /aria-valuemin="300"/);
+  assert.match(indexHtml, /aria-valuemax="720"/);
+});

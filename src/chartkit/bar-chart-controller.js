@@ -1,6 +1,7 @@
 import Highcharts from "highcharts";
 import {
   escapeHtml,
+  getAbridgedAxisLabelMarkup,
   getHorizontalCategoryLabelWidth,
   getPointPadding,
 } from "../shared/chart-core.js";
@@ -23,7 +24,7 @@ export function createBarCategoryAxisOptions({
           x: -8,
           formatter() {
             const label = typeof this.value === "string" ? this.value : "";
-            return `<span class="chart-axis-label" title="${escapeHtml(label)}" style="width:${categoryLabelWidth}px">${escapeHtml(label)}</span>`;
+            return getAbridgedAxisLabelMarkup(label, categoryLabelWidth);
           },
         },
     reversed: !isVertical,

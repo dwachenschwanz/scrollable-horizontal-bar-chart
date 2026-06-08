@@ -90,6 +90,12 @@ export function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+export function getAbridgedAxisLabelMarkup(label, width) {
+  const escapedLabel = escapeHtml(label);
+
+  return `<span class="chart-axis-label" title="${escapedLabel}" aria-label="${escapedLabel}" style="width:${width}px">${escapedLabel}</span>`;
+}
+
 export function createSafeNumberFormatter(
   formatterCache,
   locale,

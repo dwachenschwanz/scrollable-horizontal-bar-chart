@@ -21,12 +21,14 @@ Angular should own:
 - input state and validation UX
 - data fetching
 - layout around the chart host element
+- any chart-height resize handle or reset affordance
 
 `chartkit` should own:
 
 - sorting and slicing chart data
 - axis bounds and formatted chart options
 - Highcharts mount, update, and destroy lifecycle
+- category-axis label markup, including full-label hover text for labels that are visually truncated
 
 ## Bar Chart Component Shape
 
@@ -221,6 +223,17 @@ The current demos use a custom scrollbar control. In Angular, keep scrollbar sta
 - `settings.windowSize`
 
 When those values change, rebuild the view model and call `mount.update(...)`. The bar chart also exposes `updateWindow(...)`, but `update(...)` is simpler and works for both chart types.
+
+## Chart Height Resizing
+
+The Vite demos include a centered resize pill between the chart and the data table. That pill is demo UI, not part of `chartkit`. An Angular host can implement the same interaction by updating `settings.chartHeight` and then rebuilding the view model.
+
+The demo behavior is:
+
+- drag the pill to change `settings.chartHeight`
+- double-click the pill to restore the default chart height
+- clamp the maximum height to the available chart viewport space
+- keep any visible Chart Height form control synchronized with the dragged value
 
 ## Import Paths
 

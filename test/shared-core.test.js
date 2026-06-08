@@ -17,6 +17,7 @@ import {
   createValueAxisFormatter,
   debounce,
   escapeHtml,
+  getAbridgedAxisLabelMarkup,
   getSanitizedFormatCurrency,
   readBooleanPreference,
   readJsonPreference,
@@ -113,6 +114,13 @@ test("escapeHtml escapes characters used in HTML markup", () => {
   assert.equal(
     escapeHtml(`A&B <tag attr="x">'`),
     "A&amp;B &lt;tag attr=&quot;x&quot;&gt;&#39;"
+  );
+});
+
+test("abridged axis labels expose the full label as tooltip text", () => {
+  assert.equal(
+    getAbridgedAxisLabelMarkup(`A&B <tag attr="x">'`, 84),
+    `<span class="chart-axis-label" title="A&amp;B &lt;tag attr=&quot;x&quot;&gt;&#39;" aria-label="A&amp;B &lt;tag attr=&quot;x&quot;&gt;&#39;" style="width:84px">A&amp;B &lt;tag attr=&quot;x&quot;&gt;&#39;</span>`
   );
 });
 

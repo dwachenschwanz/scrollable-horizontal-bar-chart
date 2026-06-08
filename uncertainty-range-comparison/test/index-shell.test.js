@@ -114,3 +114,13 @@ test("index shell tucks layout tuning controls into advanced display controls", 
   assert.match(indexHtml, /id="barHeightSlider"/);
   assert.match(indexHtml, /id="chartHeightSlider"/);
 });
+
+test("index shell includes chart resize handle", () => {
+  assert.match(indexHtml, /class="chart-resize-handle"/);
+  assert.match(indexHtml, /id="chartResizeHandle"/);
+  assert.match(indexHtml, /role="separator"/);
+  assert.match(indexHtml, /aria-label="Resize chart"/);
+  assert.match(indexHtml, /aria-controls="container"/);
+  assert.match(indexHtml, /aria-valuemin="300"/);
+  assert.match(indexHtml, /aria-valuemax="720"/);
+});

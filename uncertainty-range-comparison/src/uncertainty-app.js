@@ -15,6 +15,7 @@ import compareUncertaintySource from "./actionMenu/compareUncertainty.json";
 import { extractCompareUncertaintyDatasets } from "./uncertainty-datasets.js";
 
 const TRACK_HEIGHT = 300;
+const CHART_HEIGHT_VIEWPORT_PADDING = 24;
 const UNCERTAINTY_BAR_COLOR = "#2caffe";
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "uncertaintySidebarCollapsed";
 const SIDEBAR_POSITION_STORAGE_KEY = "uncertaintySidebarPosition";
@@ -63,6 +64,7 @@ const elements = {
   chartContainer: document.getElementById("chart-container"),
   chartHeightSlider: document.getElementById("chartHeightSlider"),
   chartHeightValue: document.getElementById("chartHeightValue"),
+  chartResizeHandle: document.getElementById("chartResizeHandle"),
   chartSurface: document.getElementById("container"),
   controlsPanels: Array.from(document.querySelectorAll("[data-tab-panel]")),
   controlsTabs: Array.from(document.querySelectorAll("[data-tab-target]")),
@@ -243,7 +245,7 @@ function resetToDefaults() {
   invalidateViewModelCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
-  updateChartHeightDisplay();
+  setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
   axisControls.updateCurrencyInputState();
   dataTableControls.updateVisibility();
   axisControls.updateYAxisInputState();
@@ -276,11 +278,43 @@ function updateBarHeightDisplay() {
 }
 
 function updateChartHeightDisplay() {
+  getChartHeightBounds();
   elements.chartHeightValue.textContent = elements.chartHeightSlider.value;
   elements.chartContainer.style.setProperty(
     "--chart-height",
     `${elements.chartHeightSlider.value}px`
   );
+  elements.chartResizeHandle?.setAttribute(
+    "aria-valuenow",
+    elements.chartHeightSlider.value
+  );
+}
+
+function getChartHeightBounds() {
+  const min = Number.parseInt(elements.chartHeightSlider.min, 10);
+  const step = Number.parseInt(elements.chartHeightSlider.step, 10);
+  const chartSurfaceTop = elements.chartSurface.getBoundingClientRect().top;
+  const availableHeight =
+    window.innerHeight - chartSurfaceTop - CHART_HEIGHT_VIEWPORT_PADDING;
+  const max = Math.max(min, Math.floor(availableHeight / step) * step);
+
+  elements.chartHeightSlider.max = String(max);
+  elements.chartResizeHandle?.setAttribute("aria-valuemax", String(max));
+
+  return {
+    max,
+    min,
+    step,
+  };
+}
+
+function setChartHeight(height) {
+  const { max, min, step } = getChartHeightBounds();
+  const snappedHeight = Math.round(height / step) * step;
+  const chartHeight = Math.min(max, Math.max(min, snappedHeight));
+
+  elements.chartHeightSlider.value = String(chartHeight);
+  updateChartHeightDisplay();
 }
 
 function getViewModelSettings() {
@@ -489,8 +523,8 @@ function bindEvents() {
     updateBarHeightDisplay();
     renderChart();
   });
-  elements.chartHeightSlider.addEventListener("input", () => {
-    updateChartHeightDisplay();
+  elements.chartHeightSlider.addEventListener("input", (event) => {
+    setChartHeight(Number.parseInt(event.target.value, 10));
     renderChart();
   });
   elements.autoScaleCheckbox.addEventListener("change", () => {
@@ -507,6 +541,81 @@ function bindEvents() {
     onFormatRender: () => renderChart({ forceTableRender: true }),
   });
   windowControls.bindScrollbar();
+  window.addEventListener(
+    "resize",
+    debounce(() => {
+      setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
+      renderChart();
+    }, 120)
+  );
+}
+
+function bindChartResizeHandle() {
+  const handle = elements.chartResizeHandle;
+
+  if (!handle) {
+    return;
+  }
+
+  let dragStartY = 0;
+  let dragStartHeight = Number.parseInt(defaultSettings.chartHeight, 10);
+
+  function getCurrentChartHeight() {
+    const currentHeight = Number.parseInt(elements.chartHeightSlider.value, 10);
+
+    return Number.isFinite(currentHeight)
+      ? currentHeight
+      : Number.parseInt(defaultSettings.chartHeight, 10);
+  }
+
+  function endDrag() {
+    handle.classList.remove("is-dragging");
+    document.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener("pointerup", endDrag);
+    document.removeEventListener("pointercancel", endDrag);
+  }
+
+  function onPointerMove(event) {
+    setChartHeight(dragStartHeight + event.clientY - dragStartY);
+    renderChart();
+  }
+
+  function resetChartHeight() {
+    setChartHeight(Number.parseInt(defaultSettings.chartHeight, 10));
+    renderChart();
+  }
+
+  handle.addEventListener("dblclick", resetChartHeight);
+
+  handle.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    dragStartY = event.clientY;
+    dragStartHeight = getCurrentChartHeight();
+    handle.classList.add("is-dragging");
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", endDrag, { once: true });
+    document.addEventListener("pointercancel", endDrag, { once: true });
+  });
+
+  handle.addEventListener("keydown", (event) => {
+    const { max, min, step: sliderStep } = getChartHeightBounds();
+    const step = event.shiftKey ? sliderStep * 2 : sliderStep;
+    const keyAdjustments = {
+      ArrowDown: step,
+      ArrowUp: -step,
+      End: max - getCurrentChartHeight(),
+      Home: min - getCurrentChartHeight(),
+    };
+    const adjustment = keyAdjustments[event.key];
+
+    if (adjustment === undefined) {
+      return;
+    }
+
+    event.preventDefault();
+    setChartHeight(getCurrentChartHeight() + adjustment);
+    renderChart();
+  });
 }
 
 export function initializeUncertaintyApp() {
@@ -518,12 +627,13 @@ export function initializeUncertaintyApp() {
   sidebarController.applyStoredPosition();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
-  updateChartHeightDisplay();
+  setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
   axisControls.updateCurrencyInputState();
   axisControls.normalizeCurrencyInput();
   axisControls.updateCurrencyValidationState();
   dataTableControls.updateVisibility();
   axisControls.updateYAxisInputState();
   bindEvents();
+  bindChartResizeHandle();
   renderChart({ forceTableRender: true, resetScroll: true });
 }

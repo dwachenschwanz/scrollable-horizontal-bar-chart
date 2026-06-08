@@ -23,8 +23,10 @@ The apps intentionally share the same interaction model:
 - display, axis, and format sections
 - custom visible-window scrolling
 - horizontal or vertical chart orientation
+- chart-height resizing from the divider pill below each chart
 - auto or manual axis bounds
 - `Intl.NumberFormat`-based axis and label formatting
+- full category-label text exposed on hover and to assistive technology when labels are visually abridged
 - synchronized data tables with visible-row highlighting
 
 The important architectural point is that the apps are no longer two disconnected implementations. They are two demos using one shared chart foundation.
@@ -178,8 +180,12 @@ The scrollable bar chart supports:
 - built-in demo datasets loaded from `src/actionMenu/compareValue.json`
 - value and name sorting
 - visible-window scrolling
+- chart-height resizing by dragging the pill below the chart
+- chart-height reset by double-clicking the resize pill
+- dynamic chart-height maximum based on the available chart viewport space
 - auto-scale and manual axis bounds
 - compact, standard, scientific, engineering, decimal, and currency formatting
+- full category labels available through native hover tooltips when the axis label is truncated with an ellipsis
 - value labels inside bars
 - sortable synchronized data table
 
@@ -190,9 +196,19 @@ The uncertainty range comparison supports:
 - base labels and base divider markers
 - optional mean marker shown as an `x`
 - range-aware sorting
+- chart-height resizing by dragging the pill below the chart
+- chart-height reset by double-clicking the resize pill
+- dynamic chart-height maximum based on the available chart viewport space
+- full category labels available through native hover tooltips when the axis label is truncated with an ellipsis
 - matching tooltip style for range bars
 - vertical label fallback when labels do not fit inside bars
 - synchronized data table with input adjustment warnings
+
+## Chart Resize Handle
+
+Both demo apps include a horizontal divider between the chart and the table. Only the centered pill is interactive. Drag the pill up or down to change the chart height; double-click it to restore the default chart height. The existing Chart Height control stays synchronized with the dragged height.
+
+The maximum draggable height is calculated from the chart container's available viewport space instead of using a fixed pixel cap. The resize pill also supports keyboard adjustment with `ArrowUp`, `ArrowDown`, `Home`, and `End`.
 
 ## Angular Path
 
