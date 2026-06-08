@@ -12,6 +12,7 @@ npm run build:chartkit
 ```
 
 The output lives in `dist/chartkit/`. The build keeps `highcharts` external, so the Angular app should install and own the `highcharts` dependency.
+The root package `files` allowlist includes `dist/chartkit`, so `npm install /path/to/scrollable-horizontal-bar-chart` and packed artifacts include the built chartkit modules and resize stylesheet.
 
 The package exposes these chartkit entrypoints:
 
@@ -457,3 +458,15 @@ import { mountBarChart } from "scrollable-horizontal-bar-chart";
 ```
 
 Keep `highcharts` installed in the Angular app; chartkit treats it as a host-owned dependency.
+
+## Angular Build Warning
+
+Angular may report an optimization warning because `highcharts` is detected as a CommonJS dependency. The warning does not prevent the chart from building or running. If the host Angular app wants to suppress it, add `highcharts` to the build option's `allowedCommonJsDependencies` list:
+
+```json
+{
+  "allowedCommonJsDependencies": [
+    "highcharts"
+  ]
+}
+```

@@ -158,6 +158,7 @@ dist/chartkit/
 ```
 
 The chartkit package build keeps `highcharts` external, so a host app such as Angular should install and own `highcharts`.
+The package `files` allowlist includes `dist/chartkit`, so local package installs and packed artifacts include the built chartkit modules and resize stylesheet even though `dist/` is ignored by Git.
 
 The package export map points consumers at the built chartkit files:
 
@@ -198,6 +199,7 @@ npm run test:chartkit-build
 ```
 
 The browser tests start both fixed-port Vite apps and verify chart resize interactions and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected chartkit and demo exports exist.
+`npm pack --dry-run` is useful before publishing or local package testing; it should list `dist/chartkit/index.js`, `dist/chartkit/demo-controls.js`, `dist/chartkit/chart-resize.css`, and the chartkit chunks.
 
 ## App Features
 
