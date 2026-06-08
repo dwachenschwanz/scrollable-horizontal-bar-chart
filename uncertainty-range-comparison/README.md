@@ -21,6 +21,7 @@ The chart renders each bar from its low value to its high value, with a base div
 - Built-in demo datasets loaded from `src/actionMenu/compareUncertainty.json`
 - Sort by base, uncertainty spread, or name
 - Configurable bars per page with a custom scrollbar
+- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
 - Chart-height resizing by dragging the centered pill below the chart
 - Double-click chart-height reset from the resize pill
 - Dynamic chart-height maximum based on the available chart viewport space

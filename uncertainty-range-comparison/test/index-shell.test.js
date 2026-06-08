@@ -58,6 +58,46 @@ test("index shell keeps expected default checked controls", () => {
     /<input type="checkbox" id="xAxisGroupingCheckbox" checked \/>/,
     "Use Grouping should be checked"
   );
+  assert.match(
+    indexHtml,
+    /<input type="checkbox" id="expandUnassignedCheckbox" checked \/>/,
+    "Expand Unassigned should be checked"
+  );
+});
+
+test("index shell includes analysis filter controls", () => {
+  assert.match(indexHtml, /id="tab-analysis"/);
+  assert.match(indexHtml, /aria-controls="panel-analysis"/);
+  assert.match(indexHtml, /data-tab-target="analysis"/);
+  assert.match(indexHtml, /id="panel-analysis"/);
+  assert.match(indexHtml, /data-tab-panel="analysis"/);
+  assert.match(indexHtml, /<section\s+class="filter-builder"/);
+  assert.match(indexHtml, /class="filter-builder-heading"/);
+  assert.match(indexHtml, />\s*Filters\s*<\/h2>/);
+  assert.match(indexHtml, />\s*Add\s*<\/span>/);
+  assert.match(indexHtml, />\s*Filter 1\s*<\/h2>/);
+  assert.match(indexHtml, />\s*Filter 2\s*<\/h2>/);
+  assert.doesNotMatch(indexHtml, />\s*Advanced Filter\s*<\/button>/);
+  assert.doesNotMatch(indexHtml, />\s*Categorical\s*<\/span>/);
+  assert.doesNotMatch(indexHtml, />\s*Numerical\s*<\/span>/);
+  assert.doesNotMatch(indexHtml, /type="radio"/);
+  assert.doesNotMatch(indexHtml, />\s*All\s*<\/button>/);
+  assert.doesNotMatch(indexHtml, />\s*Invert\s*<\/button>/);
+  assert.match(indexHtml, /class="analysis-action-row"/);
+  assert.match(indexHtml, />\s*Apply\s*<\/button>/);
+  assert.match(indexHtml, /id="resetAnalysisButton"/);
+  assert.match(indexHtml, />\s*Reset\s*<\/button>/);
+  assert.match(indexHtml, /for="groupBySelector"/);
+  assert.match(indexHtml, /id="groupBySelector"/);
+  assert.match(indexHtml, /for="expandUnassignedCheckbox"/);
+  assert.match(indexHtml, /id="expandUnassignedCheckbox"/);
+  assert.match(indexHtml, /for="colorBySelector"/);
+  assert.match(indexHtml, /id="colorBySelector"/);
+  assert.match(indexHtml, /<option value="low">Low<\/option>/);
+  assert.match(indexHtml, /<option value="base">Base<\/option>/);
+  assert.match(indexHtml, /<option value="high">High<\/option>/);
+  assert.match(indexHtml, /<option value="mean">Mean<\/option>/);
+  assert.match(indexHtml, /<option value="spread">Spread<\/option>/);
 });
 
 test("index shell includes uncertainty input table", () => {

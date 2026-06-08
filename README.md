@@ -23,6 +23,7 @@ The apps intentionally share the same interaction model:
 - display, axis, and format sections
 - custom visible-window scrolling
 - horizontal or vertical chart orientation
+- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
 - chart-height resizing from the divider pill below each chart
 - auto or manual axis bounds
 - `Intl.NumberFormat`-based axis and label formatting
@@ -209,6 +210,7 @@ The scrollable bar chart supports:
 - built-in demo datasets loaded from `src/actionMenu/compareValue.json`
 - value and name sorting
 - visible-window scrolling
+- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
 - chart-height resizing by dragging the pill below the chart
 - chart-height reset by double-clicking the resize pill
 - dynamic chart-height maximum based on the available chart viewport space
@@ -225,6 +227,7 @@ The uncertainty range comparison supports:
 - base labels and base divider markers
 - optional mean marker shown as an `x`
 - range-aware sorting
+- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
 - chart-height resizing by dragging the pill below the chart
 - chart-height reset by double-clicking the resize pill
 - dynamic chart-height maximum based on the available chart viewport space

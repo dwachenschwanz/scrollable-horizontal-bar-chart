@@ -122,6 +122,39 @@ for (const app of apps) {
         .toBeCloseTo(300, 0);
     });
 
+    test("opens analysis filters from the sidebar tab", async ({ page }) => {
+      await openApp(page, app.path);
+
+      await page.getByRole("tab", { name: "Analysis" }).click();
+
+      await expect(page.locator("#panel-analysis")).toBeVisible();
+      await expect(page.locator(".filter-builder")).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Filter 1" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Filter 2" })).toBeVisible();
+      await expect(page.getByRole("button", { name: /Advanced Filter/i })).toHaveCount(0);
+      await expect(page.locator("#panel-analysis").locator('input[type="radio"]')).toHaveCount(0);
+      await expect(
+        page.locator("#panel-analysis").getByRole("button", { name: "Apply" })
+      ).toBeVisible();
+      await expect(page.locator("#resetAnalysisButton")).toBeVisible();
+      await expect(page.locator("#groupBySelector")).toBeVisible();
+      await expect(page.locator("#expandUnassignedCheckbox")).toBeVisible();
+      await expect(page.locator("#colorBySelector")).toBeVisible();
+      await expect(page.locator("#panel-display")).toBeHidden();
+
+      await page.locator("#groupBySelector").selectOption("country");
+      await page.locator("#expandUnassignedCheckbox").setChecked(false);
+      await page.locator("#colorBySelector").selectOption("colorTag");
+      const filterValue = app.name === "scrollable bar chart" ? "value" : "spread";
+      await page.locator(".filter-field-select").first().selectOption(filterValue);
+      await page.locator("#resetAnalysisButton").click();
+
+      await expect(page.locator("#groupBySelector")).toHaveValue("none");
+      await expect(page.locator("#expandUnassignedCheckbox")).toBeChecked();
+      await expect(page.locator("#colorBySelector")).toHaveValue("none");
+      await expect(page.locator(".filter-field-select").first()).toHaveValue("none");
+    });
+
     test("abridged axis labels expose full label text", async ({ page }) => {
       await openApp(page, app.path);
 

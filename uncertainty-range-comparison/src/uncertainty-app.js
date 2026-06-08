@@ -27,7 +27,10 @@ const defaultSettings = {
   autoScale: true,
   barHeight: "0.72",
   chartHeight: "400",
+  colorBy: "none",
   datasetKey: defaultDatasetKey,
+  expandUnassigned: true,
+  groupBy: "none",
   leftMargin: "120",
   orientation: "horizontal",
   showDataTable: true,
@@ -58,6 +61,7 @@ const state = {
 
 const elements = {
   advancedDisplayControls: document.getElementById("advancedDisplayControls"),
+  analysisPanel: document.getElementById("panel-analysis"),
   autoScaleCheckbox: document.getElementById("autoScaleCheckbox"),
   barHeightSlider: document.getElementById("barHeightSlider"),
   barHeightValue: document.getElementById("barHeightValue"),
@@ -75,9 +79,13 @@ const elements = {
   dataTablePanel: document.getElementById("dataTablePanel"),
   datasetSelector: document.getElementById("datasetSelector"),
   dynamicSliderStyle: document.getElementById("dynamic-slider-style"),
+  colorBySelector: document.getElementById("colorBySelector"),
+  expandUnassignedCheckbox: document.getElementById("expandUnassignedCheckbox"),
+  groupBySelector: document.getElementById("groupBySelector"),
   leftMarginSlider: document.getElementById("leftMarginSlider"),
   leftMarginValue: document.getElementById("leftMarginValue"),
   orientationSelector: document.getElementById("orientationSelector"),
+  resetAnalysisButton: document.getElementById("resetAnalysisButton"),
   resetDefaultsButton: document.getElementById("resetDefaultsButton"),
   showDataTableCheckbox: document.getElementById("showDataTableCheckbox"),
   scrollbar: document.getElementById("scrollbar"),
@@ -230,6 +238,7 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
   });
 
   elements.windowSizeSelector.value = defaultSettings.windowSize;
+  resetAnalysisControls();
   elements.advancedDisplayControls.open = defaultSettings.advancedDisplayOpen;
   elements.toggleLabels.checked = defaultSettings.showLabels;
   elements.toggleMean.checked = defaultSettings.showMean;
@@ -250,6 +259,17 @@ function applyDefaultSettings({ preserveRows = true } = {}) {
   elements.xAxisGroupingCheckbox.checked = defaultSettings.xAxisGrouping;
 
   controlTabs.setActive(defaultSettings.activeTab);
+}
+
+function resetAnalysisControls() {
+  elements.groupBySelector.value = defaultSettings.groupBy;
+  elements.expandUnassignedCheckbox.checked = defaultSettings.expandUnassigned;
+  elements.colorBySelector.value = defaultSettings.colorBy;
+  elements.analysisPanel
+    .querySelectorAll(".filter-field-select")
+    .forEach((select) => {
+      select.value = "none";
+    });
 }
 
 function resetToDefaults() {
@@ -481,6 +501,7 @@ function bindEvents() {
 
   elements.toggleLabels.addEventListener("change", () => renderChart());
   elements.toggleMean.addEventListener("change", () => renderChart());
+  elements.resetAnalysisButton.addEventListener("click", resetAnalysisControls);
   elements.resetDefaultsButton.addEventListener("click", resetToDefaults);
   elements.showDataTableCheckbox.addEventListener("change", () =>
     dataTableControls.render({ force: true })
