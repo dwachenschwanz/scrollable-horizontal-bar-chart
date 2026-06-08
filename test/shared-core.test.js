@@ -10,6 +10,7 @@ import {
 import {
   buildWindowSlice,
   createAxisFormatControls,
+  createChartHeightResizeControls,
   createChartWindowControls,
   createDataTableControls,
   createSafeNumberFormatter,
@@ -40,6 +41,9 @@ function createMemoryStorage() {
 function createClassList() {
   const values = new Set();
   return {
+    add(value) {
+      values.add(value);
+    },
     contains(value) {
       return values.has(value);
     },
@@ -52,6 +56,22 @@ function createClassList() {
       } else {
         values.delete(value);
       }
+    },
+  };
+}
+
+function createEventTarget(initial = {}) {
+  const listeners = new Map();
+  return {
+    ...initial,
+    addEventListener(type, handler) {
+      listeners.set(type, handler);
+    },
+    dispatch(type, event = {}) {
+      listeners.get(type)?.({ target: this, ...event });
+    },
+    removeEventListener(type) {
+      listeners.delete(type);
     },
   };
 }
@@ -409,6 +429,66 @@ test("chart window controls clamp starts and report visible indexes", () => {
 
   controls.bindScrollbar();
   assert.equal(scrolledStart, null);
+});
+
+test("chart height resize controls clamp, sync, and reset heights", () => {
+  let renderCount = 0;
+  const styleValues = new Map();
+  const handleAttributes = new Map();
+  const chartHeightSlider = createEventTarget({
+    max: "720",
+    min: "300",
+    step: "20",
+    value: "400",
+  });
+  const chartResizeHandle = createEventTarget({
+    classList: createClassList(),
+    setAttribute(name, value) {
+      handleAttributes.set(name, value);
+    },
+  });
+  const controls = createChartHeightResizeControls({
+    debounce: (callback) => callback,
+    defaultHeight: "400",
+    elements: {
+      chartContainer: {
+        style: {
+          setProperty(name, value) {
+            styleValues.set(name, value);
+          },
+        },
+      },
+      chartHeightSlider,
+      chartHeightValue: { textContent: "" },
+      chartResizeHandle,
+      chartSurface: {
+        getBoundingClientRect() {
+          return { top: 120 };
+        },
+      },
+    },
+    onChange: () => {
+      renderCount += 1;
+    },
+    windowObject: createEventTarget({ innerHeight: 910 }),
+    documentObject: createEventTarget(),
+  });
+
+  controls.bindEvents();
+  controls.setHeight(999);
+  assert.equal(chartHeightSlider.value, "760");
+  assert.equal(styleValues.get("--chart-height"), "760px");
+  assert.equal(handleAttributes.get("aria-valuemax"), "760");
+  assert.equal(handleAttributes.get("aria-valuenow"), "760");
+
+  chartHeightSlider.value = "350";
+  chartHeightSlider.dispatch("input");
+  assert.equal(chartHeightSlider.value, "360");
+  assert.equal(renderCount, 1);
+
+  chartResizeHandle.dispatch("dblclick");
+  assert.equal(chartHeightSlider.value, "400");
+  assert.equal(renderCount, 2);
 });
 
 test("data table controls render, cache, sort headers, and highlight rows", () => {

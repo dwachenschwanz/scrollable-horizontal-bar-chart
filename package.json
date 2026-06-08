@@ -5,19 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:bar": "vite --port 5173 --strictPort",
-    "dev:uncertainty": "npm --prefix uncertainty-range-comparison run dev -- --port 5174 --strictPort",
+    "dev:bar": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "dev:uncertainty": "npm --prefix uncertainty-range-comparison run dev -- --host 127.0.0.1 --port 5174 --strictPort",
     "dev:both": "concurrently -n bar,uncertainty -c blue,green \"npm:dev:bar\" \"npm:dev:uncertainty\"",
     "build": "vite build",
     "build:chartkit": "vite build --config vite.chartkit.config.js",
     "preview": "vite preview",
-    "test": "node --test",
+    "test": "node --test test/*.test.js uncertainty-range-comparison/test/*.test.js",
+    "test:browser": "playwright test",
     "test:chartkit-build": "npm run build:chartkit && node scripts/smoke-chartkit-build.mjs"
   },
   "dependencies": {
     "highcharts": "^12.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "concurrently": "^9.2.1",
     "vite": "^6.4.2"
   }

@@ -1,41 +1,26 @@
 import Highcharts from "highcharts";
 import {
+  createScrollableCategoryAxisOptions,
   escapeHtml,
-  getAbridgedAxisLabelMarkup,
-  getHorizontalCategoryLabelWidth,
 } from "../shared/chart-core.js";
 
 const UNCERTAINTY_BAR_BORDER_COLOR = "#258ec9";
 
 function createCategoryAxisOptions({ categories, leftMargin, orientation }) {
-  const isVertical = orientation === "vertical";
-  const categoryLabelWidth = getHorizontalCategoryLabelWidth(leftMargin);
-
-  return {
+  return createScrollableCategoryAxisOptions({
     categories,
-    labels: isVertical
-      ? {}
-      : {
-          reserveSpace: false,
-          useHTML: true,
-          x: -8,
-          formatter() {
-            const label = typeof this.value === "string" ? this.value : "";
-            return getAbridgedAxisLabelMarkup(label, categoryLabelWidth);
-          },
-        },
-    max: categories.length - 0.5,
-    min: -0.5,
-    reversed: !isVertical,
-    scrollbar: {
-      enabled: true,
+    extraOptions: {
+      max: categories.length - 0.5,
+      min: -0.5,
+      tickLength: 0,
+      tickPositions: categories.map((_, index) => index),
+      title: {
+        text: null,
+      },
     },
-    tickLength: 0,
-    tickPositions: categories.map((_, index) => index),
-    title: {
-      text: null,
-    },
-  };
+    leftMargin,
+    orientation,
+  });
 }
 
 function createValueAxisOptions({ axisBounds, orientation, valueAxisFormatter }) {

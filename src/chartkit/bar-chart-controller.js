@@ -1,8 +1,7 @@
 import Highcharts from "highcharts";
 import {
+  createScrollableCategoryAxisOptions,
   escapeHtml,
-  getAbridgedAxisLabelMarkup,
-  getHorizontalCategoryLabelWidth,
   getPointPadding,
 } from "../shared/chart-core.js";
 
@@ -11,27 +10,11 @@ export function createBarCategoryAxisOptions({
   leftMargin,
   orientation,
 }) {
-  const isVertical = orientation === "vertical";
-  const categoryLabelWidth = getHorizontalCategoryLabelWidth(leftMargin);
-
-  return {
+  return createScrollableCategoryAxisOptions({
     categories,
-    labels: isVertical
-      ? {}
-      : {
-          reserveSpace: false,
-          useHTML: true,
-          x: -8,
-          formatter() {
-            const label = typeof this.value === "string" ? this.value : "";
-            return getAbridgedAxisLabelMarkup(label, categoryLabelWidth);
-          },
-        },
-    reversed: !isVertical,
-    scrollbar: {
-      enabled: true,
-    },
-  };
+    leftMargin,
+    orientation,
+  });
 }
 
 function getBarTooltipMarkup(point, valueFormatter) {

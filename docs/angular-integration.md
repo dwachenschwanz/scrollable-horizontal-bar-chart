@@ -3,7 +3,7 @@
 `chartkit` is split into two entrypoints:
 
 - `src/chartkit/index.js` is the stable embeddable chart API.
-- `src/chartkit/demo-controls.js` is for the Vite demo pages and should not be needed by an Angular app.
+- `src/chartkit/demo-controls.js` is for the Vite demo pages and should not be needed for core chart rendering in an Angular app.
 
 Build the package artifact with:
 
@@ -35,6 +35,13 @@ Angular should own:
 Use `ngAfterViewInit` to create the mount, call the view-model builder whenever inputs change, and call `destroy()` from `ngOnDestroy`.
 
 ```ts
+import {
+  AfterViewInit,
+  ElementRef,
+  Input,
+  OnDestroy,
+  ViewChild,
+} from "@angular/core";
 import {
   createBarChartViewModel,
   mountBarChart,
@@ -226,7 +233,7 @@ When those values change, rebuild the view model and call `mount.update(...)`. T
 
 ## Chart Height Resizing
 
-The Vite demos include a centered resize pill between the chart and the data table. That pill is demo UI, not part of `chartkit`. An Angular host can implement the same interaction by updating `settings.chartHeight` and then rebuilding the view model.
+The Vite demos include a centered resize pill between the chart and the data table. That pill is host UI, not part of the Highcharts mount lifecycle. An Angular host can implement the same interaction by updating `settings.chartHeight` and then rebuilding the view model.
 
 The demo behavior is:
 
@@ -234,6 +241,143 @@ The demo behavior is:
 - double-click the pill to restore the default chart height
 - clamp the maximum height to the available chart viewport space
 - keep any visible Chart Height form control synchronized with the dragged value
+
+The reusable `createChartHeightResizeControls` helper is framework-neutral DOM code exported from `demo-controls.js`. Angular can reuse it after `ViewChild` elements are available, or mirror its behavior with Angular event bindings. In either case, keep the chart height in component state and call the chart mount with a fresh view model after height changes.
+
+Example template:
+
+```html
+<div #chartShell class="chart-shell">
+  <div #chartHost class="chart-host"></div>
+</div>
+
+<div class="chart-resize-row">
+  <div
+    #chartResizeHandle
+    class="chart-resize-handle"
+    role="separator"
+    aria-label="Resize chart"
+    aria-controls="chartHost"
+    aria-orientation="horizontal"
+    aria-valuemin="300"
+    aria-valuemax="720"
+    aria-valuenow="400"
+    tabindex="0"
+  ></div>
+</div>
+
+<input
+  #chartHeightSlider
+  type="range"
+  min="300"
+  max="720"
+  step="20"
+  [value]="settings.chartHeight"
+/>
+<span #chartHeightValue>{{ settings.chartHeight }}</span>
+```
+
+Example component setup:
+
+```ts
+import {
+  createBarChartViewModel,
+  mountBarChart,
+} from "../chartkit";
+import {
+  createChartHeightResizeControls,
+  debounce,
+} from "../chartkit/demo-controls";
+
+export class BarChartComponent implements AfterViewInit, OnDestroy {
+  @ViewChild("chartHost", { static: true })
+  chartHost!: ElementRef<HTMLElement>;
+  @ViewChild("chartShell", { static: true })
+  chartShell!: ElementRef<HTMLElement>;
+  @ViewChild("chartHeightSlider", { static: true })
+  chartHeightSlider!: ElementRef<HTMLInputElement>;
+  @ViewChild("chartHeightValue", { static: true })
+  chartHeightValue!: ElementRef<HTMLElement>;
+  @ViewChild("chartResizeHandle", { static: true })
+  chartResizeHandle!: ElementRef<HTMLElement>;
+
+  @Input() categories: string[] = [];
+  @Input() data: number[] = [];
+  settings = {
+    autoScale: true,
+    barHeight: "0.75",
+    chartHeight: "400",
+    currentStart: 0,
+    leftMargin: "100",
+    orientation: "horizontal",
+    showLabels: true,
+    sort: "valueDesc",
+    windowSize: 5,
+    yMax: "100",
+    yMin: "0",
+  };
+
+  private chartMount?: ReturnType<typeof mountBarChart>;
+  private destroyResizeControls?: () => void;
+
+  ngAfterViewInit(): void {
+    this.chartMount = mountBarChart(this.chartHost.nativeElement);
+
+    const resizeControls = createChartHeightResizeControls({
+      debounce,
+      defaultHeight: this.settings.chartHeight,
+      elements: {
+        chartContainer: this.chartShell.nativeElement,
+        chartHeightSlider: this.chartHeightSlider.nativeElement,
+        chartHeightValue: this.chartHeightValue.nativeElement,
+        chartResizeHandle: this.chartResizeHandle.nativeElement,
+        chartSurface: this.chartHost.nativeElement,
+      },
+      onChange: (height) => {
+        this.settings = {
+          ...this.settings,
+          chartHeight: String(height),
+        };
+        this.renderChart();
+      },
+    });
+
+    resizeControls.setHeight(this.settings.chartHeight);
+    this.destroyResizeControls = resizeControls.bindEvents();
+    this.renderChart();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyResizeControls?.();
+    this.chartMount?.destroy();
+  }
+
+  private renderChart(): void {
+    if (!this.chartMount) {
+      return;
+    }
+
+    const formatter = new Intl.NumberFormat("en-US", {
+      currency: "USD",
+      notation: "compact",
+      style: "currency",
+    });
+    const viewModel = createBarChartViewModel({
+      categories: this.categories,
+      data: this.data,
+      formatters: {
+        barValueFormatter: formatter,
+        valueAxisFormatter: formatter,
+      },
+      settings: this.settings,
+    });
+
+    this.chartMount.update(viewModel.chartOptions);
+  }
+}
+```
+
+If the Angular app uses signals, keep `chartHeight` in a writable signal instead of replacing the `settings` object directly. The important part is that the `onChange` callback updates Angular-owned state before rendering the next view model.
 
 ## Import Paths
 

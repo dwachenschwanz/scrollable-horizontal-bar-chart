@@ -58,7 +58,7 @@ The mount functions own the Highcharts lifecycle:
 - update chart
 - destroy chart
 
-`src/chartkit/demo-controls.js` exports browser-demo helpers only. These are useful for the current Vite demos, but they are not intended as the long-term Angular integration surface.
+`src/chartkit/demo-controls.js` exports browser-demo helpers only. These are useful for the current Vite demos, but they are not intended as the primary Angular chart integration surface. The chart-height resize helper is framework-neutral DOM code, so an Angular host can reuse that helper or implement the same interaction directly in a component.
 
 ## Project Structure
 
@@ -73,6 +73,8 @@ src/chartkit/bar-chart-controller.js        Bar chart Highcharts controller
 src/chartkit/uncertainty-chart-model.js     Uncertainty chart view-model builder
 src/chartkit/uncertainty-chart-controller.js Uncertainty chart Highcharts controller
 src/chartkit/chart-mounts.js                Framework-neutral chart mount lifecycle
+src/shared/chart-height-resize-controls.js  Framework-neutral chart height resize helper
+src/shared/chart-resize.css                 Shared resize handle styling
 src/shared/                                 Shared demo controls, formatting, and core utilities
 uncertainty-range-comparison/               Nested uncertainty range comparison app
 docs/angular-integration.md                 Angular integration notes and examples
@@ -125,8 +127,8 @@ npm run dev:both
 
 The default fixed ports are:
 
-- bar chart: `http://localhost:5173`
-- uncertainty chart: `http://localhost:5174`
+- bar chart: `http://127.0.0.1:5173/scrollable-horizontal-bar-chart/`
+- uncertainty chart: `http://127.0.0.1:5174/uncertainty-range-comparison/`
 
 ## Builds
 
@@ -164,13 +166,19 @@ Run the full Node test suite:
 npm test
 ```
 
+Run the browser-level interaction tests:
+
+```sh
+npm run test:browser
+```
+
 Build and smoke-test the chartkit package artifact:
 
 ```sh
 npm run test:chartkit-build
 ```
 
-The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected public exports exist.
+The browser tests start both fixed-port Vite apps and verify chart resize interactions and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected public exports exist.
 
 ## App Features
 

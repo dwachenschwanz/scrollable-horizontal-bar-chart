@@ -96,6 +96,36 @@ export function getAbridgedAxisLabelMarkup(label, width) {
   return `<span class="chart-axis-label" title="${escapedLabel}" aria-label="${escapedLabel}" style="width:${width}px">${escapedLabel}</span>`;
 }
 
+export function createScrollableCategoryAxisOptions({
+  categories,
+  extraOptions = {},
+  leftMargin,
+  orientation,
+}) {
+  const isVertical = orientation === "vertical";
+  const categoryLabelWidth = getHorizontalCategoryLabelWidth(leftMargin);
+
+  return {
+    categories,
+    labels: isVertical
+      ? {}
+      : {
+          reserveSpace: false,
+          useHTML: true,
+          x: -8,
+          formatter() {
+            const label = typeof this.value === "string" ? this.value : "";
+            return getAbridgedAxisLabelMarkup(label, categoryLabelWidth);
+          },
+        },
+    reversed: !isVertical,
+    scrollbar: {
+      enabled: true,
+    },
+    ...extraOptions,
+  };
+}
+
 export function createSafeNumberFormatter(
   formatterCache,
   locale,

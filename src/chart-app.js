@@ -5,6 +5,7 @@ import {
 import {
   createAxisFormatControls,
   createChartWindowControls,
+  createChartHeightResizeControls,
   createControlTabs,
   createDataTableControls,
   createFloatingSidebarController,
@@ -15,7 +16,6 @@ import compareValueSource from "./actionMenu/compareValue.json";
 import { extractCompareValueDatasets } from "./value-datasets.js";
 
 const TRACK_HEIGHT = 300;
-const CHART_HEIGHT_VIEWPORT_PADDING = 24;
 const SIDEBAR_COLLAPSED_STORAGE_KEY = "chartSidebarCollapsed";
 const SIDEBAR_POSITION_STORAGE_KEY = "chartSidebarPosition";
 const demoDatasets = extractCompareValueDatasets(compareValueSource);
@@ -163,6 +163,18 @@ const dataTableControls = createDataTableControls({
   renderRows: () => getDataTableRowsMarkup(),
   sortFields: ["name", "value"],
 });
+const chartHeightControls = createChartHeightResizeControls({
+  debounce,
+  defaultHeight: defaultSettings.chartHeight,
+  elements: {
+    chartContainer: elements.chartContainer,
+    chartHeightSlider: elements.chartHeightSlider,
+    chartHeightValue: elements.chartHeightValue,
+    chartResizeHandle: elements.chartResizeHandle,
+    chartSurface: elements.chartSurface,
+  },
+  onChange: () => renderChart(),
+});
 
 function applyDefaultSettings({ preserveDataset = false } = {}) {
   if (!preserveDataset) {
@@ -201,7 +213,7 @@ function resetToDefaults() {
   invalidateViewModelCache();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
-  setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
+  chartHeightControls.setHeight(elements.chartHeightSlider.value);
   axisControls.updateCurrencyInputState();
   dataTableControls.updateVisibility();
   axisControls.updateYAxisInputState();
@@ -246,46 +258,6 @@ function updateLeftMarginDisplay() {
 
 function updateBarHeightDisplay() {
   elements.barHeightValue.textContent = elements.barHeightSlider.value;
-}
-
-function updateChartHeightDisplay() {
-  getChartHeightBounds();
-  elements.chartHeightValue.textContent = elements.chartHeightSlider.value;
-  elements.chartContainer.style.setProperty(
-    "--chart-height",
-    `${elements.chartHeightSlider.value}px`
-  );
-  elements.chartResizeHandle?.setAttribute(
-    "aria-valuenow",
-    elements.chartHeightSlider.value
-  );
-}
-
-function getChartHeightBounds() {
-  const min = Number.parseInt(elements.chartHeightSlider.min, 10);
-  const step = Number.parseInt(elements.chartHeightSlider.step, 10);
-  const chartSurfaceTop = elements.chartSurface.getBoundingClientRect().top;
-  const availableHeight =
-    window.innerHeight - chartSurfaceTop - CHART_HEIGHT_VIEWPORT_PADDING;
-  const max = Math.max(min, Math.floor(availableHeight / step) * step);
-
-  elements.chartHeightSlider.max = String(max);
-  elements.chartResizeHandle?.setAttribute("aria-valuemax", String(max));
-
-  return {
-    max,
-    min,
-    step,
-  };
-}
-
-function setChartHeight(height) {
-  const { max, min, step } = getChartHeightBounds();
-  const snappedHeight = Math.round(height / step) * step;
-  const chartHeight = Math.min(max, Math.max(min, snappedHeight));
-
-  elements.chartHeightSlider.value = String(chartHeight);
-  updateChartHeightDisplay();
 }
 
 function getViewModelSettings() {
@@ -460,10 +432,6 @@ function bindEvents() {
     updateBarHeightDisplay();
     renderChart();
   });
-  elements.chartHeightSlider.addEventListener("input", (event) => {
-    setChartHeight(Number.parseInt(event.target.value, 10));
-    renderChart();
-  });
   elements.autoScaleCheckbox.addEventListener("change", () => {
     axisControls.updateYAxisInputState();
     renderChart();
@@ -480,81 +448,7 @@ function bindEvents() {
     onFormatRender: () => renderChart({ forceTableRender: true }),
   });
   windowControls.bindScrollbar();
-  window.addEventListener(
-    "resize",
-    debounce(() => {
-      setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
-      renderChart();
-    }, 120)
-  );
-}
-
-function bindChartResizeHandle() {
-  const handle = elements.chartResizeHandle;
-
-  if (!handle) {
-    return;
-  }
-
-  let dragStartY = 0;
-  let dragStartHeight = Number.parseInt(defaultSettings.chartHeight, 10);
-
-  function getCurrentChartHeight() {
-    const currentHeight = Number.parseInt(elements.chartHeightSlider.value, 10);
-
-    return Number.isFinite(currentHeight)
-      ? currentHeight
-      : Number.parseInt(defaultSettings.chartHeight, 10);
-  }
-
-  function endDrag() {
-    handle.classList.remove("is-dragging");
-    document.removeEventListener("pointermove", onPointerMove);
-    document.removeEventListener("pointerup", endDrag);
-    document.removeEventListener("pointercancel", endDrag);
-  }
-
-  function onPointerMove(event) {
-    setChartHeight(dragStartHeight + event.clientY - dragStartY);
-    renderChart();
-  }
-
-  function resetChartHeight() {
-    setChartHeight(Number.parseInt(defaultSettings.chartHeight, 10));
-    renderChart();
-  }
-
-  handle.addEventListener("dblclick", resetChartHeight);
-
-  handle.addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    dragStartY = event.clientY;
-    dragStartHeight = getCurrentChartHeight();
-    handle.classList.add("is-dragging");
-    document.addEventListener("pointermove", onPointerMove);
-    document.addEventListener("pointerup", endDrag, { once: true });
-    document.addEventListener("pointercancel", endDrag, { once: true });
-  });
-
-  handle.addEventListener("keydown", (event) => {
-    const { max, min, step: sliderStep } = getChartHeightBounds();
-    const step = event.shiftKey ? sliderStep * 2 : sliderStep;
-    const keyAdjustments = {
-      ArrowDown: step,
-      ArrowUp: -step,
-      End: max - getCurrentChartHeight(),
-      Home: min - getCurrentChartHeight(),
-    };
-    const adjustment = keyAdjustments[event.key];
-
-    if (adjustment === undefined) {
-      return;
-    }
-
-    event.preventDefault();
-    setChartHeight(getCurrentChartHeight() + adjustment);
-    renderChart();
-  });
+  chartHeightControls.bindEvents();
 }
 
 export function initializeChartApp() {
@@ -565,13 +459,12 @@ export function initializeChartApp() {
   sidebarController.applyStoredPosition();
   updateLeftMarginDisplay();
   updateBarHeightDisplay();
-  setChartHeight(Number.parseInt(elements.chartHeightSlider.value, 10));
+  chartHeightControls.setHeight(elements.chartHeightSlider.value);
   axisControls.updateCurrencyInputState();
   axisControls.normalizeCurrencyInput();
   axisControls.updateCurrencyValidationState();
   dataTableControls.updateVisibility();
   axisControls.updateYAxisInputState();
   bindEvents();
-  bindChartResizeHandle();
   renderChart({ forceTableRender: true, resetScroll: true });
 }
