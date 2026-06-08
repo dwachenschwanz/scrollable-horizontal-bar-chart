@@ -8,6 +8,9 @@
     "./demo-controls": "./dist/chartkit/demo-controls.js",
     "./chart-resize.css": "./dist/chartkit/chart-resize.css"
   },
+  "files": [
+    "dist/chartkit"
+  ],
   "style": "./dist/chartkit/chart-resize.css",
   "scripts": {
     "dev": "vite",
