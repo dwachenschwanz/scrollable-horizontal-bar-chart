@@ -38,6 +38,7 @@ The important architectural point is that the apps are no longer two disconnecte
 It exports:
 
 - `createBarChartViewModel`
+- `createChartHeightResizeControls`
 - `createUncertaintyChartViewModel`
 - `mountBarChart`
 - `mountUncertaintyChart`
@@ -58,7 +59,7 @@ The mount functions own the Highcharts lifecycle:
 - update chart
 - destroy chart
 
-`src/chartkit/demo-controls.js` exports browser-demo helpers only. These are useful for the current Vite demos, but they are not intended as the primary Angular chart integration surface. The chart-height resize helper is framework-neutral DOM code, so an Angular host can reuse that helper or implement the same interaction directly in a component.
+`src/chartkit/demo-controls.js` exports browser-demo helpers only. These are useful for the current Vite demos, but they are not intended as the primary Angular chart integration surface. The chart-height resize helper is framework-neutral DOM code exported by the stable chartkit API, so an Angular host can reuse that helper or implement the same interaction directly in a component.
 
 ## Project Structure
 
@@ -178,7 +179,7 @@ Build and smoke-test the chartkit package artifact:
 npm run test:chartkit-build
 ```
 
-The browser tests start both fixed-port Vite apps and verify chart resize interactions and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected public exports exist.
+The browser tests start both fixed-port Vite apps and verify chart resize interactions and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected chartkit and demo exports exist.
 
 ## App Features
 

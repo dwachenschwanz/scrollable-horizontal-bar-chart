@@ -1,11 +1,11 @@
 import {
   createBarChartViewModel,
+  createChartHeightResizeControls,
   mountBarChart,
 } from "./chartkit/index.js";
 import {
   createAxisFormatControls,
   createChartWindowControls,
-  createChartHeightResizeControls,
   createControlTabs,
   createDataTableControls,
   createFloatingSidebarController,

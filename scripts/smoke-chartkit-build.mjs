@@ -3,6 +3,7 @@ const demoControlsApi = await import("../dist/chartkit/demo-controls.js");
 
 const requiredPublicExports = [
   "createBarChartViewModel",
+  "createChartHeightResizeControls",
   "createUncertaintyChartViewModel",
   "mountBarChart",
   "mountUncertaintyChart",

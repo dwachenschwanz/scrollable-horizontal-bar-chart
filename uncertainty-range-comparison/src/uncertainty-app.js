@@ -1,10 +1,10 @@
 import {
+  createChartHeightResizeControls,
   createUncertaintyChartViewModel,
   mountUncertaintyChart,
 } from "../../src/chartkit/index.js";
 import {
   createAxisFormatControls,
-  createChartHeightResizeControls,
   createChartWindowControls,
   createControlTabs,
   createDataTableControls,

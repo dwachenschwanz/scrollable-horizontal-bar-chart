@@ -2,7 +2,7 @@
 
 `chartkit` is split into two entrypoints:
 
-- `src/chartkit/index.js` is the stable embeddable chart API.
+- `src/chartkit/index.js` is the stable embeddable chart API, including framework-neutral helpers that Angular can reuse.
 - `src/chartkit/demo-controls.js` is for the Vite demo pages and should not be needed for core chart rendering in an Angular app.
 
 Build the package artifact with:
@@ -242,7 +242,7 @@ The demo behavior is:
 - clamp the maximum height to the available chart viewport space
 - keep any visible Chart Height form control synchronized with the dragged value
 
-The reusable `createChartHeightResizeControls` helper is framework-neutral DOM code exported from `demo-controls.js`. Angular can reuse it after `ViewChild` elements are available, or mirror its behavior with Angular event bindings. In either case, keep the chart height in component state and call the chart mount with a fresh view model after height changes.
+The reusable `createChartHeightResizeControls` helper is framework-neutral DOM code exported from the stable chartkit API. Angular can reuse it after `ViewChild` elements are available, or mirror its behavior with Angular event bindings. In either case, keep the chart height in component state and call the chart mount with a fresh view model after height changes.
 
 Example template:
 
@@ -282,12 +282,19 @@ Example component setup:
 ```ts
 import {
   createBarChartViewModel,
+  createChartHeightResizeControls,
   mountBarChart,
 } from "../chartkit";
-import {
-  createChartHeightResizeControls,
-  debounce,
-} from "../chartkit/demo-controls";
+
+const debounce = (callback: () => void, delay = 0) => {
+  let timeoutId: number | undefined;
+  return () => {
+    if (timeoutId !== undefined) {
+      window.clearTimeout(timeoutId);
+    }
+    timeoutId = window.setTimeout(callback, delay);
+  };
+};
 
 export class BarChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild("chartHost", { static: true })

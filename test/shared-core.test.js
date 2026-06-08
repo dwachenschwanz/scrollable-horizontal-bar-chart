@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   createBarChartViewModel,
+  createChartHeightResizeControls,
   createUncertaintyChartViewModel,
   mountBarChart,
   mountUncertaintyChart,
@@ -10,7 +11,6 @@ import {
 import {
   buildWindowSlice,
   createAxisFormatControls,
-  createChartHeightResizeControls,
   createChartWindowControls,
   createDataTableControls,
   createSafeNumberFormatter,
