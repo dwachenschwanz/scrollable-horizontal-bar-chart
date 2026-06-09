@@ -21,7 +21,7 @@ The chart renders each bar from its low value to its high value, with a base div
 - Built-in demo datasets loaded from `src/actionMenu/compareUncertainty.json`
 - Sort by base, uncertainty spread, or name
 - Configurable bars per page with a custom scrollbar
-- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
+- Analysis tab with Group By, Expand Unassigned, Color By, and dynamic numerical filter controls
 - Chart-height resizing by dragging the centered pill below the chart
 - Double-click chart-height reset from the resize pill
 - Dynamic chart-height maximum based on the available chart viewport space
@@ -31,6 +31,22 @@ The chart renders each bar from its low value to its high value, with a base div
 - `Intl.NumberFormat` controls for locale, notation, grouping, style, and currency
 - Full category labels available through native hover tooltips when the y-axis label is truncated with an ellipsis
 - Synced input table with visible-row highlighting
+
+## Analysis Filters
+
+The Analysis tab includes Group By, Expand Unassigned, Color By, and a dynamic filter builder. `Expand Unassigned` defaults to unchecked.
+
+The filter builder starts with two filter cards. Use `Add +` to append another filter below the existing cards. When there are more than two filters, each card shows an `X` button in the upper-right corner; clicking it deletes that filter and renumbers the remaining cards. Reset returns the Analysis tab to the default two empty filters.
+
+Selecting a field other than `<None>` expands the card with:
+
+- a Min/Max row for the selected field
+- an operator selector with `>`, `>=`, `=`, `<=`, and `<`
+- a numeric value input bounded by the selected field's Min/Max
+
+Uncertainty filters support `Low`, `Base`, `High`, `Mean`, and `Spread`. Min/Max values use the active number-format settings. The valid input bounds are rounded to the same displayed fraction precision, so values that match the displayed Min or Max are accepted even when the raw data contains more decimal precision.
+
+Out-of-range values show a red input border, inline guidance, and accessible validation state through `aria-invalid` and `aria-describedby`. Clicking `Apply` focuses the first invalid filter value. If the Analysis tab overflows, only the area from Group By through the filter builder scrolls; Apply and Reset remain fixed at the bottom of the Analysis panel.
 
 ## Chart Resize Handle
 

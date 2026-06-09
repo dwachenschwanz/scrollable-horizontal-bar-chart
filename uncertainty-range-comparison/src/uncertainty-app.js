@@ -8,6 +8,7 @@ import {
   createChartWindowControls,
   createControlTabs,
   createDataTableControls,
+  createFilterBuilderControls,
   createFloatingSidebarController,
   debounce,
   escapeHtml,
@@ -29,7 +30,7 @@ const defaultSettings = {
   chartHeight: "400",
   colorBy: "none",
   datasetKey: defaultDatasetKey,
-  expandUnassigned: true,
+  expandUnassigned: false,
   groupBy: "none",
   leftMargin: "120",
   orientation: "horizontal",
@@ -81,6 +82,9 @@ const elements = {
   dynamicSliderStyle: document.getElementById("dynamic-slider-style"),
   colorBySelector: document.getElementById("colorBySelector"),
   expandUnassignedCheckbox: document.getElementById("expandUnassignedCheckbox"),
+  applyAnalysisButton: document.querySelector("[data-analysis-apply]"),
+  filterActionRow: document.querySelector("[data-filter-action-row]"),
+  filterAddButton: document.querySelector("[data-filter-add]"),
   groupBySelector: document.getElementById("groupBySelector"),
   leftMarginSlider: document.getElementById("leftMarginSlider"),
   leftMarginValue: document.getElementById("leftMarginValue"),
@@ -191,6 +195,70 @@ const chartHeightControls = createChartHeightResizeControls({
   },
   onChange: () => renderChart(),
 });
+const filterBuilderControls = createFilterBuilderControls({
+  actionRow: elements.filterActionRow,
+  addButton: elements.filterAddButton,
+  formatValue: (value) => getFilterValueFormatter().format(value),
+  getFieldRange: (field) => getFilterFieldRange(field),
+  getValidationRange: (range) => getFilterValidationRange(range),
+  idPrefix: "uncertaintyFilter",
+  root: elements.analysisPanel,
+});
+
+function getFilterValueFormatter() {
+  return (
+    axisControls.getStandardCurrencyFormatter() ??
+    axisControls.getValueAxisFormatter()
+  );
+}
+
+function getNumericRange(values) {
+  const finiteValues = values.filter(Number.isFinite);
+
+  if (finiteValues.length === 0) {
+    return null;
+  }
+
+  return {
+    max: Math.max(...finiteValues),
+    min: Math.min(...finiteValues),
+  };
+}
+
+function getFilterFractionDigits() {
+  const fractionDigits = Number.parseInt(
+    axisControls.getFormatSettings().fractionDigits,
+    10
+  );
+
+  return Number.isNaN(fractionDigits)
+    ? 2
+    : Math.min(6, Math.max(0, fractionDigits));
+}
+
+function roundToFractionDigits(value, fractionDigits) {
+  const factor = 10 ** fractionDigits;
+  return Math.round(value * factor) / factor;
+}
+
+function getFilterValidationRange(range) {
+  const fractionDigits = getFilterFractionDigits();
+
+  return {
+    max: roundToFractionDigits(range.max, fractionDigits),
+    min: roundToFractionDigits(range.min, fractionDigits),
+  };
+}
+
+function getFilterFieldRange(field) {
+  const fields = new Set(["low", "base", "high", "mean", "spread"]);
+
+  if (!fields.has(field)) {
+    return null;
+  }
+
+  return getNumericRange(getViewModel().normalizedRows.map((row) => row[field]));
+}
 
 function createRow(row) {
   const id = `row-${state.nextRowId}`;
@@ -265,11 +333,7 @@ function resetAnalysisControls() {
   elements.groupBySelector.value = defaultSettings.groupBy;
   elements.expandUnassignedCheckbox.checked = defaultSettings.expandUnassigned;
   elements.colorBySelector.value = defaultSettings.colorBy;
-  elements.analysisPanel
-    .querySelectorAll(".filter-field-select")
-    .forEach((select) => {
-      select.value = "none";
-    });
+  filterBuilderControls.reset();
 }
 
 function resetToDefaults() {
@@ -475,6 +539,7 @@ function changeDataset(datasetKey) {
   state.rows = cloneDatasetRows(dataset.key);
   invalidateViewModelCache();
   renderChart({ forceTableRender: true, resetScroll: true });
+  filterBuilderControls.updateRanges();
 }
 
 function bindEvents() {
@@ -489,6 +554,7 @@ function bindEvents() {
   }, 120);
   controlTabs.bindEvents();
   sidebarController.bindEvents();
+  filterBuilderControls.bindEvents();
 
   elements.windowSizeSelector.addEventListener("change", (event) => {
     windowControls.setWindowSize(
@@ -501,6 +567,9 @@ function bindEvents() {
 
   elements.toggleLabels.addEventListener("change", () => renderChart());
   elements.toggleMean.addEventListener("change", () => renderChart());
+  elements.applyAnalysisButton.addEventListener("click", () => {
+    filterBuilderControls.focusFirstInvalid();
+  });
   elements.resetAnalysisButton.addEventListener("click", resetAnalysisControls);
   elements.resetDefaultsButton.addEventListener("click", resetToDefaults);
   elements.showDataTableCheckbox.addEventListener("change", () =>
@@ -526,8 +595,14 @@ function bindEvents() {
     changeDataset(event.target.value);
   });
   axisControls.bindFormatEvents({
-    onFormatInput: debouncedFormatRender,
-    onFormatRender: () => renderChart({ forceTableRender: true }),
+    onFormatInput: () => {
+      filterBuilderControls.updateRanges();
+      debouncedFormatRender();
+    },
+    onFormatRender: () => {
+      filterBuilderControls.updateRanges();
+      renderChart({ forceTableRender: true });
+    },
   });
   windowControls.bindScrollbar();
   chartHeightControls.bindEvents();

@@ -331,9 +331,26 @@ h1 {
   box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+.analysis-controls {
+  max-height: calc(100vh - 200px);
+  min-height: 0;
+  overflow: hidden;
+}
+
 .filter-controls {
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 14px;
+  min-height: 0;
+}
+
+.analysis-scroll-region {
+  display: grid;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 4px;
 }
 
 .analysis-breakdown-controls,
@@ -413,6 +430,14 @@ h1 {
   background: #f8fafc;
 }
 
+.filter-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+}
+
 .filter-card h2 {
   margin: 0;
   color: #475569;
@@ -420,6 +445,101 @@ h1 {
   font-weight: 700;
   letter-spacing: 0;
   text-transform: none;
+}
+
+.filter-remove-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.filter-remove-button:hover {
+  border-color: #94a3b8;
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.filter-remove-button[hidden] {
+  display: none;
+}
+
+.filter-range-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 14px;
+  align-items: center;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.filter-range-row[hidden] {
+  display: none;
+}
+
+.filter-range-row strong {
+  color: #334155;
+  font-weight: 700;
+}
+
+.filter-range-row span:last-child {
+  justify-self: end;
+  text-align: right;
+}
+
+.filter-criteria-row {
+  display: grid;
+  grid-template-columns: minmax(72px, 92px) minmax(0, 1fr);
+  gap: 8px 14px;
+  align-items: center;
+}
+
+.filter-criteria-row[hidden] {
+  display: none;
+}
+
+.filter-operator-select,
+.filter-value-input {
+  width: 100%;
+}
+
+.filter-value-input {
+  justify-self: end;
+  max-width: 150px;
+  text-align: center;
+}
+
+.filter-operator-select {
+  text-align: center;
+}
+
+.filter-value-input:invalid {
+  border-color: #dc2626;
+  outline-color: #dc2626;
+}
+
+.filter-value-error {
+  grid-column: 1 / -1;
+  margin: -2px 0 0;
+  color: #b91c1c;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: right;
+}
+
+.filter-value-error[hidden] {
+  display: none;
 }
 
 .filter-field-select {

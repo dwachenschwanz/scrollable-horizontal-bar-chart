@@ -55,8 +55,8 @@ test("index shell keeps expected default checked controls", () => {
   );
   assert.match(
     indexHtml,
-    /<input type="checkbox" id="expandUnassignedCheckbox" checked \/>/,
-    "Expand Unassigned should be checked"
+    /<input type="checkbox" id="expandUnassignedCheckbox" \/>/,
+    "Expand Unassigned should be unchecked"
   );
 });
 
@@ -72,6 +72,9 @@ test("index shell includes analysis filter controls", () => {
   assert.match(indexHtml, />\s*Add\s*<\/span>/);
   assert.match(indexHtml, />\s*Filter 1\s*<\/h2>/);
   assert.match(indexHtml, />\s*Filter 2\s*<\/h2>/);
+  assert.match(indexHtml, /data-filter-card/);
+  assert.match(indexHtml, /data-filter-add/);
+  assert.match(indexHtml, /data-filter-remove/);
   assert.doesNotMatch(indexHtml, />\s*Advanced Filter\s*<\/button>/);
   assert.doesNotMatch(indexHtml, />\s*Categorical\s*<\/span>/);
   assert.doesNotMatch(indexHtml, />\s*Numerical\s*<\/span>/);

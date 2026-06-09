@@ -234,84 +234,118 @@
             hidden
           >
             <section class="filter-controls" aria-label="Analysis filters">
-              <div class="analysis-breakdown-controls">
-                <label for="groupBySelector">
-                  <span>Group By:</span>
-                  <select id="groupBySelector">
-                    <option value="none" selected>&lt;None&gt;</option>
-                    <option value="projectHealth">Project Health</option>
-                    <option value="country">Country</option>
-                    <option value="lineOfBusiness">Line of Business</option>
-                  </select>
-                </label>
+              <div class="analysis-scroll-region">
+                <div class="analysis-breakdown-controls">
+                  <label for="groupBySelector">
+                    <span>Group By:</span>
+                    <select id="groupBySelector">
+                      <option value="none" selected>&lt;None&gt;</option>
+                      <option value="projectHealth">Project Health</option>
+                      <option value="country">Country</option>
+                      <option value="lineOfBusiness">Line of Business</option>
+                    </select>
+                  </label>
 
-                <label class="checkbox-label" for="expandUnassignedCheckbox">
-                  <input type="checkbox" id="expandUnassignedCheckbox" checked />
-                  <span>Expand Unassigned</span>
-                </label>
+                  <label class="checkbox-label" for="expandUnassignedCheckbox">
+                    <input type="checkbox" id="expandUnassignedCheckbox" />
+                    <span>Expand Unassigned</span>
+                  </label>
 
-                <label for="colorBySelector">
-                  <span>Color By:</span>
-                  <select id="colorBySelector">
-                    <option value="none" selected>&lt;None&gt;</option>
-                    <option value="colorTag">Color Tag</option>
-                    <option value="projectHealth">Project Health</option>
-                    <option value="country">Country</option>
-                    <option value="lineOfBusiness">Line of Business</option>
-                  </select>
-                </label>
+                  <label for="colorBySelector">
+                    <span>Color By:</span>
+                    <select id="colorBySelector">
+                      <option value="none" selected>&lt;None&gt;</option>
+                      <option value="colorTag">Color Tag</option>
+                      <option value="projectHealth">Project Health</option>
+                      <option value="country">Country</option>
+                      <option value="lineOfBusiness">Line of Business</option>
+                    </select>
+                  </label>
+                </div>
+
+                <section class="filter-builder" aria-labelledby="uncertaintyFiltersHeading">
+                  <h2 class="filter-builder-heading" id="uncertaintyFiltersHeading">Filters</h2>
+                  <div class="filter-builder-content">
+                    <section
+                      class="filter-card"
+                      aria-labelledby="uncertaintyFilter1Heading"
+                      data-filter-card
+                    >
+                      <div class="filter-card-header">
+                        <h2 id="uncertaintyFilter1Heading" data-filter-heading>Filter 1</h2>
+                        <button
+                          type="button"
+                          class="filter-remove-button"
+                          data-filter-remove
+                          aria-label="Remove Filter 1"
+                          hidden
+                        >
+                          X
+                        </button>
+                      </div>
+                      <label class="sr-only" for="uncertaintyFilter1Selector" data-filter-label>
+                        Filter 1 field
+                      </label>
+                      <select id="uncertaintyFilter1Selector" class="filter-field-select">
+                        <option value="none" selected>&lt;None&gt;</option>
+                        <option value="low">Low</option>
+                        <option value="base">Base</option>
+                        <option value="high">High</option>
+                        <option value="mean">Mean</option>
+                        <option value="spread">Spread</option>
+                      </select>
+                    </section>
+
+                    <section
+                      class="filter-card"
+                      aria-labelledby="uncertaintyFilter2Heading"
+                      data-filter-card
+                    >
+                      <div class="filter-card-header">
+                        <h2 id="uncertaintyFilter2Heading" data-filter-heading>Filter 2</h2>
+                        <button
+                          type="button"
+                          class="filter-remove-button"
+                          data-filter-remove
+                          aria-label="Remove Filter 2"
+                          hidden
+                        >
+                          X
+                        </button>
+                      </div>
+                      <label class="sr-only" for="uncertaintyFilter2Selector" data-filter-label>
+                        Filter 2 field
+                      </label>
+                      <select id="uncertaintyFilter2Selector" class="filter-field-select">
+                        <option value="none" selected>&lt;None&gt;</option>
+                        <option value="low">Low</option>
+                        <option value="base">Base</option>
+                        <option value="high">High</option>
+                        <option value="mean">Mean</option>
+                        <option value="spread">Spread</option>
+                      </select>
+                    </section>
+
+                    <div class="filter-action-row" data-filter-action-row>
+                      <button
+                        type="button"
+                        class="filter-action-button filter-add-button"
+                        data-filter-add
+                      >
+                        <span>Add</span>
+                        <span aria-hidden="true">+</span>
+                      </button>
+                    </div>
+                  </div>
+                </section>
               </div>
 
-              <section class="filter-builder" aria-labelledby="uncertaintyFiltersHeading">
-                <h2 class="filter-builder-heading" id="uncertaintyFiltersHeading">Filters</h2>
-                <div class="filter-builder-content">
-                  <section
-                    class="filter-card"
-                    aria-labelledby="uncertaintyFilterOneHeading"
-                  >
-                    <h2 id="uncertaintyFilterOneHeading">Filter 1</h2>
-                    <label class="sr-only" for="uncertaintyFilterOneSelector">
-                      Filter 1 field
-                    </label>
-                    <select id="uncertaintyFilterOneSelector" class="filter-field-select">
-                      <option value="none" selected>&lt;None&gt;</option>
-                      <option value="low">Low</option>
-                      <option value="base">Base</option>
-                      <option value="high">High</option>
-                      <option value="mean">Mean</option>
-                      <option value="spread">Spread</option>
-                    </select>
-                  </section>
-
-                  <section
-                    class="filter-card"
-                    aria-labelledby="uncertaintyFilterTwoHeading"
-                  >
-                    <h2 id="uncertaintyFilterTwoHeading">Filter 2</h2>
-                    <label class="sr-only" for="uncertaintyFilterTwoSelector">
-                      Filter 2 field
-                    </label>
-                    <select id="uncertaintyFilterTwoSelector" class="filter-field-select">
-                      <option value="none" selected>&lt;None&gt;</option>
-                      <option value="low">Low</option>
-                      <option value="base">Base</option>
-                      <option value="high">High</option>
-                      <option value="mean">Mean</option>
-                      <option value="spread">Spread</option>
-                    </select>
-                  </section>
-
-                  <div class="filter-action-row">
-                    <button type="button" class="filter-action-button filter-add-button">
-                      <span>Add</span>
-                      <span aria-hidden="true">+</span>
-                    </button>
-                  </div>
-                </div>
-              </section>
-
               <div class="analysis-action-row">
-                <button type="button" class="analysis-action-button analysis-apply-button">
+                <button
+                  type="button"
+                  class="analysis-action-button analysis-apply-button"
+                  data-analysis-apply
+                >
                   Apply
                 </button>
                 <button

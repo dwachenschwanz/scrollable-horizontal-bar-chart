@@ -131,6 +131,19 @@ for (const app of apps) {
       await expect(page.locator(".filter-builder")).toBeVisible();
       await expect(page.getByRole("heading", { name: "Filter 1" })).toBeVisible();
       await expect(page.getByRole("heading", { name: "Filter 2" })).toBeVisible();
+      await expect(page.locator("[data-filter-card]")).toHaveCount(2);
+      await expect(page.locator("[data-filter-range]:visible")).toHaveCount(0);
+      await expect(page.locator("[data-filter-criteria]:visible")).toHaveCount(0);
+      await expect(page.locator("[data-filter-remove]:visible")).toHaveCount(0);
+      await page.locator("[data-filter-add]").click();
+      await expect(page.locator("[data-filter-card]")).toHaveCount(3);
+      await expect(page.getByRole("heading", { name: "Filter 3" })).toBeVisible();
+      await expect(page.locator("[data-filter-remove]:visible")).toHaveCount(3);
+      await page.getByRole("button", { name: "Remove Filter 2" }).click();
+      await expect(page.locator("[data-filter-card]")).toHaveCount(2);
+      await expect(page.getByRole("heading", { name: "Filter 1" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: "Filter 2" })).toBeVisible();
+      await expect(page.locator("[data-filter-remove]:visible")).toHaveCount(0);
       await expect(page.getByRole("button", { name: /Advanced Filter/i })).toHaveCount(0);
       await expect(page.locator("#panel-analysis").locator('input[type="radio"]')).toHaveCount(0);
       await expect(
@@ -142,16 +155,71 @@ for (const app of apps) {
       await expect(page.locator("#colorBySelector")).toBeVisible();
       await expect(page.locator("#panel-display")).toBeHidden();
 
+      for (let index = 0; index < 6; index += 1) {
+        await page.locator("[data-filter-add]").click();
+      }
+      await expect(page.locator("[data-filter-card]")).toHaveCount(8);
+      expect(
+        await page.locator(".analysis-scroll-region").evaluate((element) => {
+          return element.scrollHeight > element.clientHeight;
+        })
+      ).toBe(true);
+      await expect(page.locator("[data-analysis-apply]")).toBeInViewport();
+      await expect(page.locator("#resetAnalysisButton")).toBeInViewport();
+      await page.locator("#resetAnalysisButton").click();
+      await expect(page.locator("[data-filter-card]")).toHaveCount(2);
+
       await page.locator("#groupBySelector").selectOption("country");
       await page.locator("#expandUnassignedCheckbox").setChecked(false);
       await page.locator("#colorBySelector").selectOption("colorTag");
       const filterValue = app.name === "scrollable bar chart" ? "value" : "spread";
       await page.locator(".filter-field-select").first().selectOption(filterValue);
+      await expect(page.locator("[data-filter-range]:visible").first()).toContainText(
+        /Min:/
+      );
+      await expect(page.locator("[data-filter-range]:visible").first()).toContainText(
+        /Max:/
+      );
+      await expect(page.locator("[data-filter-criteria]:visible")).toHaveCount(1);
+      const firstValueInput = page.locator("[data-filter-value]:visible").first();
+      const minBound = Number(await firstValueInput.getAttribute("min"));
+      const maxBound = Number(await firstValueInput.getAttribute("max"));
+      expect(Number.isFinite(minBound)).toBe(true);
+      expect(Number.isFinite(maxBound)).toBe(true);
+      expect(maxBound).toBeGreaterThanOrEqual(minBound);
+      await page.locator("[data-filter-operator]:visible").first().selectOption(">=");
+      await firstValueInput.fill(String(minBound));
+      expect(await firstValueInput.evaluate((input) => input.checkValidity())).toBe(true);
+      if (app.name === "scrollable bar chart") {
+        expect(minBound).toBe(-5);
+      }
+      await firstValueInput.fill(String(minBound - 1));
+      expect(await firstValueInput.evaluate((input) => input.checkValidity())).toBe(false);
+      await expect(firstValueInput).toHaveAttribute("aria-invalid", "true");
+      await expect(page.locator("[data-filter-error]:visible").first()).toContainText(
+        /Enter a value from/
+      );
+      await page.locator("[data-analysis-apply]").click();
+      await expect(firstValueInput).toBeFocused();
+      await firstValueInput.fill(String((minBound + maxBound) / 2));
+      expect(await firstValueInput.evaluate((input) => input.checkValidity())).toBe(true);
+      await expect(firstValueInput).toHaveAttribute("aria-invalid", "false");
+      await expect(page.locator("[data-filter-error]:visible")).toHaveCount(0);
+      await page.locator("[data-filter-add]").click();
+      await expect(page.locator("[data-filter-card]")).toHaveCount(3);
+      await page.locator("[data-filter-card]").nth(2).locator(".filter-field-select").selectOption(
+        filterValue
+      );
+      await expect(page.locator("[data-filter-range]:visible")).toHaveCount(2);
+      await expect(page.locator("[data-filter-criteria]:visible")).toHaveCount(2);
       await page.locator("#resetAnalysisButton").click();
 
       await expect(page.locator("#groupBySelector")).toHaveValue("none");
-      await expect(page.locator("#expandUnassignedCheckbox")).toBeChecked();
+      await expect(page.locator("#expandUnassignedCheckbox")).not.toBeChecked();
       await expect(page.locator("#colorBySelector")).toHaveValue("none");
+      await expect(page.locator("[data-filter-card]")).toHaveCount(2);
+      await expect(page.locator("[data-filter-range]:visible")).toHaveCount(0);
+      await expect(page.locator("[data-filter-criteria]:visible")).toHaveCount(0);
       await expect(page.locator(".filter-field-select").first()).toHaveValue("none");
     });
 

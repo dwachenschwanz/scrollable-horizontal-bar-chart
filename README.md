@@ -23,7 +23,7 @@ The apps intentionally share the same interaction model:
 - display, axis, and format sections
 - custom visible-window scrolling
 - horizontal or vertical chart orientation
-- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
+- Analysis tab with Group By, Expand Unassigned, Color By, and dynamic numerical filter controls
 - chart-height resizing from the divider pill below each chart
 - auto or manual axis bounds
 - `Intl.NumberFormat`-based axis and label formatting
@@ -77,6 +77,7 @@ src/chartkit/uncertainty-chart-controller.js Uncertainty chart Highcharts contro
 src/chartkit/chart-mounts.js                Framework-neutral chart mount lifecycle
 src/shared/chart-height-resize-controls.js  Framework-neutral chart height resize helper
 src/shared/chart-resize.css                 Shared resize handle styling
+src/shared/filter-builder-controls.js       Shared demo Analysis filter-card controls
 src/shared/                                 Shared demo controls, formatting, and core utilities
 uncertainty-range-comparison/               Nested uncertainty range comparison app
 docs/angular-integration.md                 Angular integration notes and examples
@@ -199,7 +200,7 @@ Build and smoke-test the chartkit package artifact:
 npm run test:chartkit-build
 ```
 
-The browser tests start both fixed-port Vite apps and verify chart resize interactions and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected chartkit and demo exports exist.
+The browser tests start both fixed-port Vite apps and verify chart resize interactions, Analysis filter behavior, Analysis overflow layout, filter-value validation, and full-label tooltip attributes in Chromium. The smoke test imports the built `dist/chartkit/index.js` and `dist/chartkit/demo-controls.js` files and checks that the expected chartkit and demo exports exist.
 `npm pack --dry-run` is useful before publishing or local package testing; it should list `dist/chartkit/index.js`, `dist/chartkit/demo-controls.js`, `dist/chartkit/chart-resize.css`, and the chartkit chunks.
 
 ## App Features
@@ -210,7 +211,7 @@ The scrollable bar chart supports:
 - built-in demo datasets loaded from `src/actionMenu/compareValue.json`
 - value and name sorting
 - visible-window scrolling
-- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
+- Analysis tab with Group By, Expand Unassigned, Color By, and dynamic numerical filter controls
 - chart-height resizing by dragging the pill below the chart
 - chart-height reset by double-clicking the resize pill
 - dynamic chart-height maximum based on the available chart viewport space
@@ -227,7 +228,7 @@ The uncertainty range comparison supports:
 - base labels and base divider markers
 - optional mean marker shown as an `x`
 - range-aware sorting
-- Analysis tab with Group By, Expand Unassigned, Color By, and numerical filter controls
+- Analysis tab with Group By, Expand Unassigned, Color By, and dynamic numerical filter controls
 - chart-height resizing by dragging the pill below the chart
 - chart-height reset by double-clicking the resize pill
 - dynamic chart-height maximum based on the available chart viewport space
@@ -235,6 +236,22 @@ The uncertainty range comparison supports:
 - matching tooltip style for range bars
 - vertical label fallback when labels do not fit inside bars
 - synchronized data table with input adjustment warnings
+
+## Analysis Filters
+
+Both demo apps include an Analysis tab with Group By, Expand Unassigned, Color By, and filter-card controls. `Expand Unassigned` defaults to unchecked.
+
+The filter builder starts with two filter cards. Use `Add +` to append more filters below the existing cards. When there are more than two filters, each filter card shows an `X` button in the upper-right corner; clicking it removes that card and renumbers the remaining filters. Reset returns the Analysis tab to the default two empty filter cards.
+
+Selecting a field other than `<None>` expands the card with:
+
+- a Min/Max row for the selected field
+- an operator selector with `>`, `>=`, `=`, `<=`, and `<`
+- a numeric value input bounded by the selected field's Min/Max
+
+The bar chart exposes the `Value` field. The uncertainty chart exposes `Low`, `Base`, `High`, `Mean`, and `Spread`. Min/Max values use the active number-format settings. The valid input bounds are rounded to the same displayed fraction precision, so a displayed minimum such as `-$5` accepts `-5` rather than requiring the hidden raw value.
+
+Out-of-range values show a red input border, inline guidance, and accessible validation state through `aria-invalid` and `aria-describedby`. Clicking `Apply` focuses the first invalid filter value. If the Analysis tab overflows, only the area from Group By through the filter builder scrolls; Apply and Reset remain visible at the bottom of the Analysis panel.
 
 ## Chart Resize Handle
 
